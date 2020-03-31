@@ -12,11 +12,6 @@ public class Pane extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "pane";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position bestXY = this.cuboidFinder.getBestXY(p, material);
 		Position bestYZ = this.cuboidFinder.getBestYZ(p, material);

@@ -39,11 +39,6 @@ public class PlayerSpawnTf2 extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "playerSpawnTf2";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestXZ(p, material);
 		this.map.addPointEntitys(p, end, PlayerSpawnTf2.SPACE, this.type);

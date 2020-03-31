@@ -3,6 +3,7 @@ package source.addable;
 import java.util.Arrays;
 import java.util.Stack;
 
+import basic.Loggger;
 import cuboidFinder.ArrayCuboidFinder;
 import cuboidFinder.CuboidFinder;
 import minecraft.Position;
@@ -12,11 +13,12 @@ import source.Material;
 import source.addable.addable.Block;
 import source.addable.addable.Cactus;
 import source.addable.addable.CssLamp;
-import source.addable.addable.EmptyAddable;
+import source.addable.addable.Debug;
 import source.addable.addable.EndPortalFrame;
 import source.addable.addable.Fence;
 import source.addable.addable.Fire;
 import source.addable.addable.Liquid;
+import source.addable.addable.Nothing;
 import source.addable.addable.Pane;
 import source.addable.addable.PlayerSpawnCss;
 import source.addable.addable.Slab;
@@ -60,20 +62,20 @@ public class AddableManager {
 		this.setAddables(this.loadAddables(addablesString));
 	}
 
-//	TODO remove Slab High from addable lists in config
 	private Stack<Addable> loadAddables(String[] addablesString) {
 		Addable[] addablesPool = { new Block(), new Cactus(), new CssLamp(), new Fence(), new Fire(), new Liquid(), new Pane(), new Slab(), new SnowBlock(),
 				new StairsEast(), new StairsNorth(), new StairsSouth(), new StairsWest(), new LilypadTf2(), new TallGrassTf2(), new TransparentBlock(),
 				new EndPortalFrame(), new VinesEast(), new VinesNorth(), new VinesSouth(), new VinesWest(), new TorchNorth(), new TorchSouth(), new TorchEast(),
 				new TorchWest(), new Torch(), new StairsHighEast(), new StairsHighNorth(), new StairsHighSouth(), new StairsHighWest(), new PlayerSpawnCss(),
-				new PlayerSpawnTf2(), new SupplyTf2() };
+				new PlayerSpawnTf2(), new SupplyTf2(), new Debug() };
 		Stack<Addable> loadedAddables = new Stack<>();
 		for (Addable potentialAddable : addablesPool) {
 			for (String toBeAdded : addablesString) {
 				if (potentialAddable.getName()
-						.equals(toBeAdded)) {
+						.toLowerCase()
+						.equals(toBeAdded.toLowerCase())) {
 					for (Addable a : potentialAddable.getInstances()) {
-						// Loggger.log("adding " + a.getName());
+						Loggger.log("adding " + a.getName());
 						loadedAddables.push(a);
 					}
 				}
@@ -84,25 +86,25 @@ public class AddableManager {
 
 	private void setAddables(Stack<Addable> addables) {
 		Arrays.fill(this.materialToAddable, DEFAULT_ADDABLE);
-		for (Addable a : this.materialToAddable) {
-			a.setAccess(this.cuboidFinder, this.map, this);
+		for (Addable addable : this.materialToAddable) {
+			addable.setAccess(this.cuboidFinder, this.map, this);
 		}
 		this.materialToAddable[Material.AIR] = null;
 		this.materialToAddable[Material.CAVE_AIR] = null;
 
-		this.setAddable(new EmptyAddable());
+		this.setAddable(new Nothing());
 
 		for (Addable addable : addables) {
 			this.setAddable(addable);
 		}
 	}
 
-	private void setAddable(Addable a) {
-		a.setAccess(this.cuboidFinder, this.map, this);
-		int[] materialsUsed = a.getMaterialUsedFor();
+	private void setAddable(Addable addable) {
+		addable.setAccess(this.cuboidFinder, this.map, this);
+		int[] materialsUsed = addable.getMaterialUsedFor();
 		for (int material : materialsUsed) {
 			// add all material that use addable
-			this.materialToAddable[material] = a;
+			this.materialToAddable[material] = addable;
 		}
 	}
 

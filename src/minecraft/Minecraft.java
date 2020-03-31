@@ -59,6 +59,8 @@ public class Minecraft {
 		return minecraftPath;
 	}
 
+	public static final int MAXIMUM_HEIGHT = 256;
+
 	public Vector<LabeledCoordinates> getPlayerCoordinates(World world) {
 		File file = new File(Periphery.CONFIG.getWorldPath(world), "level.dat");
 		Vector<LabeledCoordinates> vector = new Vector<>();

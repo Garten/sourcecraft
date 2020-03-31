@@ -15,11 +15,6 @@ public class Slab extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "slab";
-	}
-
-	@Override
 	public void add(Position position, int material) {
 		this.map.addSubBlock(position, SubBlockPosition.BOTTOM_EAST_SOUTH, material);
 		this.map.addSubBlock(position, SubBlockPosition.BOTTOM_EAST_NORTH, material);

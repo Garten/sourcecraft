@@ -37,11 +37,6 @@ public class CssLamp extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "cssLamp";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		int d = 0;
 		// x=EAST

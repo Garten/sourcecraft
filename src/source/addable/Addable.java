@@ -28,18 +28,25 @@ public abstract class Addable {
 					.getConstructors()[0].newInstance();
 			list.add(a);
 		} catch (InstantiationException ex) {
-			Loggger.warn("Addable " + this.getName() + " does not have a suitable constructor (InstantiationException)");
+			Loggger.warn("Addable " + this.getClass()
+					.getSimpleName() + " does not have a suitable constructor (InstantiationException)");
 		} catch (IllegalAccessException ex) {
-			Loggger.warn("Addable " + this.getName() + " does not have a suitable constructor (IllegalAccessException)");
+			Loggger.warn("Addable " + this.getClass()
+					.getSimpleName() + " does not have a suitable constructor (IllegalAccessException)");
 		} catch (IllegalArgumentException ex) {
-			Loggger.warn("Addable " + this.getName() + " does not have a suitable constructor (IllegalArgumentException)");
+			Loggger.warn("Addable " + this.getClass()
+					.getSimpleName() + " does not have a suitable constructor (IllegalArgumentException)");
 		} catch (InvocationTargetException ex) {
-			Loggger.warn("Addable " + this.getName() + " does not have a suitable constructor (InvocationTargetException)");
+			Loggger.warn("Addable " + this.getClass()
+					.getSimpleName() + " does not have a suitable constructor (InvocationTargetException)");
 		}
 		return list;
 	}
 
-	public abstract String getName();
+	public String getName() {
+		return this.getClass()
+				.getSimpleName();
+	}
 
 	public void setAccess(CuboidFinder cuboidFinder, MinecraftMap map, AddableManager manager) {
 		this.cuboidFinder = cuboidFinder;

@@ -9,6 +9,39 @@ import basic.Loggger;
 import main.ConverterData;
 import main.World;
 import minecraft.Minecraft;
+import source.addable.addable.Block;
+import source.addable.addable.Cactus;
+import source.addable.addable.CssLamp;
+import source.addable.addable.EndPortalFrame;
+import source.addable.addable.Fence;
+import source.addable.addable.Fire;
+import source.addable.addable.Liquid;
+import source.addable.addable.Pane;
+import source.addable.addable.PlayerSpawnCss;
+import source.addable.addable.Slab;
+import source.addable.addable.SnowBlock;
+import source.addable.addable.TransparentBlock;
+import source.addable.addable.stairs.StairsEast;
+import source.addable.addable.stairs.StairsHighEast;
+import source.addable.addable.stairs.StairsHighNorth;
+import source.addable.addable.stairs.StairsHighSouth;
+import source.addable.addable.stairs.StairsHighWest;
+import source.addable.addable.stairs.StairsNorth;
+import source.addable.addable.stairs.StairsSouth;
+import source.addable.addable.stairs.StairsWest;
+import source.addable.addable.tf2.LilypadTf2;
+import source.addable.addable.tf2.PlayerSpawnTf2;
+import source.addable.addable.tf2.SupplyTf2;
+import source.addable.addable.tf2.TallGrassTf2;
+import source.addable.addable.torch.Torch;
+import source.addable.addable.torch.TorchEast;
+import source.addable.addable.torch.TorchNorth;
+import source.addable.addable.torch.TorchSouth;
+import source.addable.addable.torch.TorchWest;
+import source.addable.addable.vines.VinesEast;
+import source.addable.addable.vines.VinesNorth;
+import source.addable.addable.vines.VinesSouth;
+import source.addable.addable.vines.VinesWest;
 import vmfWriter.Color;
 
 public class Config {
@@ -267,34 +300,33 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable("playerSpawnCss")
-				.addAddable("endPortalFrame")
-				.addAddable("vinesEast")
-				.addAddable("vinesWest")
-				.addAddable("vinesNorth")
-				.addAddable("vinesSouth")
-				.addAddable("torchNorth")
-				.addAddable("torchSouth")
-				.addAddable("torchWest")
-				.addAddable("torchEast")
-				.addAddable("torch")
-				.addAddable("snowBlock")
-				.addAddable("transparentBlock")
-				.addAddable("liquid")
-				.addAddable("pane")
-				.addAddable("stairsWest")
-				.addAddable("stairsSouth")
-				.addAddable("stairsNorth")
-				.addAddable("stairsEast")
-				.addAddable("fence")
-				.addAddable("cactus")
-				.addAddable("slab")
-				.addAddable("block")
-				.addAddable("slabHigh")
-				.addAddable("stairsHighEast")
-				.addAddable("stairsHighWest")
-				.addAddable("stairsHighNorth")
-				.addAddable("stairsHighSouth"));
+				.addAddable(PlayerSpawnCss.class.getSimpleName())
+				.addAddable(EndPortalFrame.class.getSimpleName())
+				.addAddable(VinesEast.class.getSimpleName())
+				.addAddable(VinesWest.class.getSimpleName())
+				.addAddable(VinesNorth.class.getSimpleName())
+				.addAddable(VinesSouth.class.getSimpleName())
+				.addAddable(TorchNorth.class.getSimpleName())
+				.addAddable(TorchSouth.class.getSimpleName())
+				.addAddable(TorchWest.class.getSimpleName())
+				.addAddable(TorchEast.class.getSimpleName())
+				.addAddable(Torch.class.getSimpleName())
+				.addAddable(SnowBlock.class.getSimpleName())
+				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(Liquid.class.getSimpleName())
+				.addAddable(Pane.class.getSimpleName())
+				.addAddable(StairsWest.class.getSimpleName())
+				.addAddable(StairsSouth.class.getSimpleName())
+				.addAddable(StairsNorth.class.getSimpleName())
+				.addAddable(StairsEast.class.getSimpleName())
+				.addAddable(Fence.class.getSimpleName())
+				.addAddable(Cactus.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Block.class.getSimpleName())
+				.addAddable(StairsHighEast.class.getSimpleName())
+				.addAddable(StairsHighWest.class.getSimpleName())
+				.addAddable(StairsHighNorth.class.getSimpleName())
+				.addAddable(StairsHighSouth.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultTf2")
 				.setScale(48)
@@ -302,37 +334,36 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable("supplyTf2")
-				.addAddable("playerSpawnTf2")
-				.addAddable("torchEast")
-				.addAddable("torchWest")
-				.addAddable("torchSouth")
-				.addAddable("torchNorth")
-				.addAddable("block")
-				.addAddable("slab")
-				.addAddable("cactus")
-				.addAddable("fence")
-				.addAddable("stairsEast")
-				.addAddable("stairsNorth")
-				.addAddable("stairsSouth")
-				.addAddable("stairsWest")
-				.addAddable("pane")
-				.addAddable("liquid")
-				.addAddable("tfTallGrass")
-				.addAddable("tfLilypad")
-				.addAddable("transparentBlock")
-				.addAddable("snowBlock")
-				.addAddable("vinesSouth")
-				.addAddable("vinesNorth")
-				.addAddable("vinesWest")
-				.addAddable("vinesEast")
-				.addAddable("endPortalFrame")
-				.addAddable("slabHigh")
-				.addAddable("stairsHighEast")
-				.addAddable("stairsHighWest")
-				.addAddable("stairsHighNorth")
-				.addAddable("stairsHighSouth")
-				.addAddable("torch.addAddable"));
+				.addAddable(LilypadTf2.class.getSimpleName())
+				.addAddable(SupplyTf2.class.getSimpleName())
+				.addAddable(PlayerSpawnTf2.class.getSimpleName())
+				.addAddable(TorchEast.class.getSimpleName())
+				.addAddable(TorchWest.class.getSimpleName())
+				.addAddable(TorchSouth.class.getSimpleName())
+				.addAddable(TorchNorth.class.getSimpleName())
+				.addAddable(Block.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Cactus.class.getSimpleName())
+				.addAddable(Fence.class.getSimpleName())
+				.addAddable(StairsEast.class.getSimpleName())
+				.addAddable(StairsNorth.class.getSimpleName())
+				.addAddable(StairsSouth.class.getSimpleName())
+				.addAddable(StairsWest.class.getSimpleName())
+				.addAddable(Pane.class.getSimpleName())
+				.addAddable(Liquid.class.getSimpleName())
+				.addAddable(TallGrassTf2.class.getSimpleName())
+				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(SnowBlock.class.getSimpleName())
+				.addAddable(VinesSouth.class.getSimpleName())
+				.addAddable(VinesNorth.class.getSimpleName())
+				.addAddable(VinesWest.class.getSimpleName())
+				.addAddable(VinesEast.class.getSimpleName())
+				.addAddable(EndPortalFrame.class.getSimpleName())
+				.addAddable(StairsHighEast.class.getSimpleName())
+				.addAddable(StairsHighWest.class.getSimpleName())
+				.addAddable(StairsHighNorth.class.getSimpleName())
+				.addAddable(StairsHighSouth.class.getSimpleName())
+				.addAddable(Torch.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultCss")
 				.setScale(48)
@@ -340,32 +371,31 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable("stairsHighSouth")
-				.addAddable("stairsHighNorth")
-				.addAddable("stairsHighWest")
-				.addAddable("stairsHighEast")
-				.addAddable("slabHigh")
-				.addAddable("block")
-				.addAddable("slab")
-				.addAddable("cactus")
-				.addAddable("fire")
-				.addAddable("fence")
-				.addAddable("stairsEast")
-				.addAddable("stairsNorth")
-				.addAddable("stairsSouth")
-				.addAddable("stairsWest")
-				.addAddable("pane")
-				.addAddable("liquid")
-				.addAddable("transparentBlock")
-				.addAddable("snowBlock")
-				.addAddable("vinesSouth")
-				.addAddable("vinesNorth")
-				.addAddable("vinesWest")
-				.addAddable("vinesEast")
-				.addAddable("endPortalFrame")
-				.addAddable("playerSpawnCss")
-				.addAddable("cssLamp")
-				.addAddable("playerSpawnCss"));
+				.addAddable(StairsHighSouth.class.getSimpleName())
+				.addAddable(StairsHighNorth.class.getSimpleName())
+				.addAddable(StairsHighWest.class.getSimpleName())
+				.addAddable(StairsHighEast.class.getSimpleName())
+				.addAddable(Block.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Cactus.class.getSimpleName())
+				.addAddable(Fire.class.getSimpleName())
+				.addAddable(Fence.class.getSimpleName())
+				.addAddable(StairsEast.class.getSimpleName())
+				.addAddable(StairsNorth.class.getSimpleName())
+				.addAddable(StairsSouth.class.getSimpleName())
+				.addAddable(StairsWest.class.getSimpleName())
+				.addAddable(Pane.class.getSimpleName())
+				.addAddable(Liquid.class.getSimpleName())
+				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(SnowBlock.class.getSimpleName())
+				.addAddable(VinesSouth.class.getSimpleName())
+				.addAddable(VinesNorth.class.getSimpleName())
+				.addAddable(VinesWest.class.getSimpleName())
+				.addAddable(VinesEast.class.getSimpleName())
+				.addAddable(EndPortalFrame.class.getSimpleName())
+				.addAddable(PlayerSpawnCss.class.getSimpleName())
+				.addAddable(CssLamp.class.getSimpleName())
+				.addAddable(PlayerSpawnCss.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultGmod")
 				.setScale(40)
@@ -373,28 +403,27 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable("block")
-				.addAddable("slab")
-				.addAddable("cactus")
-				.addAddable("fence")
-				.addAddable("stairsEast")
-				.addAddable("stairsNorth")
-				.addAddable("stairsSouth")
-				.addAddable("stairsWest")
-				.addAddable("pane")
-				.addAddable("liquid")
-				.addAddable("transparentBlock")
-				.addAddable("snowBlock")
-				.addAddable("vinesSouth")
-				.addAddable("vinesNorth")
-				.addAddable("vinesWest")
-				.addAddable("vinesEast")
-				.addAddable("endPortalFrame")
-				.addAddable("slabHigh")
-				.addAddable("stairsHighEast")
-				.addAddable("stairsHighWest")
-				.addAddable("stairsHighNorth")
-				.addAddable("stairsHighSouth"));
+				.addAddable(Block.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Cactus.class.getSimpleName())
+				.addAddable(Fence.class.getSimpleName())
+				.addAddable(StairsEast.class.getSimpleName())
+				.addAddable(StairsNorth.class.getSimpleName())
+				.addAddable(StairsSouth.class.getSimpleName())
+				.addAddable(StairsWest.class.getSimpleName())
+				.addAddable(Pane.class.getSimpleName())
+				.addAddable(Liquid.class.getSimpleName())
+				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(SnowBlock.class.getSimpleName())
+				.addAddable(VinesSouth.class.getSimpleName())
+				.addAddable(VinesNorth.class.getSimpleName())
+				.addAddable(VinesWest.class.getSimpleName())
+				.addAddable(VinesEast.class.getSimpleName())
+				.addAddable(EndPortalFrame.class.getSimpleName())
+				.addAddable(StairsHighEast.class.getSimpleName())
+				.addAddable(StairsHighWest.class.getSimpleName())
+				.addAddable(StairsHighNorth.class.getSimpleName())
+				.addAddable(StairsHighSouth.class.getSimpleName()));
 		config.setPack("minecraft_original");
 		return config;
 	}

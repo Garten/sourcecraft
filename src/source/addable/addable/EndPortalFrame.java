@@ -14,11 +14,6 @@ public class EndPortalFrame extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return ("endPortalFrame");
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestXZ(p, material);
 		int parts = 4;

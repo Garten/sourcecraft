@@ -45,11 +45,6 @@ public class SupplyTf2 extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "supplyTf2";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Loggger.log(this.getName() + " at " + p.getString());
 		Position end = this.cuboidFinder.getBestXZ(p, material);

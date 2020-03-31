@@ -16,7 +16,7 @@ import source.Material;
 public class Main {
 
 	public static final String TITLE = "Sourcecraft - Minecraft to Source converter";
-	public static final String VERSION = "3.0";
+	public static final String VERSION = "3.0+";
 	public static final String AUTHOR = "garten";
 	public static final String LICENSE = "GNU General Public License v3.0";
 	public static final String LICENSE_INFO = "https://www.gnu.org/licenses/gpl-3.0.html";

@@ -18,11 +18,6 @@ public class ClipRampSouth extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "clipRampSouth";
-	}
-
-	@Override
 	public void add(Position p, int materia) {
 
 		Position pMark = new Position(p);

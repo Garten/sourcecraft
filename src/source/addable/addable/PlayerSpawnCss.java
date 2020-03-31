@@ -39,11 +39,6 @@ public class PlayerSpawnCss extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "playerSpawnCss";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestXZ(p, material);
 		this.map.addPointEntitys(p, end, PlayerSpawnCss.SPACE, this.type);

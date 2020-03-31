@@ -20,11 +20,6 @@ public class VinesSouth extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "vinesSouth";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestY(p, material);
 		int parts = 8;

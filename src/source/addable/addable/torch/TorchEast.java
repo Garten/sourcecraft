@@ -20,11 +20,6 @@ public class TorchEast extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "torchEast";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		int parts = 32;
 		Position[] pointOffset = new Position[8];

@@ -82,8 +82,8 @@ public class ConvertOption {
 		return this.sunShadow;
 	}
 
-	public ConvertOption addAddable(String add) {
-		this.addables.push(add);
+	public ConvertOption addAddable(String addable) {
+		this.addables.push(addable);
 		return this;
 	}
 

@@ -38,11 +38,6 @@ public class StairsSouth extends Stairs {
 	}
 
 	@Override
-	public String getName() {
-		return "stairsSouth";
-	}
-
-	@Override
 	public boolean hasWall(Orientation orientation) {
 		return orientation != Orientation.SOUTH;
 	}

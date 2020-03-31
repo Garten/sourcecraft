@@ -16,11 +16,6 @@ public class Liquid extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "liquid";
-	}
-
-	@Override
 	public void add(Position position, int material) {
 		Position end = this.cuboidFinder.getBestXYZ(position, material);
 		this.map.addSolid(this.map.createCuboid(position, end, material));

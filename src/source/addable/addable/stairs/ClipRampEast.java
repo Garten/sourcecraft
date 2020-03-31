@@ -19,11 +19,6 @@ public class ClipRampEast extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "clipRampEast";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 
 		Position end = this.cuboidFinder.getBestZ(p, this.getMaterialUsedFor());

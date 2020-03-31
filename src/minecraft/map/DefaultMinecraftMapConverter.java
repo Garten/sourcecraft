@@ -42,8 +42,6 @@ import vmfWriter.entity.pointEntity.pointEntity.ShadowControl;
 
 public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 
-	public static final int MAXIMUM_HEIGHT = 256;
-
 	private final Bounds bound;
 
 	private final Position arraySize;

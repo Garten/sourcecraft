@@ -20,11 +20,6 @@ public class Fence extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "fence";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestY(p, material);
 		// pole
