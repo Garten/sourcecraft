@@ -43,6 +43,14 @@ public class SkinManager {
 		this.materialTextureTop[material] = this.folder + topBottom;
 	}
 
+	private void setSkinTopBottom(int material, String main, String top, String bottom) {
+		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
+		this.materialTexture[material] = this.folder + main;
+		this.materialTextureTop[material] = this.folder + top;
+		this.materialTextureFront[material] = this.folder + main;
+		this.materialTextureBottom[material] = this.folder + bottom;
+	}
+
 	public void setTexture(int material, String main, String top, String front, Orientation orientation) {
 		this.materialTextureType[material] = TextureType.TOP_FRONT_EXTRA;
 		this.materialTexture[material] = this.folder + main;
@@ -116,12 +124,9 @@ public class SkinManager {
 		this.setTexture(Material.DIORITE, "stone_diorite");
 		this.setTexture(Material.GRANITE, "stone_granite");
 
-		this.materialTextureType[Material.WATER] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTextureTop[Material.WATER] = folder + "water_still";
-		this.materialTexture[Material.WATER] = NODRAW_TEXTURE;
-		this.materialTextureFront[Material.WATER] = NODRAW_TEXTURE;
-		this.materialTextureBottom[Material.WATER] = NODRAW_TEXTURE;
-		this.materialTextureType[Material.WATER] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
+		this.setWaterTexture(Material.WATER);
+		this.setWaterTexture(Material.SEAGRASS);
+		this.setWaterTexture(Material.TALL_SEAGRASS);
 
 		this.materialTexture[Material.LAVA] = folder + "lava_still";
 
@@ -132,8 +137,7 @@ public class SkinManager {
 
 		this.setTexture(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front", Orientation.NORTH);
 
-		this.skins[Material.SANDSTONE] = new Skin(folder + "sandstone side", folder + "sandstone top", folder + "sandstone side", folder + "sandstone bottom",
-				this.textureScale);
+		this.setSkinTopBottom(Material.SANDSTONE, "sandstone_normal", "sandstone_top", "sandstone_bottom");
 
 		this.materialTexture[Material.JUKEBOX] = folder + "JUKEBOX_SIDE";// note block
 
@@ -187,6 +191,15 @@ public class SkinManager {
 
 		this.materialTexture[Material._PLAYER_CLIP] = "tools/toolsplayerclip"; // player clip
 
+	}
+
+	private void setWaterTexture(int material) {
+		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
+		this.materialTextureTop[material] = folder + "water_still";
+		this.materialTexture[material] = NODRAW_TEXTURE;
+		this.materialTextureFront[material] = NODRAW_TEXTURE;
+		this.materialTextureBottom[material] = NODRAW_TEXTURE;
+		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
 	}
 
 	public Skin getSkin(int m) {

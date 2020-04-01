@@ -72,8 +72,7 @@ public class AddableManager {
 		for (Addable potentialAddable : addablesPool) {
 			for (String toBeAdded : addablesString) {
 				if (potentialAddable.getName()
-						.toLowerCase()
-						.equals(toBeAdded.toLowerCase())) {
+						.equals(toBeAdded)) {
 					for (Addable a : potentialAddable.getInstances()) {
 						Loggger.log("adding " + a.getName());
 						loadedAddables.push(a);
