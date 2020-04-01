@@ -37,8 +37,8 @@ public class SkinManager {
 		this.materialTexture[material] = this.folder + texture;
 	}
 
-	public void setTexture(int material, String main, String topBottom) {
-		this.materialTextureType[material] = TextureType.TOP_EXTRA;
+	public void setSkin(int material, String main, String topBottom) {
+		this.materialTextureType[material] = TextureType.TOPBOTTOM_EXTRA;
 		this.materialTexture[material] = this.folder + main;
 		this.materialTextureTop[material] = this.folder + topBottom;
 	}
@@ -51,7 +51,7 @@ public class SkinManager {
 		this.materialTextureBottom[material] = this.folder + bottom;
 	}
 
-	public void setTexture(int material, String main, String top, String front, Orientation orientation) {
+	public void setSkinTopFront(int material, String main, String top, String front, Orientation orientation) {
 		this.materialTextureType[material] = TextureType.TOP_FRONT_EXTRA;
 		this.materialTexture[material] = this.folder + main;
 		this.materialTextureTop[material] = this.folder + top;
@@ -59,7 +59,7 @@ public class SkinManager {
 		this.materialOrientation[material] = orientation;
 	}
 
-	public void setTexture(int material, String main, String top, String front, String bottom) {
+	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom) {
 		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
 		this.materialTexture[material] = this.folder + main;
 		this.materialTextureTop[material] = this.folder + top;
@@ -67,7 +67,7 @@ public class SkinManager {
 		this.materialTextureBottom[material] = this.folder + bottom;
 	}
 
-	public void setTexture(int material, String main, String top, String front, String bottom, Orientation orientation) {
+	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom, Orientation orientation) {
 		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
 		this.materialTexture[material] = this.folder + main;
 		this.materialTextureTop[material] = this.folder + top;
@@ -105,28 +105,35 @@ public class SkinManager {
 			this.materialOrientation[i] = Orientation.NORTH;
 		}
 
-		this.setTexture(Material.GRASS_BLOCK, "grass_side", "grass_top", "grass_side", "dirt");
+		this.setSkinTopFrontBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "grass_side", "dirt");
 
 		this.materialTexture[Material.DIRT] = folder + "DIRT";
 
 		for (int id = 1; id < Material.__LENGTH_USEFUL; id++) {
 			String name = Material.getName(id);
-			if (name.endsWith("_log")) {
+			if (name.endsWith("_log")) { // except dark oak
 				String textureName = "log_" + name.substring(0, name.length() - 4);
-				this.setTexture(id, textureName, textureName + "_top");
+				this.setSkin(id, textureName, textureName + "_top");
 			} else if (name.endsWith("_leaves")) {
 				String textureName = "leaves_" + name.substring(0, name.length() - 7);
 				this.setTexture(id, textureName);
+			} else if (name.endsWith("_slab")) {
+				String textureName = name.substring(0, name.length() - 5);
+				this.setTexture(id, textureName);
 			}
 		}
+		this.setTexture(Material.DARK_OAK_LOG, "log_big_oak");
+		this.setTexture(Material.DARK_OAK_LEAVES, "leaves_big_oak");
+
+		this.setTexture(Material.MOSSY_STONE_BRICK_SLAB, "stonebrick_mossy");
 
 		this.setTexture(Material.ANDESITE, "stone_andesite");
 		this.setTexture(Material.DIORITE, "stone_diorite");
 		this.setTexture(Material.GRANITE, "stone_granite");
 
-		this.setWaterTexture(Material.WATER);
-		this.setWaterTexture(Material.SEAGRASS);
-		this.setWaterTexture(Material.TALL_SEAGRASS);
+		for (int material : new int[] { Material.WATER, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP, Material.KELP_PLANT }) {
+			this.setWaterTexture(material);
+		}
 
 		this.materialTexture[Material.LAVA] = folder + "lava_still";
 
@@ -135,13 +142,13 @@ public class SkinManager {
 
 		//
 
-		this.setTexture(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front", Orientation.NORTH);
+		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front", Orientation.NORTH);
 
 		this.setSkinTopBottom(Material.SANDSTONE, "sandstone_normal", "sandstone_top", "sandstone_bottom");
 
 		this.materialTexture[Material.JUKEBOX] = folder + "JUKEBOX_SIDE";// note block
 
-		this.materialTextureType[Material.STONE_SLAB] = TextureType.TOP_EXTRA; // double stone slab
+		this.materialTextureType[Material.STONE_SLAB] = TextureType.TOPBOTTOM_EXTRA; // double stone slab
 		this.materialTextureTop[Material.STONE_SLAB] = folder + "stone slab top";
 
 		this.materialTextureType[Material.TORCH] = TextureType.TOP_FRONT_BOTTOM_EXTRA; // torch
@@ -160,16 +167,12 @@ public class SkinManager {
 		this.materialTextureFront[Material.FURNACE] = folder + "FURNACE";
 		this.materialTextureTop[Material.FURNACE] = folder + "FURNACE TOP";
 
-		this.materialTextureType[Material.CACTUS] = TextureType.TOP_FRONT_BOTTOM_EXTRA; // cactus
-		this.materialTexture[Material.CACTUS] = folder + "CACTUS SIDE";
-		this.materialTextureFront[Material.CACTUS] = folder + "CACTUS SIDE";
-		this.materialTextureTop[Material.CACTUS] = folder + "CACTUS TOP";
-		this.materialTextureBottom[Material.CACTUS] = folder + "CACTUS BOTTOM";
+		this.setSkin(Material.CACTUS, "cactus_side", "cactus_top");
 
 		this.skins[Material.PUMPKIN] = new Skin(folder + "pumpkin side", folder + "pumpkin top", folder + "pumpkin front", folder + "pumpkin bottom",
 				Orientation.SOUTH, this.textureScale);
 
-		this.materialTextureType[Material.MELON] = TextureType.TOP_EXTRA; // melon block
+		this.materialTextureType[Material.MELON] = TextureType.TOPBOTTOM_EXTRA; // melon block
 		this.materialTextureTop[Material.MELON] = folder + "MELON TOP";
 
 		this.materialTextureType[Material.MYCELIUM] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
@@ -186,7 +189,7 @@ public class SkinManager {
 
 		this.materialTexture[Material.REDSTONE_LAMP] = folder + "lamp off";
 
-		this.materialTextureType[Material.JUNGLE_LOG] = TextureType.TOP_EXTRA;
+		this.materialTextureType[Material.JUNGLE_LOG] = TextureType.TOPBOTTOM_EXTRA;
 		this.materialTextureTop[Material.JUNGLE_LOG] = folder + "wood top";
 
 		this.materialTexture[Material._PLAYER_CLIP] = "tools/toolsplayerclip"; // player clip
@@ -213,7 +216,7 @@ public class SkinManager {
 			Orientation o = this.materialOrientation[m];
 			if (type == TextureType.SINGLE) {
 				return new Skin(texture, s);
-			} else if (type == TextureType.TOP_EXTRA) {
+			} else if (type == TextureType.TOPBOTTOM_EXTRA) {
 				return new Skin(texture, textureTop, s);
 			} else if (type == TextureType.TOP_FRONT_EXTRA) {
 				return new Skin(texture, textureTop, this.materialTextureFront[m], o, s);

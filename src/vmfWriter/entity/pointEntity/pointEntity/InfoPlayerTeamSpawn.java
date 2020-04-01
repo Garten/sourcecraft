@@ -12,7 +12,6 @@ public class InfoPlayerTeamSpawn extends PointEntityRotateable {
 
 	public InfoPlayerTeamSpawn() {
 		super(0);
-		// this.setOrigin(origin);
 	}
 
 	public InfoPlayerTeamSpawn(int rotation, int teamNumber) {

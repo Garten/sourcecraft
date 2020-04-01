@@ -30,7 +30,6 @@ public class LightEnvironment extends PointEntity {
 
 	@Override
 	public void writeVmfSpecific(ValveWriter writer) throws IOException {
-		// writer.put("_ambient", angles)
 		writer.putTransparentColor("_ambient", this.ambient)
 				.put("_ambientHDR", "-1 -1 -1 1")
 				.put("_AmbientScaleHDR", 1)
