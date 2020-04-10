@@ -33,7 +33,7 @@ public class SkinManager {
 
 	private String folder;
 
-	public void setTexture(int material, String texture) {
+	public void setSkin(int material, String texture) {
 		this.materialTexture[material] = this.folder + texture;
 	}
 
@@ -105,48 +105,115 @@ public class SkinManager {
 			this.materialOrientation[i] = Orientation.NORTH;
 		}
 
-		this.setSkinTopFrontBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "grass_side", "dirt");
+		this.setSkinTopBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "dirt");
+		this.setSkinTopBottom(Material.GRASS_PATH, "grass_path_side", "grass_path_top", "dirt");
+		this.setSkinTopBottom(Material.PODZOL, "dirt_podzol_side", "dirt_podzol_top", "dirt");
+		this.setSkinTopBottom(Material.MYCELIUM, "mycelium_side", "mycelium_top", "dirt");
 
-		this.materialTexture[Material.DIRT] = folder + "DIRT";
+		this.materialTexture[Material.DIRT] = folder + "dirt";
 
 		for (int id = 1; id < Material.__LENGTH_USEFUL; id++) {
 			String name = Material.getName(id);
 			if (name.endsWith("_log")) { // except dark oak
-				String textureName = "log_" + name.substring(0, name.length() - 4);
+				String textureName = "log_" + name.substring(0, name.length() - "_log".length());
 				this.setSkin(id, textureName, textureName + "_top");
+			} else if (name.endsWith("_fence")) {
+				String textureName = name.substring(0, name.length() - "_fence".length());
+				this.setSkin(id, "planks_" + textureName);
 			} else if (name.endsWith("_leaves")) {
 				String textureName = "leaves_" + name.substring(0, name.length() - 7);
-				this.setTexture(id, textureName);
+				this.setSkin(id, textureName);
 			} else if (name.endsWith("_slab")) {
 				String textureName = name.substring(0, name.length() - 5);
-				this.setTexture(id, textureName);
+				this.setSkin(id, textureName);
+			} else if (name.endsWith("_planks")) {
+				String textureName = name.substring(0, name.length() - "_planks".length());
+				this.setSkin(id, "planks_" + textureName);
+			} else if (name.endsWith("_wool")) {
+				String textureName = name.substring(0, name.length() - "_wool".length());
+				this.setSkin(id, "wool_colored_" + textureName);
+			} else if (name.endsWith("_stained_glass")) {
+				String textureName = name.substring(0, name.length() - "_stained_glass".length());
+				this.setSkin(id, "glass_" + textureName);
 			}
 		}
-		this.setTexture(Material.DARK_OAK_LOG, "log_big_oak");
-		this.setTexture(Material.DARK_OAK_LEAVES, "leaves_big_oak");
+		// exceptions
+		this.setSkin(Material.NETHER_BRICK_FENCE, "nether_brick");
 
-		this.setTexture(Material.MOSSY_STONE_BRICK_SLAB, "stonebrick_mossy");
+		this.setSkin(Material.DARK_OAK_LOG, "log_big_oak", "log_big_oak_top");
+		this.setSkin(Material.DARK_OAK_LEAVES, "leaves_big_oak");
+		this.setSkin(Material.DARK_OAK_PLANKS, "planks_big_oak");
 
-		this.setTexture(Material.ANDESITE, "stone_andesite");
-		this.setTexture(Material.DIORITE, "stone_diorite");
-		this.setTexture(Material.GRANITE, "stone_granite");
+		// other
+		this.setSkin(Material.PACKED_ICE, "ice_packed");
+		this.setSkin(Material.SNOW_BLOCK, "snow");
+
+		this.setSkin(Material.BRICKS, "brick");
+		this.setSkin(Material.STONE_BRICKS, "stonebrick");
+		this.setSkin(Material.CHISELED_STONE_BRICKS, "stonebrick_carved");
+		this.setSkin(Material.CRACKED_STONE_BRICKS, "stonebrick_cracked");
+		this.setSkin(Material.MOSSY_STONE_BRICKS, "stonebrick_mossy");
+		this.setSkin(Material.MOSSY_STONE_BRICK_SLAB, "stonebrick_mossy");
+
+		this.setSkin(Material.NETHER_BRICKS, "nether_brick");
+		this.setSkin(Material.END_STONE_BRICKS, "end_bricks"); // this time its bricks ;)
+
+		this.setSkin(Material.ANDESITE, "stone_andesite");
+		this.setSkin(Material.POLISHED_ANDESITE, "stone_andesite_smooth");
+		this.setSkin(Material.DIORITE, "stone_diorite");
+		this.setSkin(Material.POLISHED_DIORITE, "stone_diorite_smooth");
+		this.setSkin(Material.GRANITE, "stone_granite");
+		this.setSkin(Material.POLISHED_GRANITE, "stone_granite_smooth");
+
+		this.setSkin(Material.SANDSTONE, "sandstone_normal", "sandstone_top");
+		this.setSkin(Material.CUT_SANDSTONE, "sandstone_smooth", "sandstone_top");
+		this.setSkin(Material.CHISELED_SANDSTONE, "sandstone_carved", "sandstone_top");
+		this.setSkin(Material.SMOOTH_SANDSTONE, "sandstone_smooth", "sandstone_top");
+
+		this.setSkin(Material.RED_SANDSTONE, "red_sandstone_normal", "red_sandstone_top");
+		this.setSkin(Material.CUT_RED_SANDSTONE, "red_sandstone_smooth", "red_sandstone_top");
+		this.setSkin(Material.CHISELED_RED_SANDSTONE, "red_sandstone_carved", "red_sandstone_top");
+		this.setSkin(Material.SMOOTH_RED_SANDSTONE, "red_sandstone_smooth", "sandstone_top");
+
+		this.setSkin(Material.PRISMARINE, "prismarine_rough");
+		this.setSkin(Material.PRISMARINE_SLAB, "prismarine_rough");
+		this.setSkin(Material.DARK_PRISMARINE, "prismarine_dark");
+		this.setSkin(Material.DARK_PRISMARINE_SLAB, "prismareine_dark");
+
+		this.setSkin(Material.PURPUR_PILLAR, "purpur_pillar", "purpur_pillar_top");
+
+		this.setSkin(Material.BONE_BLOCK, "bone_block_side", "bone_block_top");
+
+		this.setSkin(Material.NETHER_QUARTZ_ORE, "quartz_ore");
+		this.setSkinTopBottom(Material.QUARTZ_BLOCK, "quartz_block_side", "quartz_block_top", "quartz_block_bottom");
+		this.setSkin(Material.CHISELED_QUARTZ_BLOCK, "quartz_block_chiseled", "quartz_block_chiseled_top");
+		this.setSkin(Material.QUARTZ_PILLAR, "quartz_block_lines", "quartz_block_lines_top");
+		this.setSkin(Material.SMOOTH_QUARTZ, "quartz_block_bottom");
+
+		this.setSkinTopBottom(Material.TNT, "tnt_side", "tnt_top", "tnt_bottom");
 
 		for (int material : new int[] { Material.WATER, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP, Material.KELP_PLANT }) {
 			this.setWaterTexture(material);
 		}
 
-		this.materialTexture[Material.LAVA] = folder + "lava_still";
+		this.setSkin(Material.LAVA, "lava_still");
+		this.setSkin(Material.MAGMA_BLOCK, "magma");
 
-		this.setTexture(Material.SPAWNER, "mob_spawner");
-		this.setTexture(Material.MOSSY_COBBLESTONE, "cobblestone_mossy");
+		this.setSkin(Material.SPAWNER, "mob_spawner");
+		this.setSkin(Material.MOSSY_COBBLESTONE, "cobblestone_mossy");
 
-		//
+		this.setSkin(Material.NOTE_BLOCK, "jukebox_side");
+		this.setSkinTopBottom(Material.JUKEBOX, "jukebox_side", "jukebox_top", "jukebox_side");
+		this.setSkin(Material.WET_SPONGE, "sponge_wet");
 
-		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front", Orientation.NORTH);
+		this.setSkin(Material.MELON, "melon", "melon_top");
+		this.setSkinTopFront(Material.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off", Orientation.NORTH);
+		this.setSkinTopFront(Material.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on", Orientation.NORTH);
+		this.setSkin(Material.PUMPKIN, "pumpkin_side", "pumpkin_top");
+		this.skins[Material.PUMPKIN] = new Skin(folder + "pumpkin side", folder + "pumpkin top", folder + "pumpkin front", folder + "pumpkin bottom",
+				Orientation.SOUTH, this.textureScale);
 
-		this.setSkinTopBottom(Material.SANDSTONE, "sandstone_normal", "sandstone_top", "sandstone_bottom");
-
-		this.materialTexture[Material.JUKEBOX] = folder + "JUKEBOX_SIDE";// note block
+		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal", Orientation.NORTH);
 
 		this.materialTextureType[Material.STONE_SLAB] = TextureType.TOPBOTTOM_EXTRA; // double stone slab
 		this.materialTextureTop[Material.STONE_SLAB] = folder + "stone slab top";
@@ -162,24 +229,10 @@ public class SkinManager {
 		this.materialTextureFront[Material.CHEST_NORTH] = folder + "chest front";
 		this.materialTextureTop[Material.CHEST_NORTH] = folder + "chest top";
 
-		this.materialTextureType[Material.FURNACE] = TextureType.TOP_FRONT_EXTRA; // furnace
-		this.materialTexture[Material.FURNACE] = folder + "FURNACE SIDE";
-		this.materialTextureFront[Material.FURNACE] = folder + "FURNACE";
-		this.materialTextureTop[Material.FURNACE] = folder + "FURNACE TOP";
-
 		this.setSkin(Material.CACTUS, "cactus_side", "cactus_top");
-
-		this.skins[Material.PUMPKIN] = new Skin(folder + "pumpkin side", folder + "pumpkin top", folder + "pumpkin front", folder + "pumpkin bottom",
-				Orientation.SOUTH, this.textureScale);
-
-		this.materialTextureType[Material.MELON] = TextureType.TOPBOTTOM_EXTRA; // melon block
-		this.materialTextureTop[Material.MELON] = folder + "MELON TOP";
-
-		this.materialTextureType[Material.MYCELIUM] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTexture[Material.MYCELIUM] = folder + "MYCELIUM SIDE";
-		this.materialTextureTop[Material.MYCELIUM] = folder + "MYCELIUM";
-		this.materialTextureFront[Material.MYCELIUM] = folder + "MYCELIUM SIDE";
-		this.materialTextureBottom[Material.MYCELIUM] = folder + "DIRT";
+		this.setSkin(Material.SLIME_BLOCK, "slime");
+		this.setSkinTopFront(Material.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top", "crafting_table_front", Orientation.NORTH);
+		this.setSkinTopFront(Material.FURNACE, "furnace_side", "furnace_top", "furnace_front_on", Orientation.NORTH);
 
 		this.materialTextureType[Material.END_PORTAL_FRAME] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
 		this.materialTexture[Material.END_PORTAL_FRAME] = folder + "end portal frame side";
@@ -187,13 +240,11 @@ public class SkinManager {
 		this.materialTextureFront[Material.END_PORTAL_FRAME] = folder + "end portal frame side";
 		this.materialTextureBottom[Material.END_PORTAL_FRAME] = folder + "end stone";
 
-		this.materialTexture[Material.REDSTONE_LAMP] = folder + "lamp off";
-
-		this.materialTextureType[Material.JUNGLE_LOG] = TextureType.TOPBOTTOM_EXTRA;
-		this.materialTextureTop[Material.JUNGLE_LOG] = folder + "wood top";
+		this.materialTexture[Material.REDSTONE_LAMP] = folder + "lamp_off";
 
 		this.materialTexture[Material._PLAYER_CLIP] = "tools/toolsplayerclip"; // player clip
 
+		// red nether brick is colored?
 	}
 
 	private void setWaterTexture(int material) {

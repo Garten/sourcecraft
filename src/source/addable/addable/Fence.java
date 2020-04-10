@@ -15,8 +15,14 @@ public class Fence extends Addable {
 	private static int BEAM_MID_ON = 5;
 
 	public Fence() {
-		int[] temp = { Material.OAK_FENCE, Material.NETHER_BRICK_FENCE };
+		int[] temp = { Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE,
+				Material.OAK_FENCE, Material.SPRUCE_FENCE };
 		super.setMaterialUsedFor(temp);
+	}
+
+	@Override
+	public boolean hasWall(Orientation orientation) {
+		return true;
 	}
 
 	@Override
