@@ -24,7 +24,6 @@ public class WorldPiece {
 
 		this.higher = Position.subtract(end, chunkStart);
 		this.higher.y = end.y;
-		// this.higher = Position.capBy(this.higher, new Position(15, 256, 15));
 		this.higher = Position.capBelow(this.higher, new Position(Minecraft.CHUNK_SIZE_X, Minecraft.MAX_Y, Minecraft.CHUNK_SIZE_Z));
 
 		// local chunk position
@@ -48,13 +47,18 @@ public class WorldPiece {
 	}
 
 	private ChunkPosition getFileOfChunk(ChunkPosition global) {
-		int fileX = global.getX() / (Minecraft.MAX_CHUNK_IN_FILE_X);
-		if (global.getX() < 0) {
-			fileX = fileX - 1;
+		int globalX = global.getX();
+		int fileX, fileZ;
+		if (globalX >= 0) {
+			fileX = globalX / Minecraft.MAX_CHUNK_IN_FILE_X;
+		} else {
+			fileX = ((globalX + 1) / Minecraft.MAX_CHUNK_IN_FILE_X) - 1;
 		}
-		int fileZ = global.getZ() / (Minecraft.MAX_CHUNK_IN_FILE_Z);
-		if (global.getZ() < 0) {
-			fileZ = fileZ - 1;
+		int globalZ = global.getZ();
+		if (globalZ >= 0) {
+			fileZ = globalZ / Minecraft.MAX_CHUNK_IN_FILE_Z;
+		} else {
+			fileZ = ((globalZ + 1) / Minecraft.MAX_CHUNK_IN_FILE_Z) - 1;
 		}
 		return new ChunkPosition(fileX, fileZ);
 	}

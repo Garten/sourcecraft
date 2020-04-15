@@ -227,7 +227,6 @@ public class GuiLogic implements RunnableWith<Gui> {
 	}
 
 	private void informAboutTexturePack(String texturePackName) {
-		Loggger.log(texturePackName);
 		TexturePack texturePack = TexturePack.getTexturePack(texturePackName);
 		boolean upToDate = Steam.areTexturesUpToDate(this.gui.getSourceGame(), texturePack);
 		this.gui.setVisibleTextTexturesUpToDate(upToDate);

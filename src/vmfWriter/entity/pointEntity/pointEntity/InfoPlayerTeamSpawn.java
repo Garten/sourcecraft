@@ -4,26 +4,33 @@ import java.io.IOException;
 
 import minecraft.Position;
 import vmfWriter.ValveWriter;
-import vmfWriter.entity.pointEntity.PointEntityRotateable;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
-public class InfoPlayerTeamSpawn extends PointEntityRotateable {
+public class InfoPlayerTeamSpawn extends RotateablePointEntity {
 
-	private int tf2Team;
+	private int tf2Team = 0;
 
-	public InfoPlayerTeamSpawn() {
-		super(0);
-	}
-
-	public InfoPlayerTeamSpawn(int rotation, int teamNumber) {
-		super(rotation);
+	public InfoPlayerTeamSpawn setTeamNumber(int teamNumber) {
 		this.tf2Team = teamNumber;
+		return this;
 	}
 
 	@Override
 	public InfoPlayerTeamSpawn create(Position origin) {
-		InfoPlayerTeamSpawn result = new InfoPlayerTeamSpawn(this.getRotation(), this.tf2Team);
+		InfoPlayerTeamSpawn result = new InfoPlayerTeamSpawn();
+		result.setRotation(this.getRotation());
+		result.setTeamNum(this.getTeamNum());
 		result.setOrigin(origin);
 		return result;
+	}
+
+	public int getTeamNum() {
+		return this.tf2Team;
+	}
+
+	public InfoPlayerTeamSpawn setTeamNum(int teamNum) {
+		this.tf2Team = teamNum;
+		return this;
 	}
 
 	@Override

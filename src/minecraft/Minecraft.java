@@ -80,6 +80,14 @@ public class Minecraft {
 		return vector;
 	}
 
+	public static File getFileOfChunk(File fileFolder, WorldPiece source) {
+		int fileX = source.getFilePosition()
+				.getX();
+		int fileZ = source.getFilePosition()
+				.getZ();
+		return new File(fileFolder, "r." + fileX + "." + fileZ + "." + ANVIL_ENDING);
+	}
+
 	public static Vector<World> getPossibleWorlds() {
 		File file = Periphery.CONFIG.getMinceraftSavePath();
 		String[] list = file.list();

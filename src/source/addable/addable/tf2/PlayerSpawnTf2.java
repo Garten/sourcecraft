@@ -6,7 +6,7 @@ import minecraft.Position;
 import source.Material;
 import source.addable.Addable;
 import vmfWriter.entity.Tf2Team;
-import vmfWriter.entity.pointEntity.PointEntityRotateable;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerTeamSpawn;
 import vmfWriter.entity.solidEntity.Buyzone;
 
@@ -14,14 +14,14 @@ public class PlayerSpawnTf2 extends Addable {
 
 	private final static int SPACE = 50;
 
-	private PointEntityRotateable type;
+	private RotateablePointEntity type;
 	private boolean police;
 
 	public PlayerSpawnTf2() {
 
 	}
 
-	public PlayerSpawnTf2(int material, PointEntityRotateable type, boolean police) {
+	public PlayerSpawnTf2(int material, RotateablePointEntity type, boolean police) {
 		super.setMaterialUsedFor(material);
 		this.type = type;
 		this.police = police;
@@ -29,12 +29,16 @@ public class PlayerSpawnTf2 extends Addable {
 
 	@Override
 	public Iterable<Addable> getInstances() {
+		RotateablePointEntity redSpawn = new InfoPlayerTeamSpawn().setTeamNum(Tf2Team.RED)
+				.setRotation(0);
+		RotateablePointEntity blueSpawn = new InfoPlayerTeamSpawn().setTeamNum(Tf2Team.BLUE)
+				.setRotation(180);
 		LinkedList<Addable> list = new LinkedList<>();
-		list.add(new PlayerSpawnTf2(Material.END_PORTAL_FRAME, new InfoPlayerTeamSpawn(0, Tf2Team.RED), false));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_NORTH, new InfoPlayerTeamSpawn(180, Tf2Team.BLUE), true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_EAST, new InfoPlayerTeamSpawn(180, Tf2Team.BLUE), true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_SOUTH, new InfoPlayerTeamSpawn(180, Tf2Team.BLUE), true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_WEST, new InfoPlayerTeamSpawn(180, Tf2Team.BLUE), true));
+		list.add(new PlayerSpawnTf2(Material.END_PORTAL_FRAME, redSpawn, false));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_NORTH, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_EAST, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_SOUTH, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_WEST, blueSpawn, true));
 		return list;
 	}
 

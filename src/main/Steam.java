@@ -25,8 +25,8 @@ public class Steam {
 	public static final String STEAM_SDK_PATH = "sourcesdk_content";
 	public static final String STEAM_MAP_SRC_PATH = "mapsrc";
 
-	private static final String[] POTENTIAL_STEAM_PATH_GRAND_PARENTS = { "C:", "D:", "E:", "D:", "F:", File.separator };
-	private static final String[] POTENTIAL_STEAM_PATH_PARENTS = { "Program Files", "Program Files (x86)", "Programme", };
+	private static final String[] POTENTIAL_STEAM_PATH_GRAND_PARENTS = { "C:", "D:", "E:", File.separator };
+	private static final String[] POTENTIAL_STEAM_PATH_PARENTS = { "Program Files", "Program Files (x86)", "Programs", "Programme" };
 
 	public static File getSteamPath() {
 		File steamPath = Periphery.CONFIG.getSteamPath();
@@ -97,6 +97,9 @@ public class Steam {
 
 	public static boolean areTexturesUpToDate(SourceGame game, TexturePack pack) {
 		File materiaPath = game.getMatriealPath(pack);
+		if (materiaPath == null) {
+			return false;
+		}
 		Loggger.log("checking textures in " + materiaPath.toString());
 		if (materiaPath == null || materiaPath.getParentFile()
 				.exists() == false) {

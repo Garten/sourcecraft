@@ -142,6 +142,7 @@ public class RegionFile {
 			this.file.seek(0);
 			for (int i = 0; i < RegionFile.SECTOR_INTS; ++i) {
 				int offset = this.file.readInt();
+//				System.out.println(this.fileName.toString() + " offset " + i + " | " + offset);
 				this.offsets[i] = offset;
 				if (offset != 0 && (offset >> 8) + (offset & 0xFF) <= this.sectorFree.size()) {
 					for (int sectorNum = 0; sectorNum < (offset & 0xFF); ++sectorNum) {

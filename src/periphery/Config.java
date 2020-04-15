@@ -206,6 +206,9 @@ public class Config {
 	}
 
 	public void setSteamPath(File path) {
+		if (path == null) {
+			return;
+		}
 		this.steamPath = path.toString();
 	}
 
@@ -281,18 +284,19 @@ public class Config {
 
 	public static Config getDetaulftConfig() {
 		Config config = new Config();
-		config.games.add(SourceGame.create()
-				.setLongName("Team Fortress 2")
-				.setShortName("tf")
-				.setDefaultConvertOption("defaultTf2"));
-		config.games.add(SourceGame.create()
-				.setLongName("Counter-Strike Source")
-				.setShortName("cstrike")
-				.setDefaultConvertOption("defaultCss"));
-		config.games.add(SourceGame.create()
-				.setLongName("Garrysmod")
-				.setShortName("Garrysmod")
-				.setDefaultConvertOption("defaultGmod"));
+		config.games = SourceGame.createDefaults();
+//		config.games.add(SourceGame.create()
+//				.setLongName("Team Fortress 2")
+//				.setShortName("tf")
+//				.setDefaultConvertOption("defaultTf2"));
+//		config.games.add(SourceGame.create()
+//				.setLongName("Counter-Strike Source")
+//				.setShortName("cstrike")
+//				.setDefaultConvertOption("defaultCss"));
+//		config.games.add(SourceGame.create()
+//				.setLongName("Garrysmod")
+//				.setShortName("garrysmod")
+//				.setDefaultConvertOption("defaultGmod"));
 		config.options.add(ConvertOption.create()
 				.setName("default")
 				.setScale(40)

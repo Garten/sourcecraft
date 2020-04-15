@@ -1,5 +1,6 @@
 package source;
 
+import basic.Loggger;
 import periphery.TexturePack;
 import vmfWriter.Orientation;
 import vmfWriter.Skin;
@@ -19,61 +20,39 @@ public class SkinManager {
 	public static final Skin SKYBOX = new Skin("tools/toolsskybox", 0.25);
 
 	private static final String NODRAW_TEXTURE = "tools/toolsnodraw";
-	private static final String DEFAULT_TEXTURE = "dev/dev_measuregeneric01b";
+	private static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
 
-	double textureScale;
-	private Skin[] skins;
-	TextureType[] materialTextureType;
-	double[] materialTextureScale;
-	String[] materialTexture;
-	String[] materialTextureTop; // additional if type = 1 or 2 or 3
-	String[] materialTextureFront; // additional if type = 2 or 3
-	String[] materialTextureBottom; // additional if type = 3
-	Orientation[] materialOrientation;
+	private double textureScale;
+	private Skin[] skin;
 
 	private String folder;
 
+	public void setSourceSkin(int material, String texture) {
+		this.skin[material] = new Skin(texture, this.textureScale);
+	}
+
 	public void setSkin(int material, String texture) {
-		this.materialTexture[material] = this.folder + texture;
+		this.skin[material] = new Skin(this.folder + texture, this.textureScale);
 	}
 
 	public void setSkin(int material, String main, String topBottom) {
-		this.materialTextureType[material] = TextureType.TOPBOTTOM_EXTRA;
-		this.materialTexture[material] = this.folder + main;
-		this.materialTextureTop[material] = this.folder + topBottom;
+		this.skin[material] = new Skin(this.folder + main, this.folder + topBottom, this.textureScale);
 	}
 
 	private void setSkinTopBottom(int material, String main, String top, String bottom) {
-		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTexture[material] = this.folder + main;
-		this.materialTextureTop[material] = this.folder + top;
-		this.materialTextureFront[material] = this.folder + main;
-		this.materialTextureBottom[material] = this.folder + bottom;
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + main, this.folder + bottom, Orientation.NORTH, this.textureScale);
 	}
 
 	public void setSkinTopFront(int material, String main, String top, String front, Orientation orientation) {
-		this.materialTextureType[material] = TextureType.TOP_FRONT_EXTRA;
-		this.materialTexture[material] = this.folder + main;
-		this.materialTextureTop[material] = this.folder + top;
-		this.materialTextureFront[material] = this.folder + front;
-		this.materialOrientation[material] = orientation;
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, orientation, this.textureScale);
 	}
 
 	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom) {
-		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTexture[material] = this.folder + main;
-		this.materialTextureTop[material] = this.folder + top;
-		this.materialTextureFront[material] = this.folder + front;
-		this.materialTextureBottom[material] = this.folder + bottom;
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom, Orientation.NORTH, this.textureScale);
 	}
 
 	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom, Orientation orientation) {
-		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTexture[material] = this.folder + main;
-		this.materialTextureTop[material] = this.folder + top;
-		this.materialTextureFront[material] = this.folder + front;
-		this.materialTextureBottom[material] = this.folder + bottom;
-		this.materialOrientation[material] = orientation;
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom, orientation, this.textureScale);
 	}
 
 	public SkinManager(String folder, int textureSizeNew, int scale) {
@@ -85,35 +64,54 @@ public class SkinManager {
 		folder = folder + "/";
 		this.folder = folder;
 
-		this.skins = new Skin[Material.__LENGTH];
-
-		this.materialTextureType = new TextureType[Material.__LENGTH];
-		this.materialTextureScale = new double[Material.__LENGTH];
-		this.materialTexture = new String[Material.__LENGTH];
-		this.materialTextureTop = new String[Material.__LENGTH];
-		this.materialTextureFront = new String[Material.__LENGTH];
-		this.materialTextureBottom = new String[Material.__LENGTH];
-		this.materialOrientation = new Orientation[Material.__LENGTH];
-		for (int i = 0; i < Material.__LENGTH; i++) {
-			this.materialTextureType[i] = TextureType.SINGLE;
-			this.materialTextureScale[i] = this.textureScale;
-			this.materialTexture[i] = folder + Material.getName(i);
-
-			this.materialTextureTop[i] = DEFAULT_TEXTURE;
-			this.materialTextureFront[i] = DEFAULT_TEXTURE;
-			this.materialTextureBottom[i] = DEFAULT_TEXTURE;
-			this.materialOrientation[i] = Orientation.NORTH;
+		this.skin = new Skin[Material.__LENGTH];
+		for (int material = 0; material < Material.__LENGTH; material++) {
+			this.setSkin(material, Material.getName(material));
 		}
-
-		this.setSkinTopBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "dirt");
-		this.setSkinTopBottom(Material.GRASS_PATH, "grass_path_side", "grass_path_top", "dirt");
-		this.setSkinTopBottom(Material.PODZOL, "dirt_podzol_side", "dirt_podzol_top", "dirt");
-		this.setSkinTopBottom(Material.MYCELIUM, "mycelium_side", "mycelium_top", "dirt");
-
-		this.materialTexture[Material.DIRT] = folder + "dirt";
 
 		for (int id = 1; id < Material.__LENGTH_USEFUL; id++) {
 			String name = Material.getName(id);
+
+			if (name.startsWith("andesite")) {
+				this.setSkin(id, "stone_andesite");
+			} else if (name.startsWith("diorite")) {
+				this.setSkin(id, "stone_diorite");
+			} else if (name.startsWith("granite")) {
+				this.setSkin(id, "stone_granite");
+			} else if (name.startsWith("sandstone")) {
+				if (name.equals("sandstone_wall")) {
+					this.setSkin(id, "sandstone_normal");
+				} else {
+					this.setSkinTopBottom(id, "sandstone_normal", "sandstone_top", "sandstone_normal");
+				}
+			} else if (name.startsWith("red_sandstone")) {
+				if (name.equals("red_sandstone_wall")) {
+					this.setSkin(id, "red_sandstone_normal");
+				} else {
+					this.setSkinTopBottom(id, "red_sandstone_normal", "red_sandstone_top", "red_sandstone_normal");
+				}
+			} else if (name.startsWith("end_stone_brick")) {
+				this.setSkin(id, "end_bricks"); // this time its bricks ;)
+			} else if (name.startsWith("mossy_stone_brick")) {
+				this.setSkin(id, "stonebrick_mossy");
+			} else if (name.startsWith("mossy_cobblestone")) {
+				this.setSkin(id, "cobblestone_mossy");
+			} else if (name.startsWith("prismarine_brick")) {
+				this.setSkin(id, "prismarine_brick");
+			} else if (name.startsWith("prismarine")) {
+				this.setSkin(id, "prismarine_rough");
+			} else if (name.startsWith("nether_brick")) {
+				this.setSkin(id, "nether_brick");
+			} else if (name.startsWith("red_nether_brick")) {
+				this.setSkin(id, "red_nether_brick");
+			} else if (name.startsWith("stone_brick")) {
+				this.setSkin(id, "stonebrick");
+			} else if (name.startsWith("brick")) {
+				this.setSkin(id, "brick");
+			} else if (name.startsWith("cobblestone")) {
+				this.setSkin(id, "cobblestone");
+			}
+
 			if (name.endsWith("_log")) { // except dark oak
 				String textureName = "log_" + name.substring(0, name.length() - "_log".length());
 				this.setSkin(id, textureName, textureName + "_top");
@@ -121,11 +119,11 @@ public class SkinManager {
 				String textureName = name.substring(0, name.length() - "_fence".length());
 				this.setSkin(id, "planks_" + textureName);
 			} else if (name.endsWith("_leaves")) {
-				String textureName = "leaves_" + name.substring(0, name.length() - 7);
+				String textureName = "leaves_" + name.substring(0, name.length() - "_leaves".length());
 				this.setSkin(id, textureName);
-			} else if (name.endsWith("_slab")) {
-				String textureName = name.substring(0, name.length() - 5);
-				this.setSkin(id, textureName);
+//			} else if (name.endsWith("_slab")) {
+//				String textureName = name.substring(0, name.length() - "_slab".length());
+//				this.setSkin(id, textureName);
 			} else if (name.endsWith("_planks")) {
 				String textureName = name.substring(0, name.length() - "_planks".length());
 				this.setSkin(id, "planks_" + textureName);
@@ -144,19 +142,20 @@ public class SkinManager {
 		this.setSkin(Material.DARK_OAK_LEAVES, "leaves_big_oak");
 		this.setSkin(Material.DARK_OAK_PLANKS, "planks_big_oak");
 
+		//
 		// other
+		this.setSkinTopBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "dirt");
+		this.setSkinTopBottom(Material.GRASS_PATH, "grass_path_side", "grass_path_top", "dirt");
+		this.setSkinTopBottom(Material.PODZOL, "dirt_podzol_side", "dirt_podzol_top", "dirt");
+		this.setSkinTopBottom(Material.MYCELIUM, "mycelium_side", "mycelium_top", "dirt");
+
 		this.setSkin(Material.PACKED_ICE, "ice_packed");
 		this.setSkin(Material.SNOW_BLOCK, "snow");
 
-		this.setSkin(Material.BRICKS, "brick");
-		this.setSkin(Material.STONE_BRICKS, "stonebrick");
 		this.setSkin(Material.CHISELED_STONE_BRICKS, "stonebrick_carved");
 		this.setSkin(Material.CRACKED_STONE_BRICKS, "stonebrick_cracked");
 		this.setSkin(Material.MOSSY_STONE_BRICKS, "stonebrick_mossy");
 		this.setSkin(Material.MOSSY_STONE_BRICK_SLAB, "stonebrick_mossy");
-
-		this.setSkin(Material.NETHER_BRICKS, "nether_brick");
-		this.setSkin(Material.END_STONE_BRICKS, "end_bricks"); // this time its bricks ;)
 
 		this.setSkin(Material.ANDESITE, "stone_andesite");
 		this.setSkin(Material.POLISHED_ANDESITE, "stone_andesite_smooth");
@@ -165,7 +164,6 @@ public class SkinManager {
 		this.setSkin(Material.GRANITE, "stone_granite");
 		this.setSkin(Material.POLISHED_GRANITE, "stone_granite_smooth");
 
-		this.setSkin(Material.SANDSTONE, "sandstone_normal", "sandstone_top");
 		this.setSkin(Material.CUT_SANDSTONE, "sandstone_smooth", "sandstone_top");
 		this.setSkin(Material.CHISELED_SANDSTONE, "sandstone_carved", "sandstone_top");
 		this.setSkin(Material.SMOOTH_SANDSTONE, "sandstone_smooth", "sandstone_top");
@@ -210,502 +208,45 @@ public class SkinManager {
 		this.setSkinTopFront(Material.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off", Orientation.NORTH);
 		this.setSkinTopFront(Material.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on", Orientation.NORTH);
 		this.setSkin(Material.PUMPKIN, "pumpkin_side", "pumpkin_top");
-		this.skins[Material.PUMPKIN] = new Skin(folder + "pumpkin side", folder + "pumpkin top", folder + "pumpkin front", folder + "pumpkin bottom",
-				Orientation.SOUTH, this.textureScale);
 
 		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal", Orientation.NORTH);
 
-		this.materialTextureType[Material.STONE_SLAB] = TextureType.TOPBOTTOM_EXTRA; // double stone slab
-		this.materialTextureTop[Material.STONE_SLAB] = folder + "stone slab top";
-
-		this.materialTextureType[Material.TORCH] = TextureType.TOP_FRONT_BOTTOM_EXTRA; // torch
-		this.materialTexture[Material.TORCH] = folder + "torch";
-		this.materialTextureFront[Material.TORCH] = folder + "torch";
-		this.materialTextureTop[Material.TORCH] = folder + "torch fit top";
-		this.materialTextureBottom[Material.TORCH] = folder + "torch fit bottom";
-
-		this.materialTextureType[Material.CHEST_NORTH] = TextureType.TOP_FRONT_EXTRA;
-		this.materialTexture[Material.CHEST_NORTH] = folder + "chest side";
-		this.materialTextureFront[Material.CHEST_NORTH] = folder + "chest front";
-		this.materialTextureTop[Material.CHEST_NORTH] = folder + "chest top";
+		this.setSkin(Material.TORCH, "torch_on");
+		this.setSkin(Material.WALL_TORCH, "torch_on");
+		this.setSkin(Material.WALL_TORCH_NORTH, "torch_on");
+		this.setSkin(Material.WALL_TORCH_EAST, "torch_on");
+		this.setSkin(Material.WALL_TORCH_SOUTH, "torch_on");
+		this.setSkin(Material.WALL_TORCH_WEST, "torch_on");
 
 		this.setSkin(Material.CACTUS, "cactus_side", "cactus_top");
 		this.setSkin(Material.SLIME_BLOCK, "slime");
 		this.setSkinTopFront(Material.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top", "crafting_table_front", Orientation.NORTH);
 		this.setSkinTopFront(Material.FURNACE, "furnace_side", "furnace_top", "furnace_front_on", Orientation.NORTH);
 
-		this.materialTextureType[Material.END_PORTAL_FRAME] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTexture[Material.END_PORTAL_FRAME] = folder + "end portal frame side";
-		this.materialTextureTop[Material.END_PORTAL_FRAME] = folder + "end portal frame top";
-		this.materialTextureFront[Material.END_PORTAL_FRAME] = folder + "end portal frame side";
-		this.materialTextureBottom[Material.END_PORTAL_FRAME] = folder + "end stone";
+		this.setSkinTopBottom(Material.END_PORTAL_FRAME, "endframe_side", "endframe_top", "end_stone");
+		this.setSkin(Material.REDSTONE_LAMP, "lamp_on");
 
-		this.materialTexture[Material.REDSTONE_LAMP] = folder + "lamp_off";
+		this.setSkin(Material.SPRUCE_TRAPDOOR, "door_spruce_upper");
 
-		this.materialTexture[Material._PLAYER_CLIP] = "tools/toolsplayerclip"; // player clip
+		// temporary fixes
+		this.setSkin(Material.CAMPFIRE, "magma");
+		this.setSkin(Material.BLAST_FURNACE, "furnace_front_on");
 
-		// red nether brick is colored?
+		// special
+		this.setSourceSkin(Material._PLAYER_CLIP, "tools/toolsplayerclip");
+		this.setSourceSkin(Material._UNKOWN, DEFAULT_TEXTURE);
 	}
 
 	private void setWaterTexture(int material) {
-		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
-		this.materialTextureTop[material] = folder + "water_still";
-		this.materialTexture[material] = NODRAW_TEXTURE;
-		this.materialTextureFront[material] = NODRAW_TEXTURE;
-		this.materialTextureBottom[material] = NODRAW_TEXTURE;
-		this.materialTextureType[material] = TextureType.TOP_FRONT_BOTTOM_EXTRA;
+		this.setSkinTopBottom(material, NODRAW_TEXTURE, "water_still", NODRAW_TEXTURE);
 	}
 
-	public Skin getSkin(int m) {
-		if (this.skins[m] != null) {
-			return this.skins[m];
-		} else {
-			String texture = this.materialTexture[m];
-			String textureTop = this.materialTextureTop[m];
-			TextureType type = this.materialTextureType[m];
-			double s = this.materialTextureScale[m];
-			Orientation o = this.materialOrientation[m];
-			if (type == TextureType.SINGLE) {
-				return new Skin(texture, s);
-			} else if (type == TextureType.TOPBOTTOM_EXTRA) {
-				return new Skin(texture, textureTop, s);
-			} else if (type == TextureType.TOP_FRONT_EXTRA) {
-				return new Skin(texture, textureTop, this.materialTextureFront[m], o, s);
-			} else {
-				return new Skin(texture, textureTop, this.materialTextureFront[m], this.materialTextureBottom[m], o, s);
-			}
+	public Skin getSkin(int material) {
+		if (0 <= material && material < this.skin.length)
+			return this.skin[material];
+		else {
+			Loggger.log("unkown material " + material);
+			return skin[Material._UNKOWN];
 		}
 	}
-
-//	public void removeData(DefaultMinecraftMapConverter map) {
-//		map.forAllPositions(position -> removeData(map, position));
-//	}
-//
-//	/**
-//	 * Removes data and gives data relevant blocks different materials. Also makes
-//	 * grass under snow or a snow block to a snowy grass
-//	 *
-//	 * @param map
-//	 * @param position
-//	 */
-//	private void removeData(DefaultMinecraftMapConverter map, Position position) {
-//		int data = map.getData(position);
-//		switch (map.getMaterial(new Position(position))) {
-//		case Material.GRASS_BLOCK:
-//			Position above = new Position(position.x, position.y + 1, position.z);
-//			if (map.hasMaterial(above, Material.SNOW) || map.hasMaterial(above, Material.SNOW_BLOCK)) { // above
-//				map.setMaterial(position, Material.SNOW_GRASS_BLOCK);
-//				// snow grass block
-//			}
-//		case Material.OAK_LOG:
-//			if (map.getData(position) == 1) { // redwood wood
-//				map.setMaterial(position, Material.SPRUCE_LOG);
-//			} else if (map.getData(position) == 2) { // pine wood
-//				map.setMaterial(position, Material.BIRCH_LOG);
-//			} else if (map.getData(position) == 3) { // jungle wood
-//				map.setMaterial(position, Material.JUNGLE_LOG);
-//			}
-//			break;
-//		case Material.OAK_LEAVES:
-//			if (map.getData(position) == 1 || map.getData(position) == 5 || map.getData(position) == 9 || map.getData(position) == 13) {
-//				map.setMaterial(position, 259); // redwood leaves
-//			} else if (map.getData(position) == 2 || map.getData(position) == 6 || map.getData(position) == 10 || map.getData(position) == 14) {
-//				map.setMaterial(position, 260); // pine leaves
-//			} else if (map.getData(position) == 3 || map.getData(position) == 7 || map.getData(position) == 11 || map.getData(position) == 15) {
-//				map.setMaterial(position, Material.JUNGLE_LEAVES); // jungle
-//				// leaves
-//			}
-//			break;
-//		case Material.WOOL: // wool
-//			if (map.getData(position) != 0) {
-//				map.setMaterial(position, 260 + map.getData(position));
-//			} else if (map.getData(position) == 2) {
-//				map.setMaterial(position, 262);
-//			} else if (map.getData(position) == 3) {
-//				map.setMaterial(position, 263);
-//			} else if (map.getData(position) == 4) {
-//				map.setMaterial(position, 264);
-//			} else if (map.getData(position) == 5) {
-//				map.setMaterial(position, 265);
-//			} else if (map.getData(position) == 6) {
-//				map.setMaterial(position, 266);
-//			} else if (map.getData(position) == 7) {
-//				map.setMaterial(position, 267);
-//			} else if (map.getData(position) == 8) {
-//				map.setMaterial(position, 268);
-//			} else if (map.getData(position) == 9) {
-//				map.setMaterial(position, 269);
-//			} else if (map.getData(position) == 10) {
-//				map.setMaterial(position, 270);
-//			} else if (map.getData(position) == 11) {
-//				map.setMaterial(position, 271);
-//			} else if (map.getData(position) == 12) {
-//				map.setMaterial(position, 272);
-//			} else if (map.getData(position) == 13) {
-//				map.setMaterial(position, 273);
-//			} else if (map.getData(position) == 14) {
-//				map.setMaterial(position, 274);
-//			} else if (map.getData(position) == 15) {
-//				map.setMaterial(position, 275);
-//			}
-//			break;
-//		case Material.FARMLAND:
-//			if (map.getData(position) != 0) { // dry farmland
-//				map.setMaterial(position, Material.DRY_FARMLAND);
-//			}
-//			break;
-//		case Material.STONE_BRICKS:
-//			if (map.getData(position) == 1) { // mossy stone brick
-//				map.setMaterial(position, Material.MOSSY_STONE_BRICKS);
-//			} else if (map.getData(position) == 2) { // cracked stone brick
-//				map.setMaterial(position, Material.CRACKED_STONE_BRICKS);
-//			} else if (map.getData(position) == 3) { // circular stone brick
-//				map.setMaterial(position, Material.CHISELED_STONE_BRICKS);
-//			}
-//			break;
-//		case Material.STONE_SLAB:
-//			if (data != 0) {
-//				map.setMaterial(position, 295 + data);
-//			}
-//			break;
-//		case Material.INFESTED_STONE: // silverfish
-//			if (map.getData(position) == 1) { // silverfish cobblestone
-//				map.setMaterial(position, 311);
-//			} else if (map.getData(position) == 2) { // silberfish stone brick
-//				map.setMaterial(position, 312);
-//			}
-//			break;
-//		// 313 player clip texture
-//		case 53: // wooden stairs
-//			int newMaterial = Material.WOODEN_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.WOODEN_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.WOODEN_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.WOODEN_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.WOODEN_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.WOODEN_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.WOODEN_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.WOODEN_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case 67: // cobblestone stairs
-//			newMaterial = Material.COBBLESTONE_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.COBBLESTONE_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.COBBLESTONE_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.COBBLESTONE_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.COBBLESTONE_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.COBBLESTONE_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.COBBLESTONE_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.COBBLESTONE_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case 108: // brick stairs
-//			newMaterial = Material.BRICK_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.BRICK_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.BRICK_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.BRICK_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.BRICK_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.BRICK_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.BRICK_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.BRICK_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case 109: // stone brick stairs
-//			newMaterial = Material.STONE_BRICK_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.STONE_BRICK_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.STONE_BRICK_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.STONE_BRICK_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.STONE_BRICK_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.STONE_BRICK_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.STONE_BRICK_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.STONE_BRICK_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case Material.NETHER_BRICK_STAIRS_EAST: // brick stairs
-//			switch (data) {
-//			case 1:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_WEST);
-//				break;
-//			case 2:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_SOUTH);
-//				break;
-//			case 3:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_NORTH);
-//				break;
-//			case 4:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_HIGH_EAST);
-//				break;
-//			case 5:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_HIGH_WEST);
-//				break;
-//			case 6:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_HIGH_SOUTH);
-//				break;
-//			case 7:
-//				map.setMaterial(position, Material.NETHER_BRICK_STAIRS_HIGH_NORTH);
-//				break;
-//			}
-//			break;
-//		case Material.FURNACE_NORTH:
-//			if (map.getData(position) == 3) {
-//				map.setMaterial(position, Material.FURNACE_SOUTH);
-//			} else if (map.getData(position) == 4) {
-//				map.setMaterial(position, Material.FURNACE_WEST);
-//			} else if (map.getData(position) == 5) {
-//				map.setMaterial(position, Material.FURNACE_EAST);
-//			}
-//			break;
-//		case Material.CHEST_NORTH:
-//			if (map.getData(position) == 3) {
-//				map.setMaterial(position, Material.CHEST_SOUTH);
-//			} else if (map.getData(position) == 4) {
-//				map.setMaterial(position, Material.CHEST_WEST);
-//			} else if (map.getData(position) == 5) {
-//				map.setMaterial(position, Material.CHEST_EAST);
-//			}
-//			break;
-//		case Material.DISPENSER_NORTH:
-//			if (map.getData(position) == 3) {
-//				map.setMaterial(position, Material.DISPENSER_SOUTH);
-//			} else if (map.getData(position) == 4) {
-//				map.setMaterial(position, Material.DISPENSER_WEST);
-//			} else if (map.getData(position) == 5) {
-//				map.setMaterial(position, Material.DISPENSER_EAST);
-//			}
-//			break;
-//		case Material.TORCH:
-//			if (map.getData(position) == 1) {
-//				map.setMaterial(position, Material.WALL_TORCH_EAST);
-//			} else if (map.getData(position) == 2) {
-//				map.setMaterial(position, Material.WALL_TORCH_WEST);
-//			} else if (map.getData(position) == 3) {
-//				map.setMaterial(position, Material.WALL_TORCH_SOUTH);
-//			} else if (map.getData(position) == 4) {
-//				map.setMaterial(position, Material.WALL_TORCH_NORTH);
-//			}
-//			break;
-//		case Material.VINES:
-//			if (data != 0) {
-//				map.setMaterial(position, 346 + data);
-//				// map.printMaterial( position );
-//			}
-//			break;
-//		case Material.OAK_PLANKS:
-//			if (map.getData(position) == 1) {
-//				map.setMaterial(position, 362);
-//			}
-//			if (map.getData(position) == 2) {
-//				map.setMaterial(position, 363);
-//			}
-//			if (map.getData(position) == 3) {
-//				map.setMaterial(position, 364);
-//			}
-//			break;
-//		case 26: // bed
-//			// already used:
-//			// if( map.getData( position )!=1 ){
-//			// map.setMaterial( position, 367+map.getData( position ) ); //368 -
-//			// 382
-//			// }
-//			break;
-//		case Material.PINE_WOOD_STAIRS_EAST:
-//			newMaterial = Material.PINE_WOOD_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.PINE_WOOD_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.PINE_WOOD_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.PINE_WOOD_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.PINE_WOOD_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.PINE_WOOD_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.PINE_WOOD_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.PINE_WOOD_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case Material.OAK_WOOD_SLAB:
-//			newMaterial = Material.OAK_WOOD_SLAB;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.PINE_WOOD_SLAB;
-//				break;
-//			case 2:
-//				newMaterial = Material.BIRCH_WOOD_SLAB;
-//				break;
-//			case 3:
-//				newMaterial = Material.JUNGLE_WOOD_SLAB;
-//				break;
-//			case 8:
-//				newMaterial = Material.OAK_WOOD_HIGH_SLAB;
-//				break;
-//			case 9:
-//				newMaterial = Material.PINE_WOOD_HIGH_SLAB;
-//				break;
-//			case 10:
-//				newMaterial = Material.BIRCH_WOOD_HIGH_SLAB;
-//				break;
-//			case 11:
-//				newMaterial = Material.JUNGLE_WOOD_HIGH_SLAB;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case Material.BIRCH_WOOD_STAIRS_EAST:
-//			newMaterial = Material.BIRCH_WOOD_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.BIRCH_WOOD_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case Material.JUNGLE_WOOD_STAIRS_EAST:
-//			newMaterial = Material.JUNGLE_WOOD_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.JUNGLE_WOOD_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		case Material.SANDSTONE_STAIRS_EAST:
-//			newMaterial = Material.SANDSTONE_STAIRS_EAST;
-//			switch (data) {
-//			case 1:
-//				newMaterial = Material.SANDSTONE_STAIRS_WEST;
-//				break;
-//			case 2:
-//				newMaterial = Material.SANDSTONE_STAIRS_SOUTH;
-//				break;
-//			case 3:
-//				newMaterial = Material.SANDSTONE_STAIRS_NORTH;
-//				break;
-//			case 4:
-//				newMaterial = Material.SANDSTONE_STAIRS_HIGH_EAST;
-//				break;
-//			case 5:
-//				newMaterial = Material.SANDSTONE_STAIRS_HIGH_WEST;
-//				break;
-//			case 6:
-//				newMaterial = Material.SANDSTONE_STAIRS_HIGH_SOUTH;
-//				break;
-//			case 7:
-//				newMaterial = Material.SANDSTONE_STAIRS_HIGH_NORTH;
-//				break;
-//			}
-//			map.setMaterial(position, newMaterial);
-//			break;
-//		}
-//	}
 }
