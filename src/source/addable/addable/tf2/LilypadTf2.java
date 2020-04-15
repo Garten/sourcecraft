@@ -20,11 +20,6 @@ public class LilypadTf2 extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "tfLilypad";
-	}
-
-	@Override
 	public void add(Position position, int material) {
 		this.map.setPointToGrid(position);
 		this.map.movePointInGridDimension(0.5, 0, 0.5);

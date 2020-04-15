@@ -148,6 +148,9 @@ public class Gui {
 	}
 
 	public void setSourcePath(File file) {
+		if (file == null) {
+			return;
+		}
 		this.setupPanel.setSourcePath(file.toString());
 	}
 
@@ -361,6 +364,9 @@ public class Gui {
 		// input Panel
 		this.inputPanel = new InputPanel();
 		this.inputPanel.setUponContinue(() -> {
+			if (this.inputPanel.getWorld() == null) {
+				return;
+			}
 			if (this.validatePlaceIntern.run(this.inputPanel.getPlaceFromCoordinates())) {
 				tabbedPaneFinal.setSelectedIndex(2);
 			}

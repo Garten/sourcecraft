@@ -15,11 +15,6 @@ public class TransparentBlock extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "transparentBlock";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		Position end = this.cuboidFinder.getBestXYZ(p, material);
 		this.map.addSolid(this.map.createCuboid(p, end, material));

@@ -65,14 +65,20 @@ public abstract class EightPoint extends Solid {
 	private static final String LIGHTMAPSCALE_TAG = "lightmapscale";
 	private static final String SMOOTHING_GROUPS_TAG = "smoothing_groups";
 
-	protected static final Position horizontal1 = new Position(1, 0, 0);
-	protected static final Position horizontal2 = new Position(0, -1, 0);
+	protected static final Position TOP_U_AXIS = new Position(1, 0, 0);
+	protected static final Position TOP_V_AXIS = new Position(0, -1, 0);
+	protected static final Position BOTTOM_U_AXIS = new Position(-1, 0, 0);
+	protected static final Position BOTTOM_V_AXIS = new Position(0, -1, 0);
 
-	protected static final Position side1 = new Position(0, 1, 0);
-	protected static final Position side2 = new Position(0, 0, -1);
+	protected static final Position LEFT_U_AXIS = new Position(0, -1, 0);
+	protected static final Position LEFT_V_AXIS = new Position(0, 0, -1);
+	protected static final Position RIGHT_U_AXIS = new Position(0, 1, 0);
+	protected static final Position RIGHT_V_AXIS = new Position(0, 0, -1);
 
-	protected static final Position front1 = new Position(1, 0, 0);
-	protected static final Position front2 = new Position(0, 0, -1);
+	protected static final Position FRONT_U_AXIS = new Position(1, 0, 0);
+	protected static final Position FRONT_V_AXIS = new Position(0, 0, -1);
+	protected static final Position BACK_U_AXIS = new Position(-1, 0, 0);
+	protected static final Position BACK_V_AXIS = new Position(0, 0, -1);
 
 	public final void writeSide(ValveWriter writer, Position first, Position second, Position third, String skin, double textureScale1, double textureScale2,
 			Position uAxis, Position vAxis) throws IOException {

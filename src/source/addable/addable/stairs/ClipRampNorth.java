@@ -18,11 +18,6 @@ public class ClipRampNorth extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "clipRampNorth";
-	}
-
-	@Override
 	public void add(Position p, int materia) {
 
 		Position end = this.cuboidFinder.getBestX(p, this.getMaterialUsedFor());

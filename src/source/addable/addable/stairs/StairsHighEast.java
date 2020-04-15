@@ -44,11 +44,6 @@ public class StairsHighEast extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "stairsHighEast";
-	}
-
-	@Override
 	public boolean hasWall(Orientation orientation) {
 		return orientation != Orientation.EAST;
 	}

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import minecraft.ConvertingReport;
 import minecraft.Position;
+import periphery.SourceGame;
 import vmfWriter.Solid;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
@@ -41,7 +42,7 @@ public interface SourceMap {
 
 	public void addCustomPointEntity(Position p, String name);
 
-	public ConvertingReport write(File file) throws IOException;
+	public ConvertingReport write(File file, SourceGame game) throws IOException;
 
 	public void setCameraPosition(Position origin);
 

@@ -1,11 +1,12 @@
 package vmfWriter.entity.pointEntity;
 
-public abstract class PointEntityRotateable extends PointEntity {
+public abstract class RotateablePointEntity extends PointEntity {
 
 	private int rotation;
 
-	public PointEntityRotateable(int rotation) {
+	public RotateablePointEntity setRotation(int rotation) {
 		this.rotation = rotation;
+		return this;
 	}
 
 	protected int getRotation() {

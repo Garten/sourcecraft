@@ -26,6 +26,7 @@ import minecraft.reader.RegionFile;
 import minecraft.reader.nbt.McaReader;
 import periphery.ConvertOption;
 import periphery.Place;
+import periphery.SourceGame;
 import source.Material;
 import source.MaterialFilter;
 import source.SkinManager;
@@ -36,13 +37,10 @@ import vmfWriter.Orientation;
 import vmfWriter.Ramp;
 import vmfWriter.Skin;
 import vmfWriter.entity.pointEntity.PointEntity;
-import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerTeamSpawn;
 import vmfWriter.entity.pointEntity.pointEntity.LightEnvironment;
 import vmfWriter.entity.pointEntity.pointEntity.ShadowControl;
 
 public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
-
-	public static final int MAXIMUM_HEIGHT = 256;
 
 	private final Bounds bound;
 
@@ -145,7 +143,7 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 		}
 	}
 
-	public void addObjects(SourceMap target) {
+	public void addObjects(SourceMap target, SourceGame game) {
 		this.setAirBlocks();
 		do {
 			Loggger.log("run");
@@ -175,13 +173,13 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 		} while (this.rerun > 0);
 		this.addSubBlocksMap();
 		this.addSkyShell();
-		this.addSpawnPoint();
+		this.addSpawnPoint(game);
 	}
 
 	/*
 	 * adds a spawn point in the middle of the map
 	 */
-	private void addSpawnPoint() {
+	private void addSpawnPoint(SourceGame game) {
 		Position middle = Position.getMean(new Position(1, 1, 1), this.arraySize.getOffset(-1, -1, -1));
 		Position middleX = middle.getOffset(-1, 0, 0);
 		Position middleZ = middle.getOffset(0, 0, -1);
@@ -199,7 +197,7 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 		middle.setY(y + 1);
 		Position converted = this.convert(middle);
 		converted.move(0, 0, 10);
-		this.addPointEntity(new InfoPlayerTeamSpawn(), converted);
+		this.addPointEntity(game.getSpawnEntity(), converted);
 		this.setCameraPosition(converted.move(0, 0, 72));
 		this.setCameraLook(new Position(0, 0, 0));
 	}
@@ -293,7 +291,7 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 	}
 
 	private void readChunk(File fileFolder, WorldPiece worldPiece, Position writeTarget) throws IOException {
-		File file = DefaultMinecraftMapConverter.getFileOfChunk(fileFolder, worldPiece);
+		File file = Minecraft.getFileOfChunk(fileFolder, worldPiece);
 		this.logReadingChunk(worldPiece, file);
 		RegionFile regionfile = new RegionFile(file);
 		if (file.exists() == false) {
@@ -326,14 +324,6 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 			string = " " + string;
 		}
 		return string;
-	}
-
-	private static File getFileOfChunk(File fileFolder, WorldPiece target) {
-		int fileX = target.getFilePosition()
-				.getX();
-		int fileZ = target.getFilePosition()
-				.getZ();
-		return new File(fileFolder, "r." + fileX + "." + fileZ + "." + Minecraft.ANVIL_ENDING);
 	}
 
 	public void addMcaSection(McaSection section) {
@@ -465,9 +455,9 @@ public class DefaultMinecraftMapConverter extends MinecraftMapConverter {
 	}
 
 	@Override
-	public ConvertingReport write(File file) throws IOException {
-		this.addObjects(this.target);
-		this.target.write(file);
+	public ConvertingReport write(File file, SourceGame game) throws IOException {
+		this.addObjects(this.target, game);
+		this.target.write(file, game);
 		return null;
 	}
 

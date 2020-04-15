@@ -130,14 +130,20 @@ public class Cuboid extends EightPoint {
 			writer.open(Solid.SOLID_TAG)
 					.putBrushID();
 
-			this.writeSide(writer, this.b, this.f, this.g, this.skin.materialTop, this.textureScaleX, this.textureScaleY, horizontal1, horizontal2);
-			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX, this.textureScaleY, horizontal1, horizontal2);
+//			top
+			this.writeSide(writer, this.b, this.f, this.g, this.skin.materialTop, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+//			bottom
+			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX, this.textureScaleY, BOTTOM_U_AXIS, BOTTOM_V_AXIS);
 
-			this.writeSide(writer, this.a, this.e, this.f, this.skin.materialLeft, this.textureScaleX, this.textureScaleZ, side1, side2);
-			this.writeSide(writer, this.h, this.d, this.c, this.skin.materialRight, this.textureScaleX, this.textureScaleZ, side1, side2);
+//			negative x side 
+			this.writeSide(writer, this.a, this.e, this.f, this.skin.materialLeft, this.textureScaleX, this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
+//			positive x side
+			this.writeSide(writer, this.h, this.d, this.c, this.skin.materialRight, this.textureScaleX, this.textureScaleZ, RIGHT_U_AXIS, RIGHT_V_AXIS);
 
-			this.writeSide(writer, this.e, this.h, this.g, this.skin.materialBack, this.textureScaleY, this.textureScaleZ, front1, front2);
-			this.writeSide(writer, this.d, this.a, this.b, this.skin.materialFront, this.textureScaleY, this.textureScaleZ, front1, front2);
+//			positive y side
+			this.writeSide(writer, this.e, this.h, this.g, this.skin.materialBack, this.textureScaleY, this.textureScaleZ, BACK_U_AXIS, BACK_V_AXIS);
+//			negative y side
+			this.writeSide(writer, this.d, this.a, this.b, this.skin.materialFront, this.textureScaleY, this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
 
 			writer.open(ValveElement.EDITOR_TAG)
 					.put(ValveElement.COLOR, "0 215 172")

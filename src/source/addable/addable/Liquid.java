@@ -5,19 +5,13 @@ import source.Material;
 import source.addable.Addable;
 
 /**
- * A nonsolid block (thus counts as air) that has a lowered hight when it ends
+ * A non-solid block (thus counts as air) that has a lowered height when it ends
  *
  */
 public class Liquid extends Addable {
 
 	public Liquid() {
-		int[] temp = { Material.WATER, Material.LAVA };
-		super.materialUsedFor = temp;
-	}
-
-	@Override
-	public String getName() {
-		return "liquid";
+		super.materialUsedFor = new int[] { Material.WATER, Material.LAVA, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP, Material.KELP_PLANT };
 	}
 
 	@Override

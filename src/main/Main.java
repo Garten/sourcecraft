@@ -15,8 +15,8 @@ import source.Material;
 
 public class Main {
 
-	public static final String TITLE = "Sourcecraft - Minecraft to Source converter";
-	public static final String VERSION = "3.0";
+	public static final String TITLE = "Sourcecraft - Minecraft to VMF converter";
+	public static final String VERSION = "3.1";
 	public static final String AUTHOR = "garten";
 	public static final String LICENSE = "GNU General Public License v3.0";
 	public static final String LICENSE_INFO = "https://www.gnu.org/licenses/gpl-3.0.html";
@@ -54,12 +54,29 @@ public class Main {
 
 			File output = new File(this.gui.getOutputFile());
 			ConverterData data = this.getConverterData();
+			if (data == null) {
+				return;
+			}
 			this.converter.convert(data, output);
 			if (data.getUpdateTextures()) {
 				final TexturePack pack = data.getTexturePack();
 				if (!Steam.areTexturesUpToDate(data.getGame(), pack)) {
-					TextureFolderMover.copyFolder(pack.getFolder(), data.getGame()
-							.getMatriealPath(pack));
+					File targetDirectory = data.getGame()
+							.getMatriealPath(pack);
+					if (targetDirectory.exists()) {
+						TextureFolderMover.copyFolder(pack.getFolder(), data.getGame()
+								.getMatriealPath(pack));
+					} else if (targetDirectory.getParentFile()
+							.getParentFile()
+							.exists()) {
+						targetDirectory.getParentFile()
+								.mkdir(); // Garrysmod comes without material folder
+						TextureFolderMover.copyFolder(pack.getFolder(), data.getGame()
+								.getMatriealPath(pack));
+					} else {
+						Loggger.log("Not copying textures. The directory " + targetDirectory + " does not exist. Have you launched " + data.getGame()
+								.getLongName() + " at least once?");
+					}
 				}
 			}
 
@@ -80,6 +97,9 @@ public class Main {
 		});
 	}
 
+	/**
+	 * returns true if place has been found.
+	 */
 	private void saveNewPlace() {
 		if (this.gui.getRememberPlaceSelected()) {
 			String name = this.gui.getSaveLocation();
@@ -113,8 +133,11 @@ public class Main {
 		ConverterData converterData = new ConverterData();
 
 		Place place = this.gui.getPlaceFromCoordinates();
-		String worldName = this.gui.getWorld()
-				.toString();
+		World world = this.gui.getWorld();
+		if (world == null) {
+			return null;
+		}
+		String worldName = world.toString();
 		Loggger.log("world = " + worldName);
 		if (place == null) {
 			Loggger.warn("Place not found");

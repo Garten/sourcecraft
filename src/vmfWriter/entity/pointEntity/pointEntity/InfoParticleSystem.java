@@ -48,36 +48,4 @@ public class InfoParticleSystem extends PointEntity {
 				.put("flag_as_weather", false)
 				.put("start_active", true);
 	}
-
-	// @Override
-	// public void writeVmf(Counter counter, Writer w) throws IOException {
-	// w.write("entity\n");
-	// w.write("{\n");
-	// w.write(" \"id\" \""
-	// + counter.getBrushId() + "\"\n");
-	// w.write(" \"classname\" \"info_particle_system\"\n");
-	// w.write(" \"angles\" \""
-	// + this.angleX + " " + this.angleY + " " + this.angleZ + "\"\n"); // 270 0 0
-	// w.write(" \"cpoint1_parent\" \"0\"\n");
-	// w.write(" \"cpoint2_parent\" \"0\"\n");
-	// w.write(" \"cpoint3_parent\" \"0\"\n");
-	// w.write(" \"cpoint4_parent\" \"0\"\n");
-	// w.write(" \"cpoint5_parent\" \"0\"\n");
-	// w.write(" \"cpoint6_parent\" \"0\"\n");
-	// w.write(" \"cpoint7_parent\" \"0\"\n");
-	// w.write(" \"effect_name\" \""
-	// + this.effectName + "\"\n");
-	// w.write(" \"flag_as_weather\" \"0\"\n");
-	// w.write(" \"start_active\" \"1\"\n");
-	// w.write(" \"origin\" \""
-	// + this.origin.getString() + "\"\n");
-	// w.write(" editor\n");
-	// w.write(" {\n");
-	// w.write(" \"color\" \"220 30 220\"\n");
-	// w.write(" \"visgroupshown\" \"1\"\n");
-	// w.write(" \"visgroupautoshown\" \"1\"\n");
-	// w.write(" \"logicalpos\" \"[0 0]\"\n");
-	// w.write(" }\n");
-	// w.write("}\n");
-	// }
 }

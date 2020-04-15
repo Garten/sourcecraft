@@ -7,6 +7,7 @@ import java.util.Stack;
 import basic.Loggger;
 import minecraft.ConvertingReport;
 import minecraft.Position;
+import periphery.SourceGame;
 import periphery.TexturePack;
 import vmfWriter.Solid;
 import vmfWriter.ValveElement;
@@ -112,7 +113,7 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 	}
 
 	@Override
-	public ConvertingReport write(File file) throws IOException {
+	public ConvertingReport write(File file, SourceGame game) throws IOException {
 		if (!file.getParentFile()
 				.exists()) {
 			if (file.getParentFile()

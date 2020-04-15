@@ -6,6 +6,7 @@ import java.util.List;
 
 import basic.Loggger;
 import main.Steam;
+import vmfWriter.entity.pointEntity.pointEntity.NamedRotateablePointEntity;
 
 public class SourceGame {
 
@@ -13,17 +14,25 @@ public class SourceGame {
 	private String nameShort;
 	private String gamePath;
 	private String defaultConvertOption;
+	private NamedRotateablePointEntity spawn; // =new NamedRotateablePointEntity().setName("info_player_start");
+//	private static PointEntity SPAWN = new InfoPlayerStart(); // InfoPlayerTeamSpawn.setTeamNumber(0);
 
-	private static final String MATERIALS = "materials";
+	private static final String MATERIALS_FOLDER = "materials";
 
 	public static List<SourceGame> createDefaults() {
 		ArrayList<SourceGame> result = new ArrayList<>();
-		result.add(create("Team Fortress 2").setShortName("tf")
-				.setDefaultConvertOption("defaultTF2"));
-		result.add(create("Counter-Strike Source").setShortName("cstrike")
-				.setDefaultConvertOption("defaultCss"));
-		result.add(create("Garrysmod").setShortName("garrysmod")
-				.setDefaultConvertOption("defaultGmod"));
+		result.add(create().setLongName("Team Fortress 2")
+				.setShortName("tf")
+				.setDefaultConvertOption("defaultTF2")
+				.setSpawnEntity(new NamedRotateablePointEntity().setName("info_player_teamspawn")));
+		result.add(create().setLongName("Counter-Strike Source")
+				.setShortName("cstrike")
+				.setDefaultConvertOption("defaultCss")
+				.setSpawnEntity(new NamedRotateablePointEntity().setName("info_player_teamspawn")));
+		result.add(create().setLongName("Garrysmod")
+				.setShortName("garrysmod")
+				.setDefaultConvertOption("defaultGmod")
+				.setSpawnEntity(new NamedRotateablePointEntity().setName("info_player_start")));
 		return result;
 	}
 
@@ -35,12 +44,13 @@ public class SourceGame {
 
 	}
 
-	public SourceGame(String nameLong) {
-		this.nameLong = nameLong;
+	public SourceGame setSpawnEntity(NamedRotateablePointEntity spawn) {
+		this.spawn = spawn;
+		return this;
 	}
 
-	public static SourceGame create(String nameLong) {
-		return new SourceGame(nameLong);
+	public NamedRotateablePointEntity getSpawnEntity() {
+		return this.spawn;
 	}
 
 	public void setGameTargetSavePath(File filePath) {
@@ -60,7 +70,7 @@ public class SourceGame {
 		return path;
 	}
 
-	public String getGameHammerPath(Config config) { // TODO
+	public String getGameHammerPath(Config config) {
 		String path = config.getSteamPath() + File.separator + Steam.STEAM_GAME_PATH() + File.separator + this.nameLong + File.separator + "bin"
 				+ File.separator + "hammer.exe";
 		Loggger.log(path);
@@ -95,8 +105,11 @@ public class SourceGame {
 	}
 
 	public File getMatriealPath(TexturePack texturePack) {
+		if (Periphery.CONFIG.getSteamPath() == null) {
+			return null;
+		}
 		return new File(String.join(File.separator, Periphery.CONFIG.getSteamPath()
-				.toString(), Steam.STEAM_GAME_PATH(), this.getLongName(), this.getShortName(), SourceGame.MATERIALS, texturePack.getName()));
+				.toString(), Steam.STEAM_GAME_PATH(), this.getLongName(), this.getShortName(), SourceGame.MATERIALS_FOLDER, texturePack.getName()));
 	}
 
 	@Override

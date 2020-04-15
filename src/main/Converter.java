@@ -27,7 +27,7 @@ public class Converter {
 		DefaultMinecraftMapConverter map = this.getMinecraftMap(converterData);
 		Loggger.log("Saving to " + file);
 		try {
-			map.write(file);
+			map.write(file, converterData.getGame());
 		} catch (IOException e) {
 			Loggger.error(e.toString());
 		}

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import minecraft.Position;
 import vmfWriter.Angles;
-import vmfWriter.Counter;
 import vmfWriter.entity.pointEntity.PointEntity;
 
 public class PropStatic extends PointEntity {
@@ -41,7 +40,8 @@ public class PropStatic extends PointEntity {
 		return "prop_static";
 	}
 
-	public void writeVmfSpecifc(Counter counter, vmfWriter.ValveWriter writer) throws IOException {
+	@Override
+	public void writeVmfSpecific(vmfWriter.ValveWriter writer) throws IOException {
 		writer.put("angles", this.angles)
 				.put("disableselfshadowing", false)
 				.put("disableshadows", false)

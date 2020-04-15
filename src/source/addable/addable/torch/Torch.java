@@ -27,11 +27,6 @@ public class Torch extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "torch";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		int parts = 16;
 		Position offset = new Position(7, 0, 7);

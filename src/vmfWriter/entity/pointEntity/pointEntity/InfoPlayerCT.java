@@ -4,17 +4,14 @@ import java.io.IOException;
 
 import minecraft.Position;
 import vmfWriter.ValveWriter;
-import vmfWriter.entity.pointEntity.PointEntityRotateable;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
-public class InfoPlayerCT extends PointEntityRotateable {
-
-	public InfoPlayerCT(int rotation) {
-		super(rotation);
-	}
+public class InfoPlayerCT extends RotateablePointEntity {
 
 	@Override
 	public InfoPlayerCT create(Position origin) {
-		InfoPlayerCT result = new InfoPlayerCT(this.getRotation());
+		InfoPlayerCT result = new InfoPlayerCT();
+		result.setRotation(this.getRotation());
 		result.setOrigin(origin);
 		return result;
 	}

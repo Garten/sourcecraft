@@ -34,11 +34,6 @@ public class Fire extends Addable {
 	}
 
 	@Override
-	public String getName() {
-		return "fire";
-	}
-
-	@Override
 	public void add(Position p, int material) {
 		this.map.setPointToGrid(p);
 		this.map.movePointInGridDimension(0.5, 0, 0.5);

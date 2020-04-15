@@ -6,19 +6,8 @@ import vmfWriter.Orientation;
 
 public class Block extends Addable {
 
-	private static int[] materialUsedForStatic = {};
-
 	public Block() {
 		// is default addable
-	}
-
-	public static int[] getMaterialUsedForStatic() {
-		return Block.materialUsedForStatic;
-	}
-
-	@Override
-	public String getName() {
-		return "block";
 	}
 
 	@Override

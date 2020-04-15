@@ -59,6 +59,8 @@ public class Minecraft {
 		return minecraftPath;
 	}
 
+	public static final int MAXIMUM_HEIGHT = 256;
+
 	public Vector<LabeledCoordinates> getPlayerCoordinates(World world) {
 		File file = new File(Periphery.CONFIG.getWorldPath(world), "level.dat");
 		Vector<LabeledCoordinates> vector = new Vector<>();
@@ -76,6 +78,14 @@ public class Minecraft {
 			e.printStackTrace();
 		}
 		return vector;
+	}
+
+	public static File getFileOfChunk(File fileFolder, WorldPiece source) {
+		int fileX = source.getFilePosition()
+				.getX();
+		int fileZ = source.getFilePosition()
+				.getZ();
+		return new File(fileFolder, "r." + fileX + "." + fileZ + "." + ANVIL_ENDING);
 	}
 
 	public static Vector<World> getPossibleWorlds() {

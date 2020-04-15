@@ -129,8 +129,11 @@ public class InputPanel extends JPanel {
 	public Place getPlaceFromCoordinates() {
 		String placeName = this.getSaveLocation();
 		Place place = new Place(placeName);
-		place.setWorld(this.comboBox_World.getSelectedItem()
-				.toString());
+		Object object = this.comboBox_World.getSelectedItem();
+		if (object == null) {
+			return null;
+		}
+		place.setWorld(object.toString());
 		try {
 			Position start = new Position(Integer.valueOf(this.textField_FromX.getText()), Integer.valueOf(this.textField_FromY.getText()),
 					Integer.valueOf(this.textField_FromZ.getText()));
