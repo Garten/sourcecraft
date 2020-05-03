@@ -11,7 +11,7 @@ public class Debug extends Addable {
 
 	@Override
 	public void add(Position position, int material) {
-		// Loggger.log("debug");
+		this.addDebugMarker(position, material);
 	}
 
 }

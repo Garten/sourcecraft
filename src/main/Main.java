@@ -6,7 +6,6 @@ import javax.swing.JOptionPane;
 
 import basic.Loggger;
 import gui.Gui;
-import minecraft.TextureFolderMover;
 import periphery.ConvertOption;
 import periphery.Periphery;
 import periphery.Place;
@@ -16,7 +15,7 @@ import source.Material;
 public class Main {
 
 	public static final String TITLE = "Sourcecraft - Minecraft to VMF converter";
-	public static final String VERSION = "3.1";
+	public static final String VERSION = "3.1+";
 	public static final String AUTHOR = "garten";
 	public static final String LICENSE = "GNU General Public License v3.0";
 	public static final String LICENSE_INFO = "https://www.gnu.org/licenses/gpl-3.0.html";
@@ -35,16 +34,9 @@ public class Main {
 	}
 
 	public Main() {
-		try {
-			assert false;
-		} catch (java.lang.AssertionError e) {
-			Loggger.log("assertions enabeled");
-		}
-
 		Material.init();
 		Periphery.init();
 
-		this.converter = new Converter();
 		this.gui = new Gui(TITLE + " " + VERSION);
 
 		new GuiLogic().run(this.gui);
@@ -57,7 +49,8 @@ public class Main {
 			if (data == null) {
 				return;
 			}
-			this.converter.convert(data, output);
+			this.converter = new Converter(data);
+			this.converter.convert(output);
 			if (data.getUpdateTextures()) {
 				final TexturePack pack = data.getTexturePack();
 				if (!Steam.areTexturesUpToDate(data.getGame(), pack)) {
@@ -74,8 +67,10 @@ public class Main {
 						TextureFolderMover.copyFolder(pack.getFolder(), data.getGame()
 								.getMatriealPath(pack));
 					} else {
-						Loggger.log("Not copying textures. The directory " + targetDirectory + " does not exist. Have you launched " + data.getGame()
-								.getLongName() + " at least once?");
+						Loggger.log("Not copying textures. The directory " + targetDirectory
+								+ " does not exist. Have you launched " + data.getGame()
+										.getLongName()
+								+ " at least once?");
 					}
 				}
 			}
@@ -83,7 +78,7 @@ public class Main {
 			data.getGame()
 					.setGameTargetSavePath(output);
 			Periphery.CONFIG.setConvertData(data);
-			Periphery.CONFIG.setMinecraftPath(new File(this.gui.getMincraftPath()));
+			Periphery.CONFIG.setMinecraftPath(this.gui.getMincraftPath());
 			Periphery.CONFIG.setSteamPath(this.gui.getSourcePath());
 			Periphery.write();
 
@@ -122,7 +117,8 @@ public class Main {
 		String title = "Copy textures";
 		String question = "This copies \"" + Periphery.CONFIG.getTexturePack() + "\"-textures to \n\"" + materiaPath
 				+ "\\\"\n as desired by Valve's Hammer Editor.";
-		int n = JOptionPane.showOptionDialog(null, question, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+		int n = JOptionPane.showOptionDialog(null, question, title, JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 		if (n == 1) {
 			File srcFolder = new File("textures" + File.separator + Periphery.CONFIG.getTexturePack());
 			TextureFolderMover.moveFolderOld(materiaPath, srcFolder);

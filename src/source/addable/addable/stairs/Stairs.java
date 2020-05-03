@@ -21,16 +21,16 @@ public abstract class Stairs extends Addable {
 	}
 
 	@Override
-	public final void add(Position p, int material) {
-		this.map.markAsConverted(p);
+	public final void add(Position position, int material) {
+		this.map.markAsConverted(position);
 		this.clearSubField();
-		this.getType(p);
+		this.getType(position);
 		for (SubBlockPosition subBlockPosition : SubBlockPosition.values()) {
 			if (this.subField[subBlockPosition.ordinal()] == true) {
-				this.map.addSubBlock(p, subBlockPosition, this.materialReplacement);
+				this.map.addSubBlock(position, subBlockPosition, material); // this.materialReplacement
 			}
 		}
-		this.addClipRamp(p);
+		this.addClipRamp(position);
 	}
 
 	abstract void getType(Position p);
@@ -40,13 +40,12 @@ public abstract class Stairs extends Addable {
 		this.subField[SubBlockPosition.getPos(position)] = true;
 	}
 
-	private void addClipRamp(Position p, OrientationStairs o) {
-		// map.addCustomPointEntity( p, p.getPrint()+" "+o.name() );
-		this.map.addMaterialForRerun(p, o.getMaterial());
+	private void addClipRamp(Position position, OrientationStairs orientation) {
+//		this.map.addMaterialForRerun(position, orientation.getMaterial());
 	}
 
 	protected final void addClipRamp(Position position) {
-		this.map.enableRerun(1);
+//		this.map.enableRerun(1);
 		if (this.subField[SubBlockPosition.TOP_EAST_SOUTH.ordinal()]) {
 			if (this.subField[SubBlockPosition.TOP_EAST_NORTH.ordinal()]) {
 				if (this.subField[SubBlockPosition.TOP_WEST_NORTH.ordinal()]) {

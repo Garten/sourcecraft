@@ -1,11 +1,6 @@
 package minecraft.map;
 
-import java.io.File;
-import java.io.IOException;
-
-import minecraft.ConvertingReport;
 import minecraft.Position;
-import periphery.SourceGame;
 import vmfWriter.Solid;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
@@ -21,16 +16,16 @@ public interface SourceMap {
 	/**
 	 * Adds a point entity and returns the just added point entity.
 	 *
-	 * @param p
+	 * @param pointEntity
 	 * @return
 	 */
-	public PointEntity addPointEntity(PointEntity p);
+	public PointEntity addPointEntity(PointEntity pointEntity);
 
 	public PointEntity addPointEntity(PointEntity entity, Position position);
 
-	public void addPointEntity(Position p, PointEntity type);
+	public void addPointEntity(Position position, PointEntity type);
 
-	public void addPointEntitys(Position p, Position end, int space, PointEntity type);
+	public void addPointEntitys(Position position, Position end, int space, PointEntity type);
 
 	public void addSolidEntity(SolidEntity solidEnttiy);
 
@@ -39,10 +34,6 @@ public interface SourceMap {
 	public void movePointInGridDimension(double x, double y, double z);
 
 	public void movePointExactly(Position offset);
-
-	public void addCustomPointEntity(Position p, String name);
-
-	public ConvertingReport write(File file, SourceGame game) throws IOException;
 
 	public void setCameraPosition(Position origin);
 

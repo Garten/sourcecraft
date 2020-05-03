@@ -4,6 +4,8 @@ import minecraft.Position;
 import source.Material;
 import source.addable.Addable;
 import vmfWriter.Color;
+import vmfWriter.entity.pointEntity.PointEntity;
+import vmfWriter.entity.pointEntity.pointEntity.EnvFire;
 import vmfWriter.entity.pointEntity.pointEntity.InfoParticleSystem;
 import vmfWriter.entity.pointEntity.pointEntity.Light;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
@@ -20,6 +22,7 @@ public class Torch extends Addable {
 	public final static Light LIGHT = new Light(Torch.LIGHT_COLOR, Torch.distance50, Torch.distance100);
 	private final static String EFFECT_NAME = "flaming_arrow";
 	public final static InfoParticleSystem PARTICLE_SYSTEM = new InfoParticleSystem(Torch.EFFECT_NAME, 270, 0, 0);
+	protected static final PointEntity FLAME = new EnvFire().setFireSize(3);
 
 	public Torch() {
 		int[] temp = { Material.TORCH };
@@ -31,12 +34,18 @@ public class Torch extends Addable {
 		int parts = 16;
 		Position offset = new Position(7, 0, 7);
 		Position negativeOffset = new Position(7, 6, 7);
-		this.map.addSolidEntity(new FuncIllusionary(this.map.createCuboid(p, p, parts, offset, negativeOffset, material)));
+		this.map.addSolidEntity(
+				new FuncIllusionary(this.map.createCuboid(p, p, parts, offset, negativeOffset, material)));
 		this.map.setPointToGrid(p);
 		this.map.movePointInGridDimension(0.5, ((double) (parts - negativeOffset.getY())) / ((parts)), 0.5);
-		this.map.addPointEntity(Torch.PARTICLE_SYSTEM);
-		this.map.movePointInGridDimension(0, 1.0 / ((parts)), 0);
-		this.map.addPointEntity(Torch.LIGHT);
+		this.addFlame();
 		this.map.markAsConverted(p);
+	}
+
+	public void addFlame() {
+		this.map.addPointEntity(Torch.PARTICLE_SYSTEM);
+		this.map.movePointInGridDimension(0, 1.0 / ((16)), 0);
+		this.map.addPointEntity(Torch.FLAME);
+		this.map.addPointEntity(Torch.LIGHT);
 	}
 }

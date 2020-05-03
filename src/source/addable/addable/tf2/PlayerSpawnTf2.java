@@ -35,10 +35,10 @@ public class PlayerSpawnTf2 extends Addable {
 				.setRotation(180);
 		LinkedList<Addable> list = new LinkedList<>();
 		list.add(new PlayerSpawnTf2(Material.END_PORTAL_FRAME, redSpawn, false));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_NORTH, blueSpawn, true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_EAST, blueSpawn, true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_SOUTH, blueSpawn, true));
-		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST_WEST, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST$NORTH, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST$EAST, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST$SOUTH, blueSpawn, true));
+		list.add(new PlayerSpawnTf2(Material.ENDER_CHEST$WEST, blueSpawn, true));
 		return list;
 	}
 

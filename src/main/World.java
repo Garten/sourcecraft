@@ -5,11 +5,14 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
 
 import javax.swing.ImageIcon;
 
+import basic.Loggger;
 import gui.panel.LabeledCoordinates;
+import minecraft.Minecraft;
 import minecraft.Position;
 import minecraft.reader.nbt.PlayerInLevelReader;
 import periphery.Periphery;
@@ -31,20 +34,34 @@ public class World {
 	private LabeledCoordinates playerPosition;
 	private LabeledCoordinates worldSpawnPosition;
 
-	public World(String name) throws IOException {
-		this.name = name;
-		File file = new File(Periphery.CONFIG.getWorldPath(this), WORLD_LEVEL_DAT_NAME);
-		Position player = new Position();
-		Position worldSpawn = new Position();
-		DataInputStream stream = new DataInputStream(new GZIPInputStream(new FileInputStream(file)));
-		PlayerInLevelReader reader = new PlayerInLevelReader(stream);
-		reader.read();
-		player = reader.getPlayerPosition();
-		worldSpawn = reader.getWorldSpawn();
-		this.playerPosition = new LabeledCoordinates(PLAYER_POSITION, player, player);
-		this.worldSpawnPosition = new LabeledCoordinates("World spawn", worldSpawn, worldSpawn);
-		this.playerPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
-		this.worldSpawnPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
+	public World(String name) {
+		this(Minecraft.getMinecraftPath(), name);
+	}
+
+	public World(Path parent, String name) {
+		try { // TODO
+			this.name = name;
+			Path path = parent.resolve(this.getName())
+					.resolve(WORLD_LEVEL_DAT_NAME);
+//			Path path = Paths.get(Minecraft.getMinecraftPath(), this.getName(), WORLD_LEVEL_DAT_NAME);
+//			File file = new File(Periphery.CONFIG.getWorldPath(this), WORLD_LEVEL_DAT_NAME);
+			Position player = new Position();
+			Position worldSpawn = new Position();
+			DataInputStream stream;
+
+			stream = new DataInputStream(new GZIPInputStream(new FileInputStream(path.toFile())));
+
+			PlayerInLevelReader reader = new PlayerInLevelReader(stream);
+			reader.read();
+			player = reader.getPlayerPosition();
+			worldSpawn = reader.getWorldSpawn();
+			this.playerPosition = new LabeledCoordinates(PLAYER_POSITION, player, player);
+			this.worldSpawnPosition = new LabeledCoordinates("World spawn", worldSpawn, worldSpawn);
+			this.playerPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
+			this.worldSpawnPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
+		} catch (IOException e) {
+			Loggger.log("Cannot find world \"" + name + "\" in ");
+		}
 	}
 
 	@Override
@@ -70,7 +87,8 @@ public class World {
 				this.icon = new ImageIcon(icon.getImage()
 						.getScaledInstance(ICON_SIZE, ICON_SIZE, 0));
 			} else {
-				this.icon = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getScaledInstance(ICON_SIZE, ICON_SIZE, 0));
+				this.icon = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
+						.getScaledInstance(ICON_SIZE, ICON_SIZE, 0));
 			}
 
 		}

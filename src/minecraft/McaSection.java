@@ -24,8 +24,8 @@ public class McaSection {
 		return this.worldPiece;
 	}
 
-	public int[][][] getBlocks() {
-		return this.block;
+	public int getBlock(Position position) {
+		return this.block[position.x][position.y][position.z];
 	}
 
 	public int getFirstYPosition() {
@@ -49,8 +49,9 @@ public class McaSection {
 		return length / 64;
 	}
 
-	public void translateRawInfo(int[] mapping) {
+	public void translateRawInfo(McaBlock[] mapping) {
 		if (mapping == null) {
+			// some sections are empty and come without a mapping
 			return;
 		}
 		for (int y = 0; y < Minecraft.SECTION_SIZE_Y; y++) {
@@ -58,7 +59,8 @@ public class McaSection {
 				for (int x = 0; x < Minecraft.CHUNK_SIZE_X; x++) {
 					int rawId = this.block[x][y][z];
 					if (rawId >= 0 && rawId < mapping.length) {
-						this.block[x][y][z] = mapping[rawId];
+						McaBlock block = mapping[rawId];
+						this.block[x][y][z] = Material.get(block);
 					} else {
 						this.block[x][y][z] = Material._UNKOWN;
 						Loggger.warn("unknown block encoding " + rawId + " at " + new Position(x, y, z).toString());
@@ -77,7 +79,7 @@ public class McaSection {
 		return this.worldPiece.toString() + " @height " + this.firstYPosition;
 	}
 
-	public Tuple<Bounds, Position> getBoundAndTarget() {
+	public Tuple<Area, Position> getBoundAndTarget() {
 		Position lower = this.getConvertee()
 				.getLower();
 		Position higher = this.getConvertee()
@@ -98,6 +100,6 @@ public class McaSection {
 			start.y = 1;
 			end.y = 0;
 		}
-		return new Tuple<>(new Bounds(start, end), target);
+		return new Tuple<>(new Area(start, end), target);
 	}
 }

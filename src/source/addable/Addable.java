@@ -7,13 +7,15 @@ import java.util.List;
 import basic.Loggger;
 import cuboidFinder.CuboidFinder;
 import minecraft.Position;
-import minecraft.map.MinecraftMap;
+import minecraft.map.ConverterContext;
+import source.Material;
 import vmfWriter.Orientation;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public abstract class Addable {
 
 	protected CuboidFinder cuboidFinder;
-	protected MinecraftMap map;
+	protected ConverterContext map;
 	protected AddableManager manager;
 	protected int[] materialUsedFor = {};
 	private int[][] additionalMaterial = null;
@@ -48,7 +50,7 @@ public abstract class Addable {
 				.getSimpleName();
 	}
 
-	public void setAccess(CuboidFinder cuboidFinder, MinecraftMap map, AddableManager manager) {
+	public void setAccess(CuboidFinder cuboidFinder, ConverterContext map, AddableManager manager) {
 		this.cuboidFinder = cuboidFinder;
 		this.map = map;
 		this.manager = manager;
@@ -95,4 +97,12 @@ public abstract class Addable {
 	 */
 	public abstract void add(Position position, int material);
 
+	protected void addDebugMarker(Position position, int material) {
+		this.map.setPointToGrid(position);
+		this.map.movePointInGridDimension(0.5, 0, 0.5);
+		int verticalAngle = (int) (Math.random() * 360);
+		this.map.addPointEntity(new RotateablePointEntity().setName(Material.getName(material))
+				.setRotation(verticalAngle));
+		this.map.markAsConverted(position);
+	}
 }

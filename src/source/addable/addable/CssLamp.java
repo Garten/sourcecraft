@@ -27,12 +27,16 @@ public class CssLamp extends Addable {
 	private final static Light LIGHT = new Light(CssLamp.LIGHT_COLOR, CssLamp.distance50, CssLamp.distance100);
 	private final static PropStatic TORCH = new PropStatic(CssLamp.TORCH_MODEL);
 	private final static PropStatic TORCH_HOLDER_EAST = new PropStatic(CssLamp.TORCH_HOLDER_MODEL, new Angles(0, 0, 0));
-	private final static PropStatic TORCH_HOLDER_WEST = new PropStatic(CssLamp.TORCH_HOLDER_MODEL, new Angles(0, 180, 0));
-	private final static PropStatic TORCH_HOLDER_SOUTH = new PropStatic(CssLamp.TORCH_HOLDER_MODEL, new Angles(0, 270, 0));
-	private final static PropStatic TORCH_HOLDER_NORTH = new PropStatic(CssLamp.TORCH_HOLDER_MODEL, new Angles(0, 90, 0));
+	private final static PropStatic TORCH_HOLDER_WEST = new PropStatic(CssLamp.TORCH_HOLDER_MODEL,
+			new Angles(0, 180, 0));
+	private final static PropStatic TORCH_HOLDER_SOUTH = new PropStatic(CssLamp.TORCH_HOLDER_MODEL,
+			new Angles(0, 270, 0));
+	private final static PropStatic TORCH_HOLDER_NORTH = new PropStatic(CssLamp.TORCH_HOLDER_MODEL,
+			new Angles(0, 90, 0));
 
 	public CssLamp() {
-		int[] temp = { Material.TORCH, Material.WALL_TORCH_EAST, Material.WALL_TORCH_WEST, Material.WALL_TORCH_SOUTH, Material.WALL_TORCH_NORTH };
+		int[] temp = { Material.TORCH, Material.WALL_TORCH$EAST, Material.WALL_TORCH$WEST, Material.WALL_TORCH$SOUTH,
+				Material.WALL_TORCH$NORTH };
 		super.setMaterialUsedFor(temp);
 	}
 

@@ -2,13 +2,12 @@ package source.addable.addable.torch;
 
 import minecraft.Position;
 import source.Material;
-import source.addable.Addable;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
-public class TorchSouth extends Addable {
+public class TorchSouth extends Torch {
 
 	public TorchSouth() {
-		int[] temp = { Material.WALL_TORCH_SOUTH };
+		int[] temp = { Material.WALL_TORCH$SOUTH };
 		super.setMaterialUsedFor(temp);
 	}
 
@@ -27,12 +26,11 @@ public class TorchSouth extends Addable {
 		pointOffset[7] = new Position(18, 4, 4); // h
 
 		Position point = new Position(p);
-		this.map.addSolidEntity(new FuncIllusionary(this.map.createFree8Point(point, point, parts, pointOffset, false, material)));
+		this.map.addSolidEntity(
+				new FuncIllusionary(this.map.createFree8Point(point, point, parts, pointOffset, false, material)));
 		this.map.setPointToGrid(p);
 		this.map.movePointInGridDimension(0.5, 0.7, (7.0 / 20.0));
-		this.map.addPointEntity(Torch.PARTICLE_SYSTEM);
-		this.map.movePointInGridDimension(0, 1.0 / ((parts)), 0);
-		this.map.addPointEntity(Torch.LIGHT);
+		this.addFlame();
 		this.map.markAsConverted(p);
 	}
 }

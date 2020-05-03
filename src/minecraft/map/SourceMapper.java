@@ -5,12 +5,16 @@ import vmfWriter.Solid;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
 
-public abstract class MinecraftMapConverter implements MinecraftMap {
+public abstract class SourceMapper implements MinecraftMap, SourceMap {
 
 	protected ExtendedSourceMap target;
 
-	public MinecraftMapConverter(ExtendedSourceMap target) {
+	public SourceMapper() {
+	}
+
+	public SourceMapper setTarget(ExtendedSourceMap target) {
 		this.target = target;
+		return this;
 	}
 
 	@Override

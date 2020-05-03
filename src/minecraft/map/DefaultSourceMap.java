@@ -13,7 +13,6 @@ import vmfWriter.Solid;
 import vmfWriter.ValveElement;
 import vmfWriter.ValveWriter;
 import vmfWriter.entity.pointEntity.PointEntity;
-import vmfWriter.entity.pointEntity.pointEntity.CustomPointEntity;
 import vmfWriter.entity.solidEntity.FuncDetail;
 import vmfWriter.entity.solidEntity.SolidEntity;
 
@@ -28,7 +27,6 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 	private Stack<Solid> solids;
 	private Stack<PointEntity> pointEntities;
 	private Stack<SolidEntity> solidEntities;
-	private int scale;
 
 	public Position localPoint;
 
@@ -38,7 +36,6 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 		this.pointEntities = new Stack<>();
 		this.solidEntities = new Stack<>();
 
-		this.scale = optionScale;
 		this.hammerGridSize = optionScale;
 	}
 
@@ -57,20 +54,6 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 		this.solidEntities.push(new FuncDetail(solids));
 	}
 
-	// @Override
-	// public Ramp createRamp(Cuboid cuboid, Orientation orientation) {
-	// return new Ramp(cuboid, orientation);
-	// }
-	//
-	// @Override
-	// public Ramp createRampCuttet(Cuboid cuboid, Orientation orientation,
-	// Orientation cut1, Orientation cut2) {
-	// Ramp result = new Ramp(cuboid, orientation);
-	// result.cut(cut1);
-	// result.cut(cut2);
-	// return result;
-	// }
-
 	@Override
 	public void addSolidEntity(SolidEntity solidEnttiy) {
 		this.solidEntities.add(solidEnttiy);
@@ -79,6 +62,7 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 	@Override
 	public PointEntity addPointEntity(PointEntity type) {
 		PointEntity finalObject = type.create(this.localPoint);
+		assert finalObject != null;
 		this.pointEntities.push(finalObject);
 		return finalObject;
 	}
@@ -86,20 +70,24 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 	@Override
 	public PointEntity addPointEntity(PointEntity type, Position position) {
 		PointEntity finalObject = type.create(position);
+		assert finalObject != null;
 		this.pointEntities.push(finalObject);
 		return finalObject;
 	}
 
 	@Override
 	public void addPointEntity(Position origin, PointEntity type) {
-		this.pointEntities.push(type.create(origin));
+		PointEntity finalObject = type.create(origin);
+		assert finalObject != null;
+		this.pointEntities.push(finalObject);
 	}
 
 	@Override
 	public void addPointEntitys(Position start, Position end, int space, PointEntity type) {
-		Loggger.log("Adding point entities of type " + type.getName() + " from positions " + start.toString() + " to " + end.toString() + ".");
+		Loggger.log("Adding point entities of type " + type.getName() + " from positions " + start.toString() + " to "
+				+ end.toString() + ".");
 
-		Position point = new Position(start);
+		Position point = Position.create(start);
 		point.move(space / 2, space / 2, space / 2);
 		while (point.getX() <= end.getX()) {
 			int distance = 0;
@@ -124,25 +112,25 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 			}
 		}
 
-		ValveWriter w = new ValveWriter(file);
+		ValveWriter writer = new ValveWriter(file);
 
 		Loggger.log("writing");
-		this.writeHeader(w);
+		this.writeHeader(writer);
 
 		int brushCount = 0;
 		while (this.solids.empty() == false) {
 			brushCount++;
 			this.solids.pop()
-					.writeVmf(w);
+					.writeVmf(writer);
 		}
 		ConvertingReport report = new ConvertingReport();
 		report.setBrushCount(brushCount);
 		Loggger.log(brushCount + "/8192 brushes added"); // TODO
-		w.close();
-		this.write(this.solidEntities, w);
-		this.write(this.pointEntities, w);
-		this.writeTail(w);
-		w.finish();
+		writer.close();
+		this.write(this.solidEntities, writer);
+		this.write(this.pointEntities, writer);
+		this.writeTail(writer);
+		writer.finish();
 		return report;
 	}
 
@@ -214,23 +202,8 @@ public class DefaultSourceMap implements ExtendedSourceMap {
 	}
 
 	@Override
-	public void setScale(int scale) {
-		this.scale = scale;
-	}
-
-	@Override
-	public int getScale() {
-		return this.scale;
-	}
-
-	@Override
 	public Position getLocalPoint() {
 		return this.localPoint;
-	}
-
-	@Override
-	public void addCustomPointEntity(Position p, String name) {
-		this.pointEntities.push(new CustomPointEntity(p, name));
 	}
 
 	@Override

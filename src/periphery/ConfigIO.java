@@ -50,7 +50,8 @@ public class ConfigIO {
 
 		gsonBuilder.registerTypeAdapter(vmfWriter.Color.class, (InstanceCreator<Color>) arg0 -> new vmfWriter.Color());
 
-		gsonBuilder.registerTypeAdapter(periphery.ConvertOption.class, (InstanceCreator<ConvertOption>) arg0 -> new periphery.ConvertOption());
+		gsonBuilder.registerTypeAdapter(periphery.ConvertOption.class,
+				(InstanceCreator<ConvertOption>) arg0 -> new periphery.ConvertOption());
 
 		gsonBuilder.registerTypeAdapter(SourceGame.class, (InstanceCreator<SourceGame>) arg0 -> new SourceGame());
 		return gsonBuilder.create();

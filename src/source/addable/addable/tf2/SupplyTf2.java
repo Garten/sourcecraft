@@ -25,7 +25,7 @@ public class SupplyTf2 extends Addable {
 	private PropDynamic prop;
 
 	public SupplyTf2() {
-		int[] temp = { Material.CHEST_NORTH, Material.CHEST_SOUTH, Material.CHEST_WEST, Material.CHEST_EAST };
+		int[] temp = { Material.CHEST$NORTH, Material.CHEST$SOUTH, Material.CHEST$WEST, Material.CHEST$EAST };
 		super.setMaterialUsedFor(temp);
 	}
 
@@ -37,10 +37,10 @@ public class SupplyTf2 extends Addable {
 	@Override
 	public Iterable<Addable> getInstances() {
 		LinkedList<Addable> list = new LinkedList<>();
-		list.add(new SupplyTf2(Material.CHEST_NORTH, Orientation.NORTH));
-		list.add(new SupplyTf2(Material.CHEST_SOUTH, Orientation.SOUTH));
-		list.add(new SupplyTf2(Material.CHEST_EAST, Orientation.EAST));
-		list.add(new SupplyTf2(Material.CHEST_WEST, Orientation.WEST));
+		list.add(new SupplyTf2(Material.CHEST$NORTH, Orientation.NORTH));
+		list.add(new SupplyTf2(Material.CHEST$SOUTH, Orientation.SOUTH));
+		list.add(new SupplyTf2(Material.CHEST$EAST, Orientation.EAST));
+		list.add(new SupplyTf2(Material.CHEST$WEST, Orientation.WEST));
 		return list;
 	}
 

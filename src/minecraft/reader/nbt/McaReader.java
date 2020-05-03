@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import main.Converter;
+import minecraft.McaBlock;
 import minecraft.McaSection;
 import minecraft.WorldPiece;
-import minecraft.map.DefaultMinecraftMapConverter;
-import source.Material;
 
 public class McaReader extends NbtReader {
 
@@ -16,13 +16,11 @@ public class McaReader extends NbtReader {
 	private static final NamedTag SECTIONS = new NamedTag(NbtTag.LIST, "Sections");
 	private static final NamedTag PALETTE = new NamedTag(NbtTag.LIST, "Palette");
 	private static final NamedTag BLOCK_STATES = new NamedTag(NbtTag.LONG_ARRAY, "BlockStates");
-	private static final NamedTag PALETTE_NAME = new NamedTag(NbtTag.STRING, "Name");
-	private static final NamedTag PALETTE_PROPERTIES = new NamedTag(NbtTag.COMPOUND, "Properties");
 
-	private DefaultMinecraftMapConverter map;
+	private Converter map;
 	private WorldPiece convertee;
 
-	public McaReader(DataInputStream stream, DefaultMinecraftMapConverter map, WorldPiece convertee) {
+	public McaReader(DataInputStream stream, Converter map, WorldPiece convertee) {
 		super(stream);
 		this.map = map;
 		this.convertee = convertee;
@@ -48,13 +46,13 @@ public class McaReader extends NbtReader {
 
 	private class Mapping {
 
-		int[] mapping;
+		McaBlock[] mapping;
 
-		public int[] get() {
+		public McaBlock[] get() {
 			return this.mapping;
 		}
 
-		public void set(int[] mapping) {
+		public void set(McaBlock[] mapping) {
 			this.mapping = mapping;
 		}
 	}
@@ -75,19 +73,21 @@ public class McaReader extends NbtReader {
 	}
 
 	private void readPalette(Mapping mapping) throws IOException {
-		Queue<String> palette = new LinkedList<>();
-		NbtTasks paletteTasks = NbtTasks.I.create()
-				.put(PALETTE_NAME, () -> palette.add(this.readString()))
-				.put(PALETTE_PROPERTIES, this::skipCompound);
-		this.doListOfCompounds(() -> this.doCompound(paletteTasks));
-		mapping.set(this.getMapping(palette));
+		Queue<McaBlock> palette = new LinkedList<>();
+		this.doListOfCompounds(() -> {
+			McaBlock block = new McaBlock();
+			block.read(this);
+			palette.add(block);
+		});
+		mapping.set(getMapping(palette));
 	}
 
-	private int[] getMapping(Queue<String> palette) {
-		int[] mapping = new int[palette.size()];
+	private static McaBlock[] getMapping(Queue<McaBlock> palette) {
+		McaBlock[] mapping = new McaBlock[palette.size()];
 		for (int i = 0; i < mapping.length; i++) {
-			String name = palette.poll();
-			mapping[i] = Material.get(name);
+			McaBlock block = palette.poll();
+			mapping[i] = block;
+//			mapping[i] = Material.get(block);
 		}
 		return mapping;
 	}

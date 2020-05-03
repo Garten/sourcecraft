@@ -6,7 +6,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
 
@@ -139,23 +140,23 @@ public class Gui {
 		this.tabbedPane.setEnabledAt(3, enabled);
 	}
 
-	public void setMinecraftPath(File path) {
+	public void setMinecraftPath(Path path) {
 		this.setupPanel.setMinecraftPath(path.toString());
 	}
 
-	public String getMincraftPath() {
-		return this.setupPanel.getMincraftPath();
+	public Path getMincraftPath() {
+		return Paths.get(this.setupPanel.getMincraftPath());
 	}
 
-	public void setSourcePath(File file) {
+	public void setSourcePath(Path file) {
 		if (file == null) {
 			return;
 		}
 		this.setupPanel.setSourcePath(file.toString());
 	}
 
-	public File getSourcePath() {
-		return new File(this.setupPanel.getSourcePath());
+	public Path getSourcePath() {
+		return Paths.get(this.setupPanel.getSourcePath());
 	}
 
 	public void setSelectMinecraftPath(RunnableWith<String> selectMinecraftPath) {
@@ -261,7 +262,7 @@ public class Gui {
 	}
 
 	public SourceGame getSourceGame() {
-		return this.outputPanel.getSourceGame();
+		return this.outputPanel.getSelectedGame();
 	}
 
 	public String getOutputFile() {
@@ -429,5 +430,13 @@ public class Gui {
 
 	public String getTexturePack() {
 		return this.detailsPanel.getTexturePack();
+	}
+
+	public void setSelectedGame(SourceGame game) {
+		this.outputPanel.setSelectedGame(game);
+	}
+
+	public void setSelectedConverterOptions(String convertOption) {
+		this.detailsPanel.setSelectedConverterOptions(convertOption);
 	}
 }

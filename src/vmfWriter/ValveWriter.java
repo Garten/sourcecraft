@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import minecraft.Position;
+
 public class ValveWriter {
 
 	private static final String INDENTATION = "\t";
@@ -89,6 +91,10 @@ public class ValveWriter {
 
 	public ValveWriter putTransparentColor(String key, Color color) throws IOException {
 		return this.put(key, color.red + " " + color.green + " " + color.blue + " " + color.alpha);
+	}
+
+	public ValveWriter put(String key, Position position) throws IOException {
+		return this.put(key, position.getX() + " " + position.getY() + " " + position.getZ());
 	}
 
 	public ValveWriter put(String key, Angles angles) throws IOException {

@@ -11,7 +11,8 @@ import source.addable.Addable;
 public class Liquid extends Addable {
 
 	public Liquid() {
-		super.materialUsedFor = new int[] { Material.WATER, Material.LAVA, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP, Material.KELP_PLANT };
+		super.materialUsedFor = new int[] { Material.WATER, Material.LAVA, Material.SEAGRASS, Material.TALL_SEAGRASS,
+				Material.KELP, Material.KELP_PLANT };
 	}
 
 	@Override

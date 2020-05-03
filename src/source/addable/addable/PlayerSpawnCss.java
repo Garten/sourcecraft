@@ -31,10 +31,10 @@ public class PlayerSpawnCss extends Addable {
 	public Iterable<Addable> getInstances() {
 		LinkedList<Addable> list = new LinkedList<>();
 		list.add(new PlayerSpawnCss(Material.END_PORTAL_FRAME, new InfoPlayerT().setRotation(0), false));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST_NORTH, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST_EAST, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST_SOUTH, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST_WEST, new InfoPlayerCT().setRotation(180), true));
+		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$NORTH, new InfoPlayerCT().setRotation(180), true));
+		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$EAST, new InfoPlayerCT().setRotation(180), true));
+		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$SOUTH, new InfoPlayerCT().setRotation(180), true));
+		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$WEST, new InfoPlayerCT().setRotation(180), true));
 		return list;
 	}
 

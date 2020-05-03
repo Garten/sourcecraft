@@ -35,7 +35,8 @@ public class TexturePack {
 
 	public static TexturePack getTexturePack(String texturePackName) {
 		TexturePack result = new TexturePack(texturePackName);
-		Path textureOptionsPath = new File(String.join(File.separator, TEXTURES_FOLDER, texturePackName, TEXTURE_OPTIONS_FILE)).toPath();
+		Path textureOptionsPath = new File(
+				String.join(File.separator, TEXTURES_FOLDER, texturePackName, TEXTURE_OPTIONS_FILE)).toPath();
 		result.textureOptions = readTextureOptions(result.textureOptions, textureOptionsPath);
 		return result;
 	}

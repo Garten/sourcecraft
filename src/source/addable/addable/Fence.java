@@ -15,8 +15,8 @@ public class Fence extends Addable {
 	private static int BEAM_MID_ON = 5;
 
 	public Fence() {
-		int[] temp = { Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE, Material.NETHER_BRICK_FENCE,
-				Material.OAK_FENCE, Material.SPRUCE_FENCE };
+		int[] temp = { Material.ACACIA_FENCE, Material.BIRCH_FENCE, Material.DARK_OAK_FENCE, Material.JUNGLE_FENCE,
+				Material.NETHER_BRICK_FENCE, Material.OAK_FENCE, Material.SPRUCE_FENCE };
 		super.setMaterialUsedFor(temp);
 	}
 
@@ -40,51 +40,67 @@ public class Fence extends Addable {
 			if (this.map.hasMaterial(p.getOffset(1, 0, 0), material)) {
 				offset = new Position(10, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(10, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
 				offset = new Position(10, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(10, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
-			} else if (this.map.hasOrHadMaterial(p.getOffset(1, 0, 0), new MaterialWallFilter(this.manager, Orientation.EAST))) {
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
+			} else if (this.map.hasOrHadMaterial(p.getOffset(1, 0, 0),
+					new MaterialWallFilter(this.manager, Orientation.EAST))) {
 				offset = new Position(10, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(parts, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
 				offset = new Position(10, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(parts, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
 			}
 
-			if (this.map.hasOrHadMaterial(p.getOffset(-1, 0, 0), new MaterialWallFilter(this.manager, Orientation.WEST))) {
+			if (this.map.hasOrHadMaterial(p.getOffset(-1, 0, 0),
+					new MaterialWallFilter(this.manager, Orientation.WEST))) {
 				offset = new Position(parts, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(10, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
 				offset = new Position(parts, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
 				negativeOffset = new Position(10, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				this.map.addDetail(this.map.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
 			}
 
 			if (this.map.hasMaterial(p.getOffset(0, 0, 1), material)) {
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, 10);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 10);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, 10);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 10);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
-			} else if (this.map.hasOrHadMaterial(p.getOffset(0, 0, 1), new MaterialWallFilter(this.manager, Orientation.SOUTH))) {
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
+			} else if (this.map.hasOrHadMaterial(p.getOffset(0, 0, 1),
+					new MaterialWallFilter(this.manager, Orientation.SOUTH))) {
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, 10);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, parts);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, 10);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, parts);
-				this.map.addDetail(this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
 			}
 
-			if (this.map.hasOrHadMaterial(p.getOffset(0, 0, -1), new MaterialWallFilter(this.manager, Orientation.NORTH))) {
+			if (this.map.hasOrHadMaterial(p.getOffset(0, 0, -1),
+					new MaterialWallFilter(this.manager, Orientation.NORTH))) {
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, parts);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 10);
-				this.map.addDetail(this.map.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
 				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, parts);
 				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 10);
-				this.map.addDetail(this.map.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
+				this.map.addDetail(
+						this.map.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
 			}
 
 			p.move(0, 1, 0);

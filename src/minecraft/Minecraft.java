@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
@@ -12,13 +15,13 @@ import gui.panel.LabeledCoordinates;
 import main.Main;
 import main.World;
 import minecraft.reader.nbt.PlayerInLevelReader;
-import periphery.Config;
 import periphery.Periphery;
 import periphery.Place;
 
 public class Minecraft {
 
-	public static final String SAVES_FOLDER = "saves";
+	private static final String SAVES_FOLDER = "saves";
+	private static final String REGION_FOLDER = "region";
 
 	public static final int MAX_CHUNK_IN_FILE_X = 32; // number of last chunk
 	public static final int MAX_CHUNK_IN_FILE_Z = 32;
@@ -34,32 +37,40 @@ public class Minecraft {
 	public static final String LEVEL_FILE_NAME = "level.dat";
 	public static final String PLAYERS_FOLDER = "players";
 
-	public static File getMinecraftPath() {
-		String minecraftPathString = Periphery.CONFIG.getMinecraftPathString();
-		if (minecraftPathString == null) {
+	public static final int MAXIMUM_HEIGHT = 256;
+
+	public static Path getMinecraftPath() {
+		return Periphery.CONFIG.getMinceraftSavePath();
+	}
+
+	public static Path getCorrectMinecraftPath() {
+		Path minecraftPath = Periphery.CONFIG.getMinceraftSavePath();
+		if (minecraftPath == null) {
 			return getNewMinecraftPath();
 		}
-		File minecraftPath = new File(minecraftPathString);
-		if (!minecraftPath.exists() || !(Config.verifyMinecraftDirectory(minecraftPath))) {
+		if (!(isMinecraftInputDirectory(minecraftPath))) {
 			return getNewMinecraftPath();
 		}
 		Loggger.log("valid minecraft path: " + Periphery.CONFIG.getMinecraftPathString());
 		return minecraftPath;
 	}
 
-	private static File getNewMinecraftPath() {
-		File minecraftPath;
+	public static boolean isMinecraftInputDirectory(Path path) {
+		return getPossibleWorlds(path).size() > 0;
+	}
+
+	private static Path getNewMinecraftPath() {
+		Path minecraftPath;
 		if (Main.isUnix()) {
-			minecraftPath = new File(String.join(File.separator, System.getProperty("user.home"), ".minecraft"));
+			minecraftPath = Paths.get(System.getProperty("user.home"), ".minecraft");
 		} else {
-			minecraftPath = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\");
+			minecraftPath = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", ".minecraft",
+					SAVES_FOLDER);
 		}
 		Periphery.CONFIG.setMinecraftPath(minecraftPath);
 		Loggger.log("guessing minecraft path: " + Periphery.CONFIG.getMinecraftPathString());
 		return minecraftPath;
 	}
-
-	public static final int MAXIMUM_HEIGHT = 256;
 
 	public Vector<LabeledCoordinates> getPlayerCoordinates(World world) {
 		File file = new File(Periphery.CONFIG.getWorldPath(world), "level.dat");
@@ -89,28 +100,50 @@ public class Minecraft {
 	}
 
 	public static Vector<World> getPossibleWorlds() {
-		File file = Periphery.CONFIG.getMinceraftSavePath();
-		String[] list = file.list();
-		Vector<World> vector = new Vector<>();
-		if (list != null) {
-			for (String world : list) {
-				try {
-					vector.addElement(new World(world));
-				} catch (IOException e) {
-					Loggger.log("cannot create world");
-				}
+		return getPossibleWorlds(Periphery.CONFIG.getMinceraftSavePath());
+	}
 
-			}
+	public static Vector<World> getPossibleWorlds(Path savesPath) {
+		Vector<World> result = new Vector<>();
+		try {
+			Files.list(savesPath)
+					.filter(path -> {
+						return Files.isDirectory(path.resolve(REGION_FOLDER));
+					})
+					.forEach(path -> result.add(new World(path.getParent(), path.getFileName()
+							.toString())));
+		} catch (IOException e) {
 		}
-		return vector;
+		return result;
 	}
 
-	public static File getSavesFolder(Place place) {
-		return new File(Periphery.CONFIG.getMinecraftPath(), "saves" + File.separator + place.getWorld());
-//		return String.join(File.separator, Periphery.CONFIG.getMinecraftPathString(), place.getWorld());
+//	public static Vector<World> getPossibleWorlds(Path savesPath) {
+//		String[] list = file.list();
+//		Vector<World> vector = new Vector<>();
+//		if (list != null) {
+//			for (String world : list) {
+//				if (!(Files.isDirectory(Paths.get(Periphery.CONFIG.getMinceraftSavePath()
+//						.toString(), world, REGION_FOLDER)))) {
+//					continue;
+//				}
+//				try {
+//					vector.addElement(new World(world));
+//				} catch (IOException e) {
+//					Loggger.log("cannot create world");
+//				}
+//
+//			}
+//		}
+//		return vector;
+//	}
+
+	public static File getWorldFolder(Place place) {
+		return new File(Periphery.CONFIG.getMinecraftPath() + File.separator + place.getWorld());
+//		return new File(Periphery.CONFIG.getMinecraftPath(), "saves" + File.separator + place.getWorld());
+////		return String.join(File.separator, Periphery.CONFIG.getMinecraftPathString(), place.getWorld());
 	}
 
-	public static String getRegionFolder(Place place) {
-		return getSavesFolder(place) + File.separator + "region";
+	public static Path getRegionFolder(Place place) {
+		return Paths.get(getWorldFolder(place).toString(), REGION_FOLDER);
 	}
 }

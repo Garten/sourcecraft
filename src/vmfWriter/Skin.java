@@ -59,7 +59,8 @@ public class Skin {
 		this.scale = newScale;
 	}
 
-	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, Orientation orientation, double newScale) {
+	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, Orientation orientation,
+			double newScale) {
 		this.materialLeft = newMaterial;
 		this.materialRight = newMaterial;
 		this.materialBack = newMaterial;
@@ -85,7 +86,8 @@ public class Skin {
 		this.scale = newScale;
 	}
 
-	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, String newMaterialBottom, double newScale) {
+	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, String newMaterialBottom,
+			double newScale) {
 		this.materialLeft = newMaterial;
 		this.materialRight = newMaterial;
 		this.materialBack = newMaterial;
@@ -97,7 +99,8 @@ public class Skin {
 		this.scale = newScale;
 	}
 
-	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, String newMaterialBottom, Orientation orientation, double newScale) {
+	public Skin(String newMaterial, String newMaterialTop, String newMaterialFront, String newMaterialBottom,
+			Orientation orientation, double newScale) {
 		this.materialLeft = newMaterial;
 		this.materialRight = newMaterial;
 		this.materialBack = newMaterial;

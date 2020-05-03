@@ -13,8 +13,8 @@ import vmfWriter.Ramp;
 public class ClipRampWest extends Addable {
 
 	public ClipRampWest() {
-		int[] temp = { Material._STAIRS_WEST, Material._STAIRS_BIG_WEST_NORTH, Material._STAIRS_BIG_WEST_SOUTH, Material._STAIRS_SMALL_WEST_NORTH,
-				Material._STAIRS_SMALL_WEST_SOUTH };
+		int[] temp = { Material._STAIRS_WEST, Material._STAIRS_BIG_WEST_NORTH, Material._STAIRS_BIG_WEST_SOUTH,
+				Material._STAIRS_SMALL_WEST_NORTH, Material._STAIRS_SMALL_WEST_SOUTH };
 		super.setMaterialUsedFor(temp);
 	}
 
@@ -36,7 +36,8 @@ public class ClipRampWest extends Addable {
 		}
 		// map.addRampCuttet( p, end, 2, offset, negativeOffset,
 		// Material.PLAYER_CLIP, cut1, cut2, Orientation.WEST );
-		Ramp ramp = this.map.createRamp(this.map.createCuboid(p, end, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.WEST);
+		Ramp ramp = this.map.createRamp(this.map.createCuboid(p, end, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+				Orientation.WEST);
 		ramp.cut(cut1);
 		ramp.cut(cut2);
 		this.map.addSolid(ramp);
@@ -50,15 +51,17 @@ public class ClipRampWest extends Addable {
 				negativeOffset = new Position(-1, 0, 1);
 				// map.addRamp( neighbour, neighbour, 2, offset, negativeOffset,
 				// Material.PLAYER_CLIP, Orientation.SOUTH);
-				this.map.addSolid(
-						this.map.createRamp(this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.SOUTH));
+				this.map.addSolid(this.map.createRamp(
+						this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+						Orientation.SOUTH));
 			} else if (this.map.hasOrHadMaterial(neighbour, Material._STAIRS_SOUTH) == false) {
 				offset = new Position(2, 0, -1);
 				negativeOffset = new Position(-1, 0, 1);
 				// map.addRamp( neighbour, neighbour, 2, offset, negativeOffset,
 				// Material.PLAYER_CLIP, Orientation.SOUTH);
-				this.map.addSolid(
-						this.map.createRamp(this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.SOUTH));
+				this.map.addSolid(this.map.createRamp(
+						this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+						Orientation.SOUTH));
 			}
 		}
 		if (this.map.hasOrHadMaterial(end, Material._STAIRS_SMALL_WEST_NORTH)) {
@@ -69,15 +72,17 @@ public class ClipRampWest extends Addable {
 				negativeOffset = new Position(-1, 0, -1);
 				// map.addRamp( neighbour, neighbour, 2, offset, negativeOffset,
 				// Material.PLAYER_CLIP, Orientation.NORTH);
-				this.map.addSolid(
-						this.map.createRamp(this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.NORTH));
+				this.map.addSolid(this.map.createRamp(
+						this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+						Orientation.NORTH));
 			} else if (this.map.hasOrHadMaterial(neighbour, Material._STAIRS_NORTH) == false) {
 				offset = new Position(2, 0, 1);
 				negativeOffset = new Position(-1, 0, -1);
 				// map.addRamp( neighbour, neighbour, 2, offset, negativeOffset,
 				// Material.PLAYER_CLIP, Orientation.NORTH);
-				this.map.addSolid(
-						this.map.createRamp(this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.NORTH));
+				this.map.addSolid(this.map.createRamp(
+						this.map.createCuboid(neighbour, neighbour, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+						Orientation.NORTH));
 			}
 		}
 

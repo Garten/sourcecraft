@@ -39,9 +39,9 @@ public class InfoPlayerTeamSpawn extends RotateablePointEntity {
 	}
 
 	@Override
-	public void writeVmfSpecific(ValveWriter writer) throws IOException {
-		writer.put("angles", "0 " + this.getRotation() + " 0")
-				.put("StartDisabled", 0)
+	public void writeVmfSpecific2(ValveWriter writer) throws IOException {
+//		writer.put("angles", "0 " + this.getRotation() + " 0")
+		writer.put("StartDisabled", 0)
 				.put("TeamNum", this.tf2Team);
 	}
 }

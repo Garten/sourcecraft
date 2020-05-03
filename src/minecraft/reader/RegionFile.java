@@ -73,6 +73,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 import basic.Loggger;
+import minecraft.Minecraft;
 
 public class RegionFile {
 
@@ -142,7 +143,6 @@ public class RegionFile {
 			this.file.seek(0);
 			for (int i = 0; i < RegionFile.SECTOR_INTS; ++i) {
 				int offset = this.file.readInt();
-//				System.out.println(this.fileName.toString() + " offset " + i + " | " + offset);
 				this.offsets[i] = offset;
 				if (offset != 0 && (offset >> 8) + (offset & 0xFF) <= this.sectorFree.size()) {
 					for (int sectorNum = 0; sectorNum < (offset & 0xFF); ++sectorNum) {
@@ -176,7 +176,8 @@ public class RegionFile {
 	}
 
 	private void debug(String mode, int x, int z, int count, String in) {
-		Loggger.log("region " + mode + " " + this.fileName.getName() + "[" + x + "," + z + "] " + count + "B = " + in, 1);
+		Loggger.log("region " + mode + " " + this.fileName.getName() + "[" + x + "," + z + "] " + count + "B = " + in,
+				1);
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class RegionFile {
 		try {
 			int offset = this.getOffset(x, z);
 			if (offset == 0) {
-				// debugln("READ", x, z, "miss");
+				Loggger.log("chunk " + x + " " + z + " not present in file " + this.fileName.getName());
 				return null;
 			}
 
@@ -352,11 +353,11 @@ public class RegionFile {
 
 	/* is this an invalid chunk coordinate? */
 	private boolean outOfBounds(int x, int z) {
-		return x < 0 || x >= 32 || z < 0 || z >= 32;
+		return x < 0 || x >= Minecraft.MAX_CHUNK_IN_FILE_X || z < 0 || z >= Minecraft.MAX_CHUNK_IN_FILE_Z;
 	}
 
 	private int getOffset(int x, int z) {
-		return this.offsets[x + z * 32];
+		return this.offsets[x + z * Minecraft.MAX_CHUNK_IN_FILE_X];
 	}
 
 	public boolean hasChunk(int x, int z) {
@@ -364,14 +365,14 @@ public class RegionFile {
 	}
 
 	private void setOffset(int x, int z, int offset) throws IOException {
-		this.offsets[x + z * 32] = offset;
-		this.file.seek((x + z * 32) * 4);
+		this.offsets[x + z * Minecraft.MAX_CHUNK_IN_FILE_X] = offset;
+		this.file.seek((x + z * Minecraft.MAX_CHUNK_IN_FILE_X) * 4);
 		this.file.writeInt(offset);
 	}
 
 	private void setTimestamp(int x, int z, int value) throws IOException {
-		this.chunkTimestamps[x + z * 32] = value;
-		this.file.seek(RegionFile.SECTOR_BYTES + (x + z * 32) * 4);
+		this.chunkTimestamps[x + z * Minecraft.MAX_CHUNK_IN_FILE_X] = value;
+		this.file.seek(RegionFile.SECTOR_BYTES + (x + z * Minecraft.MAX_CHUNK_IN_FILE_X) * 4);
 		this.file.writeInt(value);
 	}
 

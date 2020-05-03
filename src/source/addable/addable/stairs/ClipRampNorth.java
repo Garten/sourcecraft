@@ -37,7 +37,8 @@ public class ClipRampNorth extends Addable {
 		}
 		// map.addRampCuttet( p, end, 2, offset, negativeOffset,
 		// Material.PLAYER_CLIP, cut1, cut2, Orientation.NORTH );
-		Ramp ramp = this.map.createRamp(this.map.createCuboid(p, end, 2, offset, negativeOffset, Material._PLAYER_CLIP), Orientation.NORTH);
+		Ramp ramp = this.map.createRamp(this.map.createCuboid(p, end, 2, offset, negativeOffset, Material._PLAYER_CLIP),
+				Orientation.NORTH);
 		ramp.cut(cut1);
 		ramp.cut(cut2);
 		this.map.addSolid(ramp);

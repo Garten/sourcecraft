@@ -20,7 +20,8 @@ public class SkinManager {
 	public static final Skin SKYBOX = new Skin("tools/toolsskybox", 0.25);
 
 	private static final String NODRAW_TEXTURE = "tools/toolsnodraw";
-	private static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
+	private static final String PLAYER_CLIP = "tools/toolsplayerclip";
+	public static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
 
 	private double textureScale;
 	private Skin[] skin;
@@ -40,19 +41,24 @@ public class SkinManager {
 	}
 
 	private void setSkinTopBottom(int material, String main, String top, String bottom) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + main, this.folder + bottom, Orientation.NORTH, this.textureScale);
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + main, this.folder + bottom,
+				Orientation.NORTH, this.textureScale);
 	}
 
 	public void setSkinTopFront(int material, String main, String top, String front, Orientation orientation) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, orientation, this.textureScale);
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, orientation,
+				this.textureScale);
 	}
 
 	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom, Orientation.NORTH, this.textureScale);
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom,
+				Orientation.NORTH, this.textureScale);
 	}
 
-	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom, Orientation orientation) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom, orientation, this.textureScale);
+	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom,
+			Orientation orientation) {
+		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom,
+				orientation, this.textureScale);
 	}
 
 	public SkinManager(String folder, int textureSizeNew, int scale) {
@@ -71,7 +77,6 @@ public class SkinManager {
 
 		for (int id = 1; id < Material.__LENGTH_USEFUL; id++) {
 			String name = Material.getName(id);
-
 			if (name.startsWith("andesite")) {
 				this.setSkin(id, "stone_andesite");
 			} else if (name.startsWith("diorite")) {
@@ -96,10 +101,12 @@ public class SkinManager {
 				this.setSkin(id, "stonebrick_mossy");
 			} else if (name.startsWith("mossy_cobblestone")) {
 				this.setSkin(id, "cobblestone_mossy");
+			} else if (name.startsWith("prismarine")) { // order crucial
+				this.setSkin(id, "prismarine_rough");
 			} else if (name.startsWith("prismarine_brick")) {
 				this.setSkin(id, "prismarine_brick");
-			} else if (name.startsWith("prismarine")) {
-				this.setSkin(id, "prismarine_rough");
+			} else if (name.startsWith("prismareine_dark")) {
+				this.setSkin(id, "prismareine_dark");
 			} else if (name.startsWith("nether_brick")) {
 				this.setSkin(id, "nether_brick");
 			} else if (name.startsWith("red_nether_brick")) {
@@ -110,6 +117,16 @@ public class SkinManager {
 				this.setSkin(id, "brick");
 			} else if (name.startsWith("cobblestone")) {
 				this.setSkin(id, "cobblestone");
+			} else if (name.startsWith("stone")) {
+				this.setSkin(id, "stone");
+			} else if (name.startsWith("oak")) {
+				this.setSkin(id, "planks_oak"); // except oak_log, door
+			} else if (name.startsWith("dark_oak")) {
+				this.setSkin(id, "planks_big_oak"); // except log, door, ..
+			} else if (name.startsWith("spruce")) {
+				this.setSkin(id, "planks_spruce");
+			} else if (name.startsWith("acacia")) {
+				this.setSkin(id, "planks_acacia");
 			}
 
 			if (name.endsWith("_log")) { // except dark oak
@@ -154,8 +171,6 @@ public class SkinManager {
 
 		this.setSkin(Material.CHISELED_STONE_BRICKS, "stonebrick_carved");
 		this.setSkin(Material.CRACKED_STONE_BRICKS, "stonebrick_cracked");
-		this.setSkin(Material.MOSSY_STONE_BRICKS, "stonebrick_mossy");
-		this.setSkin(Material.MOSSY_STONE_BRICK_SLAB, "stonebrick_mossy");
 
 		this.setSkin(Material.ANDESITE, "stone_andesite");
 		this.setSkin(Material.POLISHED_ANDESITE, "stone_andesite_smooth");
@@ -173,11 +188,6 @@ public class SkinManager {
 		this.setSkin(Material.CHISELED_RED_SANDSTONE, "red_sandstone_carved", "red_sandstone_top");
 		this.setSkin(Material.SMOOTH_RED_SANDSTONE, "red_sandstone_smooth", "sandstone_top");
 
-		this.setSkin(Material.PRISMARINE, "prismarine_rough");
-		this.setSkin(Material.PRISMARINE_SLAB, "prismarine_rough");
-		this.setSkin(Material.DARK_PRISMARINE, "prismarine_dark");
-		this.setSkin(Material.DARK_PRISMARINE_SLAB, "prismareine_dark");
-
 		this.setSkin(Material.PURPUR_PILLAR, "purpur_pillar", "purpur_pillar_top");
 
 		this.setSkin(Material.BONE_BLOCK, "bone_block_side", "bone_block_top");
@@ -190,7 +200,8 @@ public class SkinManager {
 
 		this.setSkinTopBottom(Material.TNT, "tnt_side", "tnt_top", "tnt_bottom");
 
-		for (int material : new int[] { Material.WATER, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP, Material.KELP_PLANT }) {
+		for (int material : new int[] { Material.WATER, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP,
+				Material.KELP_PLANT }) {
 			this.setWaterTexture(material);
 		}
 
@@ -205,22 +216,25 @@ public class SkinManager {
 		this.setSkin(Material.WET_SPONGE, "sponge_wet");
 
 		this.setSkin(Material.MELON, "melon", "melon_top");
-		this.setSkinTopFront(Material.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off", Orientation.NORTH);
-		this.setSkinTopFront(Material.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on", Orientation.NORTH);
+		this.setSkinTopFront(Material.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off",
+				Orientation.NORTH);
+		this.setSkinTopFront(Material.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on",
+				Orientation.NORTH);
 		this.setSkin(Material.PUMPKIN, "pumpkin_side", "pumpkin_top");
 
-		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal", Orientation.NORTH);
+		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal",
+				Orientation.NORTH);
 
-		this.setSkin(Material.TORCH, "torch_on");
-		this.setSkin(Material.WALL_TORCH, "torch_on");
-		this.setSkin(Material.WALL_TORCH_NORTH, "torch_on");
-		this.setSkin(Material.WALL_TORCH_EAST, "torch_on");
-		this.setSkin(Material.WALL_TORCH_SOUTH, "torch_on");
-		this.setSkin(Material.WALL_TORCH_WEST, "torch_on");
+		this.setSkin(Material.TORCH, "magma"); // temporary fixes
+		this.setSkin(Material.WALL_TORCH$NORTH, "magma");
+		this.setSkin(Material.WALL_TORCH$EAST, "magma");
+		this.setSkin(Material.WALL_TORCH$SOUTH, "magma");
+		this.setSkin(Material.WALL_TORCH$WEST, "magma");
 
 		this.setSkin(Material.CACTUS, "cactus_side", "cactus_top");
 		this.setSkin(Material.SLIME_BLOCK, "slime");
-		this.setSkinTopFront(Material.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top", "crafting_table_front", Orientation.NORTH);
+		this.setSkinTopFront(Material.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top",
+				"crafting_table_front", Orientation.NORTH);
 		this.setSkinTopFront(Material.FURNACE, "furnace_side", "furnace_top", "furnace_front_on", Orientation.NORTH);
 
 		this.setSkinTopBottom(Material.END_PORTAL_FRAME, "endframe_side", "endframe_top", "end_stone");
@@ -230,23 +244,33 @@ public class SkinManager {
 
 		// temporary fixes
 		this.setSkin(Material.CAMPFIRE, "magma");
+		this.setSkin(Material.LANTERN, "magma");
 		this.setSkin(Material.BLAST_FURNACE, "furnace_front_on");
 
 		// special
-		this.setSourceSkin(Material._PLAYER_CLIP, "tools/toolsplayerclip");
+		this.setSourceSkin(Material._PLAYER_CLIP, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_NORTH, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_EAST, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_SOUTH, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_WEST, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_NORTH_EAST, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_NORTH_WEST, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_SOUTH_EAST, PLAYER_CLIP);
+		this.setSourceSkin(Material._RAMP_SOUTH_WEST, PLAYER_CLIP);
 		this.setSourceSkin(Material._UNKOWN, DEFAULT_TEXTURE);
 	}
 
 	private void setWaterTexture(int material) {
-		this.setSkinTopBottom(material, NODRAW_TEXTURE, "water_still", NODRAW_TEXTURE);
+		this.skin[material] = new Skin(NODRAW_TEXTURE, this.folder + "water_still", NODRAW_TEXTURE, NODRAW_TEXTURE,
+				this.textureScale);
 	}
 
 	public Skin getSkin(int material) {
-		if (0 <= material && material < this.skin.length)
+		if (0 <= material && material < this.skin.length) {
 			return this.skin[material];
-		else {
+		} else {
 			Loggger.log("unkown material " + material);
-			return skin[Material._UNKOWN];
+			return this.skin[Material._UNKOWN];
 		}
 	}
 }

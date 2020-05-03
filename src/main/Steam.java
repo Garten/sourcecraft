@@ -1,10 +1,11 @@
 package main;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import basic.Loggger;
-import minecraft.TextureFolderMover;
 import periphery.Periphery;
 import periphery.SourceGame;
 import periphery.TextureOptions;
@@ -26,12 +27,13 @@ public class Steam {
 	public static final String STEAM_MAP_SRC_PATH = "mapsrc";
 
 	private static final String[] POTENTIAL_STEAM_PATH_GRAND_PARENTS = { "C:", "D:", "E:", File.separator };
-	private static final String[] POTENTIAL_STEAM_PATH_PARENTS = { "Program Files", "Program Files (x86)", "Programs", "Programme" };
+	private static final String[] POTENTIAL_STEAM_PATH_PARENTS = { "Program Files", "Program Files (x86)", "Programs",
+			"Programme" };
 
-	public static File getSteamPath() {
-		File steamPath = Periphery.CONFIG.getSteamPath();
+	public static Path getSteamPath() {
+		Path steamPath = Periphery.CONFIG.getSteamPath();
 		if (!isSteamPath(steamPath)) {
-			File potentialPath = guessSteamPath();
+			Path potentialPath = guessSteamPath();
 			if (potentialPath != null) {
 				Loggger.log("guessed steam path: " + potentialPath);
 				steamPath = potentialPath;
@@ -41,16 +43,16 @@ public class Steam {
 		return steamPath;
 	}
 
-	private static File guessSteamPath() {
+	private static Path guessSteamPath() {
 		if (Main.isUnix()) {
-			File potentialPath = new File(System.getProperty("user.home") + File.separator + STEAM_NAME_UNIX);
+			Path potentialPath = Paths.get(System.getProperty("user.home"), STEAM_NAME_UNIX);
 			if (isSteamPath(potentialPath)) {
 				return potentialPath;
 			}
 		}
 		for (String first : POTENTIAL_STEAM_PATH_GRAND_PARENTS) {
 			for (String second : POTENTIAL_STEAM_PATH_PARENTS) {
-				File potentialPath = new File(first + File.separator + second + File.separator + STEAM_NAME);
+				Path potentialPath = Paths.get(first, second, STEAM_NAME);
 				if (isSteamPath(potentialPath)) {
 					return potentialPath;
 				}
@@ -59,11 +61,12 @@ public class Steam {
 		return null;
 	}
 
-	public static boolean isSteamPath(File path) {
+	public static boolean isSteamPath(Path path) {
 		if (path == null) {
 			return false;
 		}
-		if (!path.exists() || !path.isDirectory() || !path.getName()
+		if (!Files.isDirectory(path) || !path.getFileName()
+				.toString()
 				.toLowerCase()
 				.equals(STEAM_NAME.toLowerCase())) {
 			return false;
@@ -106,7 +109,8 @@ public class Steam {
 			Loggger.warn("Cannot find material path.");
 			return false;
 		}
-		Path optionsGamePath = new File(materiaPath.toString() + File.separator + TexturePack.TEXTURE_OPTIONS_FILE).toPath();
+		Path optionsGamePath = new File(materiaPath.toString() + File.separator + TexturePack.TEXTURE_OPTIONS_FILE)
+				.toPath();
 		TextureOptions toGame = TexturePack.readTextureOptions(new TextureOptions(), optionsGamePath);
 		TextureOptions toSourcecraft = pack.getTextureOptions();
 		return TextureOptions.isUpToDate(toGame, toSourcecraft);

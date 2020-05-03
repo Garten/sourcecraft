@@ -6,6 +6,7 @@ import java.util.Map;
 
 import basic.Loggger;
 import basic.RunnableThrowing;
+import basic.ThrowingRunnableWith;
 
 public abstract class NbtReader {
 
@@ -163,6 +164,15 @@ public abstract class NbtReader {
 			} else {
 				action.run();
 			}
+			tag = this.readTag();
+		}
+	}
+
+	public void doCompond(ThrowingRunnableWith<String> action) throws IOException {
+		int tag = this.stream.readUnsignedByte();
+		while (tag != NbtTag.END) {
+			String title = this.readTitle();
+			action.run(title);
 			tag = this.readTag();
 		}
 	}

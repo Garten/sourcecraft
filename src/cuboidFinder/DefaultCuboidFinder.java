@@ -1,14 +1,20 @@
 package cuboidFinder;
 
 import minecraft.Position;
-import minecraft.map.DefaultMinecraftMapConverter;
+import minecraft.map.ConverterContext;
 
-public abstract class AbstractCuboidFinder implements CuboidFinder {
+public class DefaultCuboidFinder extends CuboidFinder {
 
-	protected final DefaultMinecraftMapConverter map;
+	protected final ConverterContext map;
 
-	public AbstractCuboidFinder(DefaultMinecraftMapConverter map) {
+	public DefaultCuboidFinder(ConverterContext map) {
 		this.map = map;
+	}
+
+	protected boolean blockValid(int xTest, int yTest, int zTest, int... material) {
+		Position test = new Position(xTest, yTest, zTest);
+		assert this.map != null;
+		return (this.map.hasMaterial(test, material) == true && this.map.isNextToAir(test) == true);
 	}
 
 	@Override
@@ -46,7 +52,6 @@ public abstract class AbstractCuboidFinder implements CuboidFinder {
 		return this.getBestZ(p.getX(), p.getY(), p.getZ(), materials);
 	}
 
-	// methods that determine a maximal size of a Cuboid
 	public Position getBestXYZ(int x, int y, int z, int... materials) {
 		int xRun = x;
 		int yRun = y;
@@ -222,7 +227,7 @@ public abstract class AbstractCuboidFinder implements CuboidFinder {
 	private boolean addZValid(int x, int y, int z, int xRun, int yRun, int zRun, int... materials) {
 		for (int xTest = x; xTest <= xRun; xTest++) {
 			for (int yTest = y; yTest <= yRun; yTest++) {
-				if (this.blockNotValid(xTest, yTest, zRun, materials)) {
+				if (!this.blockValid(xTest, yTest, zRun, materials)) {
 					return false;
 				}
 			}
@@ -233,7 +238,7 @@ public abstract class AbstractCuboidFinder implements CuboidFinder {
 	private boolean addYValid(int x, int y, int z, int xRun, int yRun, int zRun, int... materials) {
 		for (int xTest = x; xTest <= xRun; xTest++) {
 			for (int zTest = z; zTest <= zRun; zTest++) {
-				if (this.blockNotValid(xTest, yRun, zTest, materials)) {
+				if (!this.blockValid(xTest, yRun, zTest, materials)) {
 					return false;
 				}
 			}
@@ -244,7 +249,7 @@ public abstract class AbstractCuboidFinder implements CuboidFinder {
 	private boolean addXValid(int x, int y, int z, int xRun, int yRun, int zRun, int... materials) {
 		for (int yTest = y; yTest <= yRun; yTest++) {
 			for (int zTest = z; zTest <= zRun; zTest++) {
-				if (this.blockNotValid(xRun, yTest, zTest, materials)) {
+				if (!this.blockValid(xRun, yTest, zTest, materials)) {
 					return false;
 				}
 			}
@@ -252,5 +257,4 @@ public abstract class AbstractCuboidFinder implements CuboidFinder {
 		return true;
 	}
 
-	protected abstract boolean blockNotValid(int xTest, int yTest, int zTest, int... material);
 }

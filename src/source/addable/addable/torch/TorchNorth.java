@@ -8,7 +8,7 @@ import vmfWriter.entity.solidEntity.FuncIllusionary;
 public class TorchNorth extends Addable {
 
 	public TorchNorth() {
-		int[] temp = { Material.WALL_TORCH_NORTH };
+		int[] temp = { Material.WALL_TORCH$NORTH };
 		super.setMaterialUsedFor(temp);
 	}
 
@@ -27,7 +27,8 @@ public class TorchNorth extends Addable {
 		pointOffset[7] = new Position(14, 4, 28); // h
 
 		Position point = new Position(p);
-		this.map.addSolidEntity(new FuncIllusionary(this.map.createFree8Point(point, point, parts, pointOffset, false, material)));
+		this.map.addSolidEntity(
+				new FuncIllusionary(this.map.createFree8Point(point, point, parts, pointOffset, false, material)));
 		this.map.setPointToGrid(p);
 		this.map.movePointInGridDimension(0.5, 0.7, (13.0 / 20.0));
 		this.map.addPointEntity(Torch.PARTICLE_SYSTEM);

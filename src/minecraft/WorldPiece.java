@@ -24,7 +24,8 @@ public class WorldPiece {
 
 		this.higher = Position.subtract(end, chunkStart);
 		this.higher.y = end.y;
-		this.higher = Position.capBelow(this.higher, new Position(Minecraft.CHUNK_SIZE_X, Minecraft.MAX_Y, Minecraft.CHUNK_SIZE_Z));
+		this.higher = Position.capBelow(this.higher,
+				new Position(Minecraft.CHUNK_SIZE_X, Minecraft.MAX_Y, Minecraft.CHUNK_SIZE_Z));
 
 		// local chunk position
 		int x = getLocalCunkCoordinate(this.globalChunkPosition.getX());
@@ -92,8 +93,8 @@ public class WorldPiece {
 		}
 	}
 
-	public Bounds createBounds() {
-		return new Bounds(this.getLower(), this.getHigher());
+	public Area createBounds() {
+		return new Area(this.getLower(), this.getHigher());
 	}
 
 	public Position getAreaXZ() {
@@ -104,8 +105,9 @@ public class WorldPiece {
 
 	@Override
 	public String toString() {
-		return this.filePosition.toFileName() + " local " + this.localChunkPosition.toString() + " bounds " + this.lower.toBracketString() + " to "
-				+ this.higher.toBracketString() + " -> " + this.vmfStart.toBracketString();
+		return this.filePosition.toFileName() + " local " + this.localChunkPosition.toString() + " bounds "
+				+ this.lower.toBracketString() + " to " + this.higher.toBracketString() + " -> "
+				+ this.vmfStart.toBracketString();
 	}
 
 	public Position getVmfStart() {
