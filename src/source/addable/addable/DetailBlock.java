@@ -1,25 +1,29 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 import vmfWriter.entity.solidEntity.FuncDetail;
 
 /**
  * creates a "func_detail"-Block
  */
-public class DetailBlock extends Addable {
+public class DetailBlock extends ConvertAction {
 
 	public DetailBlock() {
-		int[] temp = { Material.OAK_LEAVES, Material.GLASS, Material.ICE, Material.JUNGLE_LEAVES,
-				Material.SPRUCE_LEAVES, Material.BIRCH_LEAVES, Material.ACACIA_LEAVES, Material.DARK_OAK_LEAVES };
+		int[] temp = { MaterialLegacy.OAK_LEAVES, MaterialLegacy.GLASS, MaterialLegacy.ICE,
+				MaterialLegacy.JUNGLE_LEAVES, MaterialLegacy.SPRUCE_LEAVES, MaterialLegacy.BIRCH_LEAVES,
+				MaterialLegacy.ACACIA_LEAVES, MaterialLegacy.DARK_OAK_LEAVES };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestXYZ(p, material);
-		this.map.addSolidEntity(new FuncDetail(this.map.createCuboid(p, end, material)));
-		this.map.markAsConverted(p, end);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position end = context.getCuboidFinder()
+				.getBestXYZ(p, material);
+		context.addSolidEntity(new FuncDetail(context.createCuboid(p, end, material)));
+		context.markAsConverted(p, end);
 	}
 }

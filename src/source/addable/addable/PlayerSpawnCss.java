@@ -1,16 +1,13 @@
 package source.addable.addable;
 
-import java.util.LinkedList;
-
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.addable.ConvertAction;
 import vmfWriter.entity.pointEntity.RotateablePointEntity;
-import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerCT;
-import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerT;
 import vmfWriter.entity.solidEntity.Buyzone;
 
-public class PlayerSpawnCss extends Addable {
+public class PlayerSpawnCss extends ConvertAction {
 
 	private final static int SPACE = 40;
 
@@ -21,29 +18,18 @@ public class PlayerSpawnCss extends Addable {
 
 	}
 
-	public PlayerSpawnCss(int material, RotateablePointEntity type, boolean police) {
-		super.setMaterialUsedFor(material);
+	public PlayerSpawnCss(RotateablePointEntity type, boolean police) {
 		this.type = type;
 		this.police = police;
 	}
 
 	@Override
-	public Iterable<Addable> getInstances() {
-		LinkedList<Addable> list = new LinkedList<>();
-		list.add(new PlayerSpawnCss(Material.END_PORTAL_FRAME, new InfoPlayerT().setRotation(0), false));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$NORTH, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$EAST, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$SOUTH, new InfoPlayerCT().setRotation(180), true));
-		list.add(new PlayerSpawnCss(Material.ENDER_CHEST$WEST, new InfoPlayerCT().setRotation(180), true));
-		return list;
-	}
-
-	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestXZ(p, material);
-		this.map.addPointEntitys(p, end, PlayerSpawnCss.SPACE, this.type);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position end = context.getCuboidFinder()
+				.getBestXZ(p, material);
+		context.addPointEntitys(p, end, PlayerSpawnCss.SPACE, this.type);
 		end.move(0, 2, 0);
-		this.map.addSolidEntity(new Buyzone(this.map.createCuboid(p, end, 0), this.police));
-		this.map.markAsConverted(p, end);
+		context.addSolidEntity(new Buyzone(context.createCuboid(p, end, null), this.police));
+		context.markAsConverted(p, end);
 	}
 }

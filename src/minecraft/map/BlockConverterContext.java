@@ -1,25 +1,21 @@
 package minecraft.map;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.function.Consumer;
 
 import basic.Loggger;
-import basic.RunnableWith;
 import basic.Tuple;
-import main.ConverterData;
+import main.ConvertTask;
 import minecraft.Area;
-import minecraft.ConvertingReport;
+import minecraft.Block;
+import minecraft.Blocks;
 import minecraft.Position;
 import minecraft.SubBlockPosition;
 import periphery.ConvertOption;
 import periphery.SourceGame;
-import source.Material;
 import source.SkinManager;
 import source.addable.CustomAddableManager;
 import vmfWriter.Cuboid;
 import vmfWriter.Free8Point;
-import vmfWriter.Orientation;
-import vmfWriter.Ramp;
 import vmfWriter.Skin;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.pointEntity.pointEntity.LightEnvironment;
@@ -31,7 +27,8 @@ public class BlockConverterContext extends ConverterContext {
 
 	private final Position arraySize;
 
-	private int[][][] materialField;
+	private boolean[][][] isConverted;
+	private Block[][][] materialField;
 	private boolean[][][] isNextToAir;
 
 	private boolean isAirBlock[][][];
@@ -39,15 +36,16 @@ public class BlockConverterContext extends ConverterContext {
 
 	private SubblockConverterContext subBlocks;
 
-	public BlockConverterContext(ConverterData converterData, ExtendedSourceMap target) {
+	public BlockConverterContext(ConvertTask converterData, ExtendedSourceMap target) {
 		this.setTarget(target);
 
 		this.convertOption = converterData.getOption();
-		super.target.setSkyTexture(this.convertOption.getSkyTexture());
+		this.setSkyTexture(this.convertOption.getSkyTexture());
 
 		this.setScale(this.convertOption.getScale());
 
-		this.setAddableManager(new CustomAddableManager(this, this.convertOption.getAddablesAsStrings()));
+		this.convertOption.getAddablesAsStrings();
+		this.setAddableManager(new CustomAddableManager(this, null).setDefaults());
 
 		this.bound = converterData.getPlace()
 				.createBound();
@@ -62,11 +60,11 @@ public class BlockConverterContext extends ConverterContext {
 
 		this.isNextToAir = this.createBooleanArray(this.arraySize);
 		this.isAirBlock = this.createBooleanArray(this.arraySize);
-
-		this.materialField = this.createIntArray(this.arraySize);
+		this.isConverted = this.createBooleanArray(this.arraySize);
+		this.materialField = this.createBlockArray(this.arraySize);
 
 		this.forAllPositions(p -> {
-			this.materialField[p.x][p.y][p.z] = Material._UNSET;
+			this.materialField[p.x][p.y][p.z] = Blocks._UNSET;
 			this.isNextToAir[p.x][p.y][p.z] = true;
 		});
 
@@ -77,8 +75,8 @@ public class BlockConverterContext extends ConverterContext {
 		return new boolean[size.getX()][size.getY()][size.getZ()];
 	}
 
-	private int[][][] createIntArray(Position size) {
-		return new int[size.getX()][size.getY()][size.getZ()];
+	private Block[][][] createBlockArray(Position size) {
+		return new Block[size.getX()][size.getY()][size.getZ()];
 	}
 
 	public void markBorder() {
@@ -102,31 +100,31 @@ public class BlockConverterContext extends ConverterContext {
 		}
 	}
 
-	public void forAllPositions(RunnableWith<Position> execute) {
+	public void forAllPositions(Consumer<Position> execute) {
 		this.forPositions(new Position(1, 1, 1), this.arraySize.getOffset(-2, -2, -2), execute);
 	}
 
-	public void forPositions(Position start, Position end, RunnableWith<Position> execute) {
+	public void forPositions(Position start, Position end, Consumer<Position> execute) {
 		for (int y = start.y; y <= end.y; y++) {
 			for (int x = start.x; x <= end.x; x++) {
 				for (int z = start.z; z <= end.z; z++) {
-					execute.run(new Position(x, y, z));
+					execute.accept(new Position(x, y, z));
 				}
 			}
 		}
 	}
 
 	@Override
-	public void addObjects(SourceMap target, SourceGame game) {
+	public void addObjects(SourceGame game) {
 		this.setAirBlocks();
 		Loggger.log("run");
 		this.markBorder(); // temp fix
 		this.forAllPositions(position -> {
-			if (this.isNextToAir(position) == true) {
-				this.addableManager.add(position, this.getMaterial(position));
+			if (this.isNextToAir(position) && (!this.isConverted(position))) {
+				this.convertActions.add(this, position, this.getMaterial(position));
 			}
 		});
-		this.subBlocks.addObjects(target, game);
+		this.subBlocks.addObjects(game);
 		this.addSkyShell();
 		this.addSpawnPoint(game);
 	}
@@ -145,7 +143,8 @@ public class BlockConverterContext extends ConverterContext {
 			middleX.setY(y);
 			middleZ.setY(y);
 			middleXZ.setY(y);
-			if (!(this.isAir(middle) && this.isAir(middleX) && this.isAir(middleZ) && this.isAir(middleXZ))) {
+			if (!(this.isAirLegacy(middle) && this.isAirLegacy(middleX) && this.isAirLegacy(middleZ)
+					&& this.isAirLegacy(middleXZ))) {
 				break;
 			}
 		}
@@ -159,14 +158,13 @@ public class BlockConverterContext extends ConverterContext {
 
 	private void setAirBlocks() {
 		this.forAllPositions(position -> {
-			if (this.isAirBlockInitiate(position)) {
+			if (this.isAir(position)) {
 				this.setAirBlock(position, true);
 				this.markNeighbors(position);
 			} else {
 				this.setAirBlock(position, false);
 			}
 		});
-		this.markBorder();
 	}
 
 	// marks neighbor blocks and itself to be needed
@@ -199,11 +197,11 @@ public class BlockConverterContext extends ConverterContext {
 
 	@Override
 	public void markAsConverted(Position p) {
-		this.materialField[p.x][p.y][p.z] = -this.materialField[p.x][p.y][p.z];
+		this.isConverted[p.x][p.y][p.z] = true;
 	}
 
 	@Override
-	public int getMaterial(Position p) {
+	public Block getMaterial(Position p) {
 		return this.materialField[p.getX()][p.getY()][p.getZ()];
 	}
 
@@ -213,16 +211,14 @@ public class BlockConverterContext extends ConverterContext {
 	}
 
 	@Override
-	public void addSubBlock(Position position, SubBlockPosition pos, int materialInt) {
+	public void addSubBlock(Position position, SubBlockPosition pos, Block block) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
-		// TODO check if already set
-		Integer material = Integer.valueOf(materialInt);
 		x = x * 2 + 1;
 		y = y * 2 + 1;
 		z = z * 2 + 1;
-		Position point;
+		Position point = null;
 		switch (pos) {
 		case BOTTOM_EAST_SOUTH:
 			point = new Position(x, y - 1, z);
@@ -249,17 +245,9 @@ public class BlockConverterContext extends ConverterContext {
 			point = new Position(x - 1, y, z - 1);
 			break;
 		default:
-			point = new Position(1, 1, 1);
-			Loggger.warn("default case of subBlocks occured");
 			break;
 		}
-		this.subBlocks.setMaterial(point, material);
-	}
-
-	public ConvertingReport write(File file, SourceGame game) throws IOException {
-		this.addObjects(this.target, game);
-		this.target.write(file, game);
-		return null;
+		this.subBlocks.setMaterial(point, block);
 	}
 
 	/**
@@ -287,10 +275,10 @@ public class BlockConverterContext extends ConverterContext {
 
 		// addSun
 		Position p = new Position(-this.getScale() * 2, this.getScale() * 2, (verticalHeight + 4) * this.getScale());
-		this.target.addPointEntity(p,
+		this.addPointEntity(p,
 				new LightEnvironment(p, this.convertOption.getSunLight(), this.convertOption.getSunAmbient()));
 		p.move(this.getScale() / 2, 0, 0);
-		this.target.addPointEntity(p, new ShadowControl(p, this.convertOption.getSunShadow()));
+		this.addPointEntity(p, new ShadowControl(p, this.convertOption.getSunShadow()));
 	}
 
 	private void createHollow(Position aPoint, Position hollow, Position gPoint, Skin skin) {
@@ -298,24 +286,24 @@ public class BlockConverterContext extends ConverterContext {
 		int hollowY = hollow.getY() - aPoint.getY();
 		int hollowZ = hollow.getZ() - aPoint.getZ();
 		// bottom
-		this.target.addSolid(new Cuboid(
+		this.addSolid(new Cuboid(
 				new Tuple<>(aPoint, new Position(gPoint.getX(), gPoint.getY(), aPoint.getZ() + hollowZ)), skin));
 		// top
-		this.target.addSolid(new Cuboid(
+		this.addSolid(new Cuboid(
 				new Tuple<>(new Position(aPoint.getX(), aPoint.getY(), gPoint.getZ() - hollowZ), gPoint), skin));
 
 		// x side
-		this.target.addSolid(new Cuboid(new Tuple<>(aPoint.getOffset(0, 0, hollowZ),
+		this.addSolid(new Cuboid(new Tuple<>(aPoint.getOffset(0, 0, hollowZ),
 				new Position(aPoint.getX() + hollowX, gPoint.getY(), gPoint.getZ() - hollowZ)), skin));
-		this.target.addSolid(
+		this.addSolid(
 				new Cuboid(new Tuple<>(new Position(gPoint.getX() - hollowX, aPoint.getY(), aPoint.getZ() + hollowZ),
 						gPoint.getOffset(0, 0, -hollowZ)), skin));
 		// y side
-		this.target.addSolid(new Cuboid(
+		this.addSolid(new Cuboid(
 				new Tuple<>(aPoint.getOffset(hollowX, 0, hollowZ),
 						new Position(gPoint.getX() - hollowX, aPoint.getY() + hollowY, gPoint.getZ() - hollowZ)),
 				skin));
-		this.target.addSolid(new Cuboid(
+		this.addSolid(new Cuboid(
 				new Tuple<>(new Position(aPoint.getX() + hollowX, gPoint.getY() - hollowY, aPoint.getZ() + hollowZ),
 						gPoint.getOffset(-hollowX, 0, -hollowZ)),
 				skin));
@@ -324,17 +312,19 @@ public class BlockConverterContext extends ConverterContext {
 	@Override
 	public void addPointEntitys(Position start, Position end, int space, PointEntity type) {
 		Tuple<Position, Position> conveted = this.convertPositions(start, end);
-		super.target.addPointEntitys(conveted.getFirst(), conveted.getSecond(), space, type);
+		this.addPointEntitys(conveted.getFirst(), conveted.getSecond(), space, type);
 	}
 
 	@Override
-	public void setMaterial(Position p, int material) {
-		this.materialField[p.getX()][p.getY()][p.getZ()] = material;
+	public void setMaterial(Position p, Block block) {
+		if (block != null) {
+			this.materialField[p.getX()][p.getY()][p.getZ()] = block;
+		}
 	}
 
 	@Override
 	public Free8Point createFree8Point(Position start, Position end, int parts, Position[] offset, boolean align,
-			int material) {
+			Block material) {
 		double grid = ((double) (this.getScale())) / (double) (parts);
 		Position[] p = new Position[8];
 		for (int i = 0; i < 8; i++) {
@@ -348,14 +338,12 @@ public class BlockConverterContext extends ConverterContext {
 		return shape;
 	}
 
-	@Override
-	public Ramp createRampCuttet(Cuboid cuboid, Orientation orientation, Orientation cut1, Orientation cut2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void setIsNextToAir(Position position, boolean value) {
 		this.isNextToAir[position.x][position.y][position.z] = value;
 	}
 
+	@Override
+	protected boolean isConverted(Position p) {
+		return this.isConverted[p.x][p.y][p.z];
+	}
 }

@@ -1,23 +1,26 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 
-public class Cactus extends Addable {
+public class Cactus extends ConvertAction {
 
 	public Cactus() {
-		int[] temp = { Material.CACTUS };
+		int[] temp = { MaterialLegacy.CACTUS };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestY(p, material);
+	public void add(ConverterContext context, Position position, Block block) {
+		Position end = context.getCuboidFinder()
+				.getBestY(position, block);
 		int parts = 8;
 		Position offset = new Position(1, 0, 1);
 		Position negativeOffset = new Position(1, 1, 1);
-		this.map.addDetail(this.map.createCuboid(p, end, parts, offset, negativeOffset, material));
-		this.map.markAsConverted(p, end);
+		context.addDetail(context.createCuboid(position, end, parts, offset, negativeOffset, block));
+		context.markAsConverted(position, end);
 	}
 }

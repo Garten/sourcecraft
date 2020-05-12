@@ -1,24 +1,27 @@
 package source;
 
-import source.addable.Addable;
-import source.addable.AddableManager;
+import java.util.function.Predicate;
+
+import minecraft.Block;
+import source.addable.ConvertAction;
+import source.addable.ConvertActions;
 import vmfWriter.Orientation;
 
-public class MaterialWallFilter implements MaterialFilter {
+public class MaterialWallFilter implements Predicate<Block> {
 
-	private AddableManager manager;
+	private ConvertActions manager;
 	private Orientation orientation;
 
-	public MaterialWallFilter(AddableManager manager, Orientation orientation) {
+	public MaterialWallFilter(ConvertActions manager, Orientation orientation) {
 		this.manager = manager;
 		this.orientation = orientation;
 	}
 
 	@Override
-	public boolean filter(int material) {
-		Addable addable = this.manager.getAddable(material);
+	public boolean test(Block material) {
+		ConvertAction addable = this.manager.getAction(material);
 		if (addable != null) {
-			return this.manager.getAddable(material)
+			return this.manager.getAction(material)
 					.hasWall(this.orientation);
 		} else {
 			return false;

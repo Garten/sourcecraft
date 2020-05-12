@@ -1,6 +1,11 @@
 package minecraft.map;
 
+import java.io.File;
+import java.io.IOException;
+
+import minecraft.ConvertingReport;
 import minecraft.Position;
+import periphery.SourceGame;
 import vmfWriter.Solid;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
@@ -38,4 +43,6 @@ public interface SourceMap {
 	public void setCameraPosition(Position origin);
 
 	public void setCameraLook(Position position);
+
+	public ConvertingReport write(File file, SourceGame game) throws IOException;
 }

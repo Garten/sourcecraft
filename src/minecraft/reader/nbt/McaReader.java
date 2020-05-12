@@ -2,11 +2,10 @@ package minecraft.reader.nbt;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import main.Converter;
-import minecraft.McaBlock;
+import minecraft.Block;
+import minecraft.Blocks;
 import minecraft.McaSection;
 import minecraft.WorldPiece;
 
@@ -16,6 +15,9 @@ public class McaReader extends NbtReader {
 	private static final NamedTag SECTIONS = new NamedTag(NbtTag.LIST, "Sections");
 	private static final NamedTag PALETTE = new NamedTag(NbtTag.LIST, "Palette");
 	private static final NamedTag BLOCK_STATES = new NamedTag(NbtTag.LONG_ARRAY, "BlockStates");
+
+	private static final NamedTag PALETTE_NAME = new NamedTag(NbtTag.STRING, "Name");
+	private static final NamedTag PALETTE_PROPERTIES = new NamedTag(NbtTag.COMPOUND, "Properties");
 
 	private Converter map;
 	private WorldPiece convertee;
@@ -44,52 +46,31 @@ public class McaReader extends NbtReader {
 		});
 	}
 
-	private class Mapping {
-
-		McaBlock[] mapping;
-
-		public McaBlock[] get() {
-			return this.mapping;
-		}
-
-		public void set(McaBlock[] mapping) {
-			this.mapping = mapping;
-		}
-	}
-
 	/**
 	 * Reads the section after the title has already be been read.
 	 */
 	private McaSection readSection() throws IOException {
 		McaSection section = new McaSection(this.convertee);
-		Mapping mapping = new Mapping();
-		NbtTasks sectionTasks = NbtTasks.I.create()
+		this.doCompound(NbtTasks.I.create()
 				.put(Y, () -> section.setHeight(this.readByte()))
 				.put(BLOCK_STATES, () -> section.readBlocksRaw(this))
-				.put(PALETTE, () -> this.readPalette(mapping));
-		this.doCompound(sectionTasks);
-		section.translateRawInfo(mapping.get());
+				.put(PALETTE, () -> this.readPalette(section)));
+//		section.translateRawInfo(mapping.get()); // TODO lazy on output
 		return section;
 	}
 
-	private void readPalette(Mapping mapping) throws IOException {
-		Queue<McaBlock> palette = new LinkedList<>();
-		this.doListOfCompounds(() -> {
-			McaBlock block = new McaBlock();
-			block.read(this);
-			palette.add(block);
+	private void readPalette(McaSection section) throws IOException {
+		this.doListOfCompounds(pos -> {
+			section.addPalette(pos, this.readBlock());
 		});
-		mapping.set(getMapping(palette));
 	}
 
-	private static McaBlock[] getMapping(Queue<McaBlock> palette) {
-		McaBlock[] mapping = new McaBlock[palette.size()];
-		for (int i = 0; i < mapping.length; i++) {
-			McaBlock block = palette.poll();
-			mapping[i] = block;
-//			mapping[i] = Material.get(block);
-		}
-		return mapping;
+	private Block readBlock() throws IOException {
+		return Blocks.I.getIO(template -> {
+			this.doCompound(NbtTasks.I.create()
+					.put(PALETTE_NAME, () -> template.setName(this.readString()))
+					.put(PALETTE_PROPERTIES,
+							() -> this.doCompond(title -> template.addProperty(title, this.readString()))));
+		});
 	}
-
 }

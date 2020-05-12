@@ -2,9 +2,9 @@ package basic;
 
 import java.io.IOException;
 
-public interface ThrowingRunnableWith<Argument> {
+public interface IOConsumer<Argument> {
 
-	public static final ThrowingRunnableWith<String> INSTANCE = argument -> {
+	public static final IOConsumer<String> INSTANCE = argument -> {
 		// do nothing
 	};
 

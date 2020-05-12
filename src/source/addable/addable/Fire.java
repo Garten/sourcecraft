@@ -1,13 +1,15 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 import vmfWriter.Color;
 import vmfWriter.entity.pointEntity.pointEntity.EnvFire;
 import vmfWriter.entity.pointEntity.pointEntity.Light;
 
-public class Fire extends Addable {
+public class Fire extends ConvertAction {
 
 	private final static int red = 255;
 	private final static int green = 113;
@@ -20,22 +22,22 @@ public class Fire extends Addable {
 	private static EnvFire ENV_FIRE;
 
 	public Fire() {
-		int[] temp = { Material.FIRE };
+		int[] temp = { MaterialLegacy.FIRE };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position position, int material) {
-		this.ENV_FIRE.setFireSize(this.map.getScale());
-		this.map.setPointToGrid(position);
-		this.map.movePointInGridDimension(0.5, 0, 0.5);
-		this.map.movePointExactly(new Position(0, 1, 0));
-		this.map.movePointInGridDimension(this.randomOffset(0.5), 0, this.randomOffset(0.5));
-		this.map.addPointEntity(Fire.ENV_FIRE);
-		this.map.movePointInGridDimension(0, 0.5, 0);
-		this.map.movePointExactly(new Position(0, -1, 0));
-		this.map.addPointEntity(Fire.LIGHT);
-		this.map.markAsConverted(position);
+	public void add(ConverterContext context, Position position, Block material) {
+		this.ENV_FIRE.setFireSize(context.getScale());
+		context.setPointToGrid(position);
+		context.movePointInGridDimension(0.5, 0, 0.5);
+		context.movePointExactly(new Position(0, 1, 0));
+		context.movePointInGridDimension(this.randomOffset(0.5), 0, this.randomOffset(0.5));
+		context.addPointEntity(Fire.ENV_FIRE);
+		context.movePointInGridDimension(0, 0.5, 0);
+		context.movePointExactly(new Position(0, -1, 0));
+		context.addPointEntity(Fire.LIGHT);
+		context.markAsConverted(position);
 	}
 
 	private double randomOffset(double scale) {

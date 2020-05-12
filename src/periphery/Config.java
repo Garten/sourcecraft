@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Queue;
 
 import basic.Loggger;
-import main.ConverterData;
+import main.ConvertTask;
 import main.World;
-import source.addable.addable.Block;
 import source.addable.addable.Cactus;
 import source.addable.addable.CssLamp;
 import source.addable.addable.DetailBlock;
@@ -20,9 +19,10 @@ import source.addable.addable.Fire;
 import source.addable.addable.Liquid;
 import source.addable.addable.Pane;
 import source.addable.addable.PlayerSpawnCss;
+import source.addable.addable.SlabBottom;
+import source.addable.addable.SlabTop;
 import source.addable.addable.SnowBlock;
-import source.addable.addable.stairs.SlabBottom;
-import source.addable.addable.stairs.SlabTop;
+import source.addable.addable.Solid;
 import source.addable.addable.tf2.LilypadTf2;
 import source.addable.addable.tf2.PlayerSpawnTf2;
 import source.addable.addable.tf2.SupplyTf2;
@@ -32,7 +32,6 @@ import source.addable.addable.torch.TorchEast;
 import source.addable.addable.torch.TorchNorth;
 import source.addable.addable.torch.TorchSouth;
 import source.addable.addable.torch.TorchWest;
-import source.addable.addable.ttt.TttEntites;
 import source.addable.addable.vines.VinesEast;
 import source.addable.addable.vines.VinesNorth;
 import source.addable.addable.vines.VinesSouth;
@@ -261,7 +260,7 @@ public class Config {
 		return this.savePath;
 	}
 
-	public void setConvertData(ConverterData converterData) {
+	public void setConvertData(ConvertTask converterData) {
 		this.setPlace(converterData.getPlace()
 				.getDisplayName());
 		this.setGame(converterData.getGame()
@@ -300,7 +299,7 @@ public class Config {
 				.addAddable(Fence.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(SlabBottom.class.getSimpleName())
-				.addAddable(Block.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
 				.addAddable(SlabTop.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultTf2")
@@ -316,7 +315,7 @@ public class Config {
 				.addAddable(TorchWest.class.getSimpleName())
 				.addAddable(TorchSouth.class.getSimpleName())
 				.addAddable(TorchNorth.class.getSimpleName())
-				.addAddable(Block.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
 				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
@@ -339,7 +338,7 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(Block.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
 				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fire.class.getSimpleName())
@@ -364,7 +363,7 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(Block.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
 				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
@@ -382,8 +381,7 @@ public class Config {
 				.addAddable(TorchSouth.class.getSimpleName())
 				.addAddable(TorchWest.class.getSimpleName())
 				.addAddable(TorchEast.class.getSimpleName())
-				.addAddable(Torch.class.getSimpleName())
-				.addAddable(TttEntites.class.getSimpleName()));
+				.addAddable(Torch.class.getSimpleName()));
 		config.setPack("minecraft_original");
 		config.setGame("Garrysmod");
 		return config;

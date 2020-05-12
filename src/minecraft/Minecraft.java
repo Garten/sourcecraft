@@ -107,9 +107,7 @@ public class Minecraft {
 		Vector<World> result = new Vector<>();
 		try {
 			Files.list(savesPath)
-					.filter(path -> {
-						return Files.isDirectory(path.resolve(REGION_FOLDER));
-					})
+					.filter(path -> Files.isDirectory(path.resolve(REGION_FOLDER)))
 					.forEach(path -> result.add(new World(path.getParent(), path.getFileName()
 							.toString())));
 		} catch (IOException e) {
@@ -145,5 +143,9 @@ public class Minecraft {
 
 	public static Path getRegionFolder(Place place) {
 		return Paths.get(getWorldFolder(place).toString(), REGION_FOLDER);
+	}
+
+	public static String toMaterial(String name) {
+		return "minecraft:" + name;
 	}
 }

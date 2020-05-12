@@ -1,20 +1,24 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 
-public class Pane extends Addable {
+public class Pane extends ConvertAction {
 
 	public Pane() {
-		int temp[] = { Material.GLASS_PANE };
+		int temp[] = { MaterialLegacy.GLASS_PANE };
 		super.materialUsedFor = temp;
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position bestXY = this.cuboidFinder.getBestXY(p, material);
-		Position bestYZ = this.cuboidFinder.getBestYZ(p, material);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position bestXY = context.getCuboidFinder()
+				.getBestXY(p, material);
+		Position bestYZ = context.getCuboidFinder()
+				.getBestYZ(p, material);
 		int sizeXY = p.getRoomSizeTo(bestXY);
 		int sizeYZ = p.getRoomSizeTo(bestYZ);
 		int parts = 16;
@@ -37,8 +41,10 @@ public class Pane extends Addable {
 			int x = p.getX();
 			int y = p.getY();
 			int z = p.getZ();
-			int sumX = this.countAirY(x + 1, y, z, bestXY.getY()) + this.countAirY(x - 1, y, z, bestXY.getY());
-			int sumZ = this.countAirY(x, y, z + 1, bestYZ.getY()) + this.countAirY(x, y, z - 1, bestYZ.getY());
+			int sumX = this.countAirY(context, x + 1, y, z, bestXY.getY())
+					+ this.countAirY(context, x - 1, y, z, bestXY.getY());
+			int sumZ = this.countAirY(context, x, y, z + 1, bestYZ.getY())
+					+ this.countAirY(context, x, y, z - 1, bestYZ.getY());
 			if (sumX <= sumZ) {
 				end = bestXY;
 				zOffset = 7;
@@ -51,14 +57,14 @@ public class Pane extends Addable {
 		}
 		Position offset = new Position(xOffset, yOffset, zOffset);
 		Position negativeOffset = new Position(xStop, yStop, zStop);
-		this.map.addDetail(this.map.createCuboid(p, end, parts, offset, negativeOffset, material));
-		this.map.markAsConverted(p, end);
+		context.addDetail(context.createCuboid(p, end, parts, offset, negativeOffset, material));
+		context.markAsConverted(p, end);
 	}
 
-	private int countAirY(int x, int yStart, int z, int yEnd) {
+	private int countAirY(ConverterContext context, int x, int yStart, int z, int yEnd) {
 		int sum = 0;
 		for (int yRun = yStart; yRun <= yEnd; yRun++) {
-			if (this.map.isAirBlock(new Position(x, yRun, z))) {
+			if (context.isAirBlock(new Position(x, yRun, z))) {
 				sum++;
 			}
 		}

@@ -5,7 +5,7 @@ import periphery.Place;
 import periphery.SourceGame;
 import periphery.TexturePack;
 
-public class ConverterData {
+public class ConvertTask {
 
 	private Place place;
 	private SourceGame game;
@@ -13,7 +13,7 @@ public class ConverterData {
 	private TexturePack texturePack;
 	private boolean updateTextures;
 
-	public ConverterData() {
+	public ConvertTask() {
 
 	}
 

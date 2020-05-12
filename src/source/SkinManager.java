@@ -1,7 +1,14 @@
 package source;
 
+import java.util.function.Supplier;
+
 import basic.Loggger;
+import minecraft.Block;
+import minecraft.Blocks;
+import minecraft.Material;
+import minecraft.Texture;
 import periphery.TexturePack;
+import source.addable.BlockMap;
 import vmfWriter.Orientation;
 import vmfWriter.Skin;
 
@@ -18,259 +25,330 @@ public class SkinManager {
 	public static final Skin NODRAW = new Skin("tools/toolsnodraw", 0.25);
 	public static final Skin TRIGGER = new Skin("tools/toolstrigger", 0.25);
 	public static final Skin SKYBOX = new Skin("tools/toolsskybox", 0.25);
+	private static final Skin PLAYER_CLIP = new Skin("tools/toolsplayerclip", 0.25);
 
 	private static final String NODRAW_TEXTURE = "tools/toolsnodraw";
-	private static final String PLAYER_CLIP = "tools/toolsplayerclip";
 	public static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
 
 	private double textureScale;
-	private Skin[] skin;
+	private Skin[] skinLegacy;
 
 	private String folder;
 
-	public void setSourceSkin(int material, String texture) {
-		this.skin[material] = new Skin(texture, this.textureScale);
+	public Skin setSourceSkin(String texture) {
+		return new Skin(texture, this.textureScale);
 	}
 
-	public void setSkin(int material, String texture) {
-		this.skin[material] = new Skin(this.folder + texture, this.textureScale);
+	public Skin createSkin(String texture) {
+		return new Skin(this.folder + texture, this.textureScale);
 	}
 
-	public void setSkin(int material, String main, String topBottom) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + topBottom, this.textureScale);
+	public Skin createSkin(String main, String topBottom) {
+		return new Skin(this.folder + main, this.folder + topBottom, this.textureScale);
 	}
 
-	private void setSkinTopBottom(int material, String main, String top, String bottom) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + main, this.folder + bottom,
+	private Skin createSkinTopBottom(String main, String top, String bottom) {
+		return new Skin(this.folder + main, this.folder + top, this.folder + main, this.folder + bottom,
 				Orientation.NORTH, this.textureScale);
 	}
 
-	public void setSkinTopFront(int material, String main, String top, String front, Orientation orientation) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, orientation,
+	public Skin createSkinTopFront(String main, String top, String front, Orientation orientation) {
+		return new Skin(this.folder + main, this.folder + top, this.folder + front, orientation, this.textureScale);
+	}
+
+	public Skin createSkinTopFrontBottom(String main, String top, String front, String bottom) {
+		return new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom,
+				Orientation.NORTH, this.textureScale);
+	}
+
+	public Skin createSkinTopFrontBottom(String main, String top, String front, String bottom,
+			Orientation orientation) {
+		return new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom, orientation,
 				this.textureScale);
 	}
 
-	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom,
-				Orientation.NORTH, this.textureScale);
+	//
+
+	public void setSourceSkinOld(int material, String texture) {
+		this.skinLegacy[material] = new Skin(texture, this.textureScale);
 	}
 
-	public void setSkinTopFrontBottom(int material, String main, String top, String front, String bottom,
+	public void setSkinOld(int material, String texture) {
+		this.skinLegacy[material] = new Skin(this.folder + texture, this.textureScale);
+	}
+
+	public void setSkinOld(int material, String main, String topBottom) {
+		this.skinLegacy[material] = new Skin(this.folder + main, this.folder + topBottom, this.textureScale);
+	}
+
+	private void setSkinTopBottomOld(int material, String main, String top, String bottom) {
+		this.skinLegacy[material] = new Skin(this.folder + main, this.folder + top, this.folder + main,
+				this.folder + bottom, Orientation.NORTH, this.textureScale);
+	}
+
+	public void setSkinTopFrontOld(int material, String main, String top, String front, Orientation orientation) {
+		this.skinLegacy[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, orientation,
+				this.textureScale);
+	}
+
+	public void setSkinTopFrontBottomOld(int material, String main, String top, String front, String bottom) {
+		this.skinLegacy[material] = new Skin(this.folder + main, this.folder + top, this.folder + front,
+				this.folder + bottom, Orientation.NORTH, this.textureScale);
+	}
+
+	public void setSkinTopFrontBottomOld(int material, String main, String top, String front, String bottom,
 			Orientation orientation) {
-		this.skin[material] = new Skin(this.folder + main, this.folder + top, this.folder + front, this.folder + bottom,
-				orientation, this.textureScale);
+		this.skinLegacy[material] = new Skin(this.folder + main, this.folder + top, this.folder + front,
+				this.folder + bottom, orientation, this.textureScale);
 	}
 
 	public SkinManager(String folder, int textureSizeNew, int scale) {
+//		this.initLegacy(folder, textureSizeNew, scale);
 		this.init(folder, textureSizeNew, scale);
+	}
+
+	private BlockMap<Skin> skins;
+
+	/**
+	 * Return whethe
+	 *
+	 * @param suffix
+	 * @return
+	 */
+	private boolean putPrefixMadeSuffix(Material material, Material suffix) {
+		String name = material.name();
+		String _suf = suffix.name();
+		if (name.endsWith(_suf)) { // except dark oak
+			String suf_ = _suf.substring(1) + "_";
+			String textureName = suf_ + name.substring(0, name.length() - suf_.length());
+			this.put(material, textureName);
+			return true;
+		}
+		return false;
 	}
 
 	public void init(String folder, int textureSizeNew, int scale) {
 		this.textureScale = ((double) scale) / ((double) textureSizeNew);
+		this.folder = folder + "/";
+		this.skins = new BlockMap<Skin>().setDefault(new Skin(DEFAULT_TEXTURE, this.textureScale));
+		for (Texture texture : Texture.values()) {
+			this.put(texture);
+			String name = texture.name();
+		}
+		for (Material material : Material.values()) {
+			String name = material.name();
+			if (name.endsWith("_log")) { // except dark oak
+				String textureName = "log_" + name.substring(0, name.length() - "_log".length()) + "_top";
+				this.put(material, textureName);
+			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
+
+			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
+
+			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
+
+			} else if (this.putPrefixMadeSuffix(material, Material._stained_glass)) {
+
+			}
+		}
+		this.put(Material.andesite, Texture.stone_andesite);
+		this.put(Material.diorite, Texture.stone_diorite);
+		this.put(Material.granite, Texture.stone_granite);
+		this.skins.put(Material.sandstone,
+				this.createSkinTopBottom("sandstone_normal", "sandstone_top", "sandstone_normal"));
+		this.put(Material.sandstone, Texture.sandstone_normal);
+		this.skins.put(Material.red_sandstone,
+				this.createSkinTopBottom("red_sandstone_normal", "red_sandstone_top", "red_sandstone_normal"));
+		this.put(Material.red_sandstone_wall, Texture.red_sandstone_normal);
+		this.put(Material.end_stone_brick_, Texture.end_bricks);
+		this.put(Material.mossy_stone_brick_, Texture.stonebrick_mossy);
+		this.put(Material.mossy_cobblestone, Texture.cobblestone_mossy);
+		this.put(Material.prismarine, Texture.prismarine_rough);
+		this.put(Material.prismarine_brick_, Texture.prismarine_bricks);
+		this.put(Material.nether_brick_, Texture.nether_brick);
+		this.put(Material.red_nether_brick_, Texture.red_nether_brick);
+		this.put(Material.stone_bricks, Texture.stonebrick);
+		this.put(Material.stone_brick_, Texture.stonebrick);
+		this.put(Material.oak_, Texture.planks_oak); // except oak_log, door
+		this.put(Material.dark_oak_, Texture.planks_big_oak); // except log, door, ..
+		this.put(Material.spruce_, Texture.planks_spruce);
+		this.put(Material.acacia_, Texture.planks_acacia);
+		// exceptsion wood
+
+		// special
+		this.skins.put(Blocks.get("sourcecraft:ramp"), PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._PLAYER_CLIP, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_NORTH, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_EAST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_SOUTH, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_WEST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_NORTH_EAST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_NORTH_WEST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_SOUTH_EAST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._RAMP_SOUTH_WEST, PLAYER_CLIP);
+//		this.setSourceSkinOld(MaterialLegacy._UNKOWN, DEFAULT_TEXTURE);
+	}
+
+	private void put(Texture block) {
+		this.put(block, block);
+	}
+
+	private void put(Supplier<Block> block, Texture texture) {
+		this.put(block, texture.name());
+	}
+
+	private void put(Supplier<Block> block, String name) {
+		this.skins.put(block, this.createSkin(name));
+	}
+
+	public void initLegacy(String folder, int textureSizeNew, int scale) {
+		this.textureScale = ((double) scale) / ((double) textureSizeNew);
 		folder = folder + "/";
 		this.folder = folder;
 
-		this.skin = new Skin[Material.__LENGTH];
-		for (int material = 0; material < Material.__LENGTH; material++) {
-			this.setSkin(material, Material.getName(material));
+		this.skinLegacy = new Skin[MaterialLegacy.__LENGTH];
+		for (int material = 0; material < MaterialLegacy.__LENGTH; material++) {
+			this.setSkinOld(material, MaterialLegacy.getName(material));
 		}
 
-		for (int id = 1; id < Material.__LENGTH_USEFUL; id++) {
-			String name = Material.getName(id);
-			if (name.startsWith("andesite")) {
-				this.setSkin(id, "stone_andesite");
-			} else if (name.startsWith("diorite")) {
-				this.setSkin(id, "stone_diorite");
-			} else if (name.startsWith("granite")) {
-				this.setSkin(id, "stone_granite");
-			} else if (name.startsWith("sandstone")) {
-				if (name.equals("sandstone_wall")) {
-					this.setSkin(id, "sandstone_normal");
-				} else {
-					this.setSkinTopBottom(id, "sandstone_normal", "sandstone_top", "sandstone_normal");
-				}
-			} else if (name.startsWith("red_sandstone")) {
-				if (name.equals("red_sandstone_wall")) {
-					this.setSkin(id, "red_sandstone_normal");
-				} else {
-					this.setSkinTopBottom(id, "red_sandstone_normal", "red_sandstone_top", "red_sandstone_normal");
-				}
-			} else if (name.startsWith("end_stone_brick")) {
-				this.setSkin(id, "end_bricks"); // this time its bricks ;)
-			} else if (name.startsWith("mossy_stone_brick")) {
-				this.setSkin(id, "stonebrick_mossy");
-			} else if (name.startsWith("mossy_cobblestone")) {
-				this.setSkin(id, "cobblestone_mossy");
-			} else if (name.startsWith("prismarine")) { // order crucial
-				this.setSkin(id, "prismarine_rough");
-			} else if (name.startsWith("prismarine_brick")) {
-				this.setSkin(id, "prismarine_brick");
-			} else if (name.startsWith("prismareine_dark")) {
-				this.setSkin(id, "prismareine_dark");
-			} else if (name.startsWith("nether_brick")) {
-				this.setSkin(id, "nether_brick");
-			} else if (name.startsWith("red_nether_brick")) {
-				this.setSkin(id, "red_nether_brick");
-			} else if (name.startsWith("stone_brick")) {
-				this.setSkin(id, "stonebrick");
-			} else if (name.startsWith("brick")) {
-				this.setSkin(id, "brick");
-			} else if (name.startsWith("cobblestone")) {
-				this.setSkin(id, "cobblestone");
-			} else if (name.startsWith("stone")) {
-				this.setSkin(id, "stone");
-			} else if (name.startsWith("oak")) {
-				this.setSkin(id, "planks_oak"); // except oak_log, door
-			} else if (name.startsWith("dark_oak")) {
-				this.setSkin(id, "planks_big_oak"); // except log, door, ..
-			} else if (name.startsWith("spruce")) {
-				this.setSkin(id, "planks_spruce");
-			} else if (name.startsWith("acacia")) {
-				this.setSkin(id, "planks_acacia");
-			}
+		for (int id = 1; id < MaterialLegacy.__LENGTH_USEFUL; id++) {
+			String name = MaterialLegacy.getName(id);
 
 			if (name.endsWith("_log")) { // except dark oak
 				String textureName = "log_" + name.substring(0, name.length() - "_log".length());
-				this.setSkin(id, textureName, textureName + "_top");
+				this.setSkinOld(id, textureName, textureName + "_top");
 			} else if (name.endsWith("_fence")) {
 				String textureName = name.substring(0, name.length() - "_fence".length());
-				this.setSkin(id, "planks_" + textureName);
+				this.setSkinOld(id, "planks_" + textureName);
 			} else if (name.endsWith("_leaves")) {
 				String textureName = "leaves_" + name.substring(0, name.length() - "_leaves".length());
-				this.setSkin(id, textureName);
-//			} else if (name.endsWith("_slab")) {
-//				String textureName = name.substring(0, name.length() - "_slab".length());
-//				this.setSkin(id, textureName);
+				this.setSkinOld(id, textureName);
 			} else if (name.endsWith("_planks")) {
 				String textureName = name.substring(0, name.length() - "_planks".length());
-				this.setSkin(id, "planks_" + textureName);
+				this.setSkinOld(id, "planks_" + textureName);
 			} else if (name.endsWith("_wool")) {
 				String textureName = name.substring(0, name.length() - "_wool".length());
-				this.setSkin(id, "wool_colored_" + textureName);
+				this.setSkinOld(id, "wool_colored_" + textureName);
 			} else if (name.endsWith("_stained_glass")) {
 				String textureName = name.substring(0, name.length() - "_stained_glass".length());
-				this.setSkin(id, "glass_" + textureName);
+				this.setSkinOld(id, "glass_" + textureName);
 			}
 		}
 		// exceptions
-		this.setSkin(Material.NETHER_BRICK_FENCE, "nether_brick");
+		this.setSkinOld(MaterialLegacy.NETHER_BRICK_FENCE, "nether_brick");
 
-		this.setSkin(Material.DARK_OAK_LOG, "log_big_oak", "log_big_oak_top");
-		this.setSkin(Material.DARK_OAK_LEAVES, "leaves_big_oak");
-		this.setSkin(Material.DARK_OAK_PLANKS, "planks_big_oak");
+		this.setSkinOld(MaterialLegacy.DARK_OAK_LOG, "log_big_oak", "log_big_oak_top");
+		this.setSkinOld(MaterialLegacy.DARK_OAK_LEAVES, "leaves_big_oak");
+		this.setSkinOld(MaterialLegacy.DARK_OAK_PLANKS, "planks_big_oak");
 
 		//
 		// other
-		this.setSkinTopBottom(Material.GRASS_BLOCK, "grass_side", "grass_top", "dirt");
-		this.setSkinTopBottom(Material.GRASS_PATH, "grass_path_side", "grass_path_top", "dirt");
-		this.setSkinTopBottom(Material.PODZOL, "dirt_podzol_side", "dirt_podzol_top", "dirt");
-		this.setSkinTopBottom(Material.MYCELIUM, "mycelium_side", "mycelium_top", "dirt");
+		this.setSkinTopBottomOld(MaterialLegacy.GRASS_BLOCK, "grass_side", "grass_top", "dirt");
+		this.setSkinTopBottomOld(MaterialLegacy.GRASS_PATH, "grass_path_side", "grass_path_top", "dirt");
+		this.setSkinTopBottomOld(MaterialLegacy.PODZOL, "dirt_podzol_side", "dirt_podzol_top", "dirt");
+		this.setSkinTopBottomOld(MaterialLegacy.MYCELIUM, "mycelium_side", "mycelium_top", "dirt");
 
-		this.setSkin(Material.PACKED_ICE, "ice_packed");
-		this.setSkin(Material.SNOW_BLOCK, "snow");
+		this.setSkinOld(MaterialLegacy.PACKED_ICE, "ice_packed");
+		this.setSkinOld(MaterialLegacy.SNOW_BLOCK, "snow");
 
-		this.setSkin(Material.CHISELED_STONE_BRICKS, "stonebrick_carved");
-		this.setSkin(Material.CRACKED_STONE_BRICKS, "stonebrick_cracked");
+		this.setSkinOld(MaterialLegacy.CHISELED_STONE_BRICKS, "stonebrick_carved");
+		this.setSkinOld(MaterialLegacy.CRACKED_STONE_BRICKS, "stonebrick_cracked");
 
-		this.setSkin(Material.ANDESITE, "stone_andesite");
-		this.setSkin(Material.POLISHED_ANDESITE, "stone_andesite_smooth");
-		this.setSkin(Material.DIORITE, "stone_diorite");
-		this.setSkin(Material.POLISHED_DIORITE, "stone_diorite_smooth");
-		this.setSkin(Material.GRANITE, "stone_granite");
-		this.setSkin(Material.POLISHED_GRANITE, "stone_granite_smooth");
+		this.setSkinOld(MaterialLegacy.ANDESITE, "stone_andesite");
+		this.setSkinOld(MaterialLegacy.POLISHED_ANDESITE, "stone_andesite_smooth");
+		this.setSkinOld(MaterialLegacy.DIORITE, "stone_diorite");
+		this.setSkinOld(MaterialLegacy.POLISHED_DIORITE, "stone_diorite_smooth");
+		this.setSkinOld(MaterialLegacy.GRANITE, "stone_granite");
+		this.setSkinOld(MaterialLegacy.POLISHED_GRANITE, "stone_granite_smooth");
 
-		this.setSkin(Material.CUT_SANDSTONE, "sandstone_smooth", "sandstone_top");
-		this.setSkin(Material.CHISELED_SANDSTONE, "sandstone_carved", "sandstone_top");
-		this.setSkin(Material.SMOOTH_SANDSTONE, "sandstone_smooth", "sandstone_top");
+		this.setSkinOld(MaterialLegacy.CUT_SANDSTONE, "sandstone_smooth", "sandstone_top");
+		this.setSkinOld(MaterialLegacy.CHISELED_SANDSTONE, "sandstone_carved", "sandstone_top");
+		this.setSkinOld(MaterialLegacy.SMOOTH_SANDSTONE, "sandstone_smooth", "sandstone_top");
 
-		this.setSkin(Material.RED_SANDSTONE, "red_sandstone_normal", "red_sandstone_top");
-		this.setSkin(Material.CUT_RED_SANDSTONE, "red_sandstone_smooth", "red_sandstone_top");
-		this.setSkin(Material.CHISELED_RED_SANDSTONE, "red_sandstone_carved", "red_sandstone_top");
-		this.setSkin(Material.SMOOTH_RED_SANDSTONE, "red_sandstone_smooth", "sandstone_top");
+		this.setSkinOld(MaterialLegacy.RED_SANDSTONE, "red_sandstone_normal", "red_sandstone_top");
+		this.setSkinOld(MaterialLegacy.CUT_RED_SANDSTONE, "red_sandstone_smooth", "red_sandstone_top");
+		this.setSkinOld(MaterialLegacy.CHISELED_RED_SANDSTONE, "red_sandstone_carved", "red_sandstone_top");
+		this.setSkinOld(MaterialLegacy.SMOOTH_RED_SANDSTONE, "red_sandstone_smooth", "sandstone_top");
 
-		this.setSkin(Material.PURPUR_PILLAR, "purpur_pillar", "purpur_pillar_top");
+		this.setSkinOld(MaterialLegacy.PURPUR_PILLAR, "purpur_pillar", "purpur_pillar_top");
 
-		this.setSkin(Material.BONE_BLOCK, "bone_block_side", "bone_block_top");
+		this.setSkinOld(MaterialLegacy.BONE_BLOCK, "bone_block_side", "bone_block_top");
 
-		this.setSkin(Material.NETHER_QUARTZ_ORE, "quartz_ore");
-		this.setSkinTopBottom(Material.QUARTZ_BLOCK, "quartz_block_side", "quartz_block_top", "quartz_block_bottom");
-		this.setSkin(Material.CHISELED_QUARTZ_BLOCK, "quartz_block_chiseled", "quartz_block_chiseled_top");
-		this.setSkin(Material.QUARTZ_PILLAR, "quartz_block_lines", "quartz_block_lines_top");
-		this.setSkin(Material.SMOOTH_QUARTZ, "quartz_block_bottom");
+		this.setSkinOld(MaterialLegacy.NETHER_QUARTZ_ORE, "quartz_ore");
+		this.setSkinTopBottomOld(MaterialLegacy.QUARTZ_BLOCK, "quartz_block_side", "quartz_block_top",
+				"quartz_block_bottom");
+		this.setSkinOld(MaterialLegacy.CHISELED_QUARTZ_BLOCK, "quartz_block_chiseled", "quartz_block_chiseled_top");
+		this.setSkinOld(MaterialLegacy.QUARTZ_PILLAR, "quartz_block_lines", "quartz_block_lines_top");
+		this.setSkinOld(MaterialLegacy.SMOOTH_QUARTZ, "quartz_block_bottom");
 
-		this.setSkinTopBottom(Material.TNT, "tnt_side", "tnt_top", "tnt_bottom");
+		this.setSkinTopBottomOld(MaterialLegacy.TNT, "tnt_side", "tnt_top", "tnt_bottom");
 
-		for (int material : new int[] { Material.WATER, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.KELP,
-				Material.KELP_PLANT }) {
+		for (int material : new int[] { MaterialLegacy.WATER, MaterialLegacy.SEAGRASS, MaterialLegacy.TALL_SEAGRASS,
+				MaterialLegacy.KELP, MaterialLegacy.KELP_PLANT }) {
 			this.setWaterTexture(material);
 		}
 
-		this.setSkin(Material.LAVA, "lava_still");
-		this.setSkin(Material.MAGMA_BLOCK, "magma");
+		this.setSkinOld(MaterialLegacy.LAVA, "lava_still");
+		this.setSkinOld(MaterialLegacy.MAGMA_BLOCK, "magma");
 
-		this.setSkin(Material.SPAWNER, "mob_spawner");
-		this.setSkin(Material.MOSSY_COBBLESTONE, "cobblestone_mossy");
+		this.setSkinOld(MaterialLegacy.SPAWNER, "mob_spawner");
+		this.setSkinOld(MaterialLegacy.MOSSY_COBBLESTONE, "cobblestone_mossy");
 
-		this.setSkin(Material.NOTE_BLOCK, "jukebox_side");
-		this.setSkinTopBottom(Material.JUKEBOX, "jukebox_side", "jukebox_top", "jukebox_side");
-		this.setSkin(Material.WET_SPONGE, "sponge_wet");
+		this.setSkinOld(MaterialLegacy.NOTE_BLOCK, "jukebox_side");
+		this.setSkinTopBottomOld(MaterialLegacy.JUKEBOX, "jukebox_side", "jukebox_top", "jukebox_side");
+		this.setSkinOld(MaterialLegacy.WET_SPONGE, "sponge_wet");
 
-		this.setSkin(Material.MELON, "melon", "melon_top");
-		this.setSkinTopFront(Material.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off",
+		this.setSkinOld(MaterialLegacy.MELON, "melon", "melon_top");
+		this.setSkinTopFrontOld(MaterialLegacy.CARVED_PUMPKIN, "pumpkin_side", "pumpkin_top", "pumpkin_face_off",
 				Orientation.NORTH);
-		this.setSkinTopFront(Material.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on",
+		this.setSkinTopFrontOld(MaterialLegacy.JACK_O_LANTERN, "pumpkin_side", "pumpkin_top", "pumpkin_face_on",
 				Orientation.NORTH);
-		this.setSkin(Material.PUMPKIN, "pumpkin_side", "pumpkin_top");
+		this.setSkinOld(MaterialLegacy.PUMPKIN, "pumpkin_side", "pumpkin_top");
 
-		this.setSkinTopFront(Material.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal",
+		this.setSkinTopFrontOld(MaterialLegacy.DISPENSER, "furnace_side", "furnace_top", "dispenser_front_horizontal",
 				Orientation.NORTH);
 
-		this.setSkin(Material.TORCH, "magma"); // temporary fixes
-		this.setSkin(Material.WALL_TORCH$NORTH, "magma");
-		this.setSkin(Material.WALL_TORCH$EAST, "magma");
-		this.setSkin(Material.WALL_TORCH$SOUTH, "magma");
-		this.setSkin(Material.WALL_TORCH$WEST, "magma");
+		this.setSkinOld(MaterialLegacy.TORCH, "magma"); // temporary fixes
+		this.setSkinOld(MaterialLegacy.WALL_TORCH$NORTH, "magma");
+		this.setSkinOld(MaterialLegacy.WALL_TORCH$EAST, "magma");
+		this.setSkinOld(MaterialLegacy.WALL_TORCH$SOUTH, "magma");
+		this.setSkinOld(MaterialLegacy.WALL_TORCH$WEST, "magma");
 
-		this.setSkin(Material.CACTUS, "cactus_side", "cactus_top");
-		this.setSkin(Material.SLIME_BLOCK, "slime");
-		this.setSkinTopFront(Material.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top",
+		this.setSkinOld(MaterialLegacy.CACTUS, "cactus_side", "cactus_top");
+		this.setSkinOld(MaterialLegacy.SLIME_BLOCK, "slime");
+		this.setSkinTopFrontOld(MaterialLegacy.CRAFTING_TABLE, "crafting_table_side", "crafting_table_top",
 				"crafting_table_front", Orientation.NORTH);
-		this.setSkinTopFront(Material.FURNACE, "furnace_side", "furnace_top", "furnace_front_on", Orientation.NORTH);
+		this.setSkinTopFrontOld(MaterialLegacy.FURNACE, "furnace_side", "furnace_top", "furnace_front_on",
+				Orientation.NORTH);
 
-		this.setSkinTopBottom(Material.END_PORTAL_FRAME, "endframe_side", "endframe_top", "end_stone");
-		this.setSkin(Material.REDSTONE_LAMP, "lamp_on");
+		this.setSkinTopBottomOld(MaterialLegacy.END_PORTAL_FRAME, "endframe_side", "endframe_top", "end_stone");
+		this.setSkinOld(MaterialLegacy.REDSTONE_LAMP, "lamp_on");
 
-		this.setSkin(Material.SPRUCE_TRAPDOOR, "door_spruce_upper");
+		this.setSkinOld(MaterialLegacy.SPRUCE_TRAPDOOR, "door_spruce_upper");
 
 		// temporary fixes
-		this.setSkin(Material.CAMPFIRE, "magma");
-		this.setSkin(Material.LANTERN, "magma");
-		this.setSkin(Material.BLAST_FURNACE, "furnace_front_on");
+		this.setSkinOld(MaterialLegacy.CAMPFIRE, "magma");
+		this.setSkinOld(MaterialLegacy.LANTERN, "magma");
+		this.setSkinOld(MaterialLegacy.BLAST_FURNACE, "furnace_front_on");
 
-		// special
-		this.setSourceSkin(Material._PLAYER_CLIP, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_NORTH, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_EAST, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_SOUTH, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_WEST, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_NORTH_EAST, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_NORTH_WEST, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_SOUTH_EAST, PLAYER_CLIP);
-		this.setSourceSkin(Material._RAMP_SOUTH_WEST, PLAYER_CLIP);
-		this.setSourceSkin(Material._UNKOWN, DEFAULT_TEXTURE);
 	}
 
 	private void setWaterTexture(int material) {
-		this.skin[material] = new Skin(NODRAW_TEXTURE, this.folder + "water_still", NODRAW_TEXTURE, NODRAW_TEXTURE,
-				this.textureScale);
+		this.skinLegacy[material] = new Skin(NODRAW_TEXTURE, this.folder + "water_still", NODRAW_TEXTURE,
+				NODRAW_TEXTURE, this.textureScale);
+	}
+
+	// temp
+	public Skin getSkin(Block block) {
+		return this.skins.getFallBackToPrefix(block);
+//		return this.getSkin(MaterialLegacy.get(block));
 	}
 
 	public Skin getSkin(int material) {
-		if (0 <= material && material < this.skin.length) {
-			return this.skin[material];
+		if (0 <= material && material < this.skinLegacy.length) {
+			return this.skinLegacy[material];
 		} else {
 			Loggger.log("unkown material " + material);
-			return this.skin[Material._UNKOWN];
+			return this.skinLegacy[MaterialLegacy._UNKOWN];
 		}
 	}
 }

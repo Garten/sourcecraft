@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import minecraft.McaBlock;
+import minecraft.Block;
 
-public class Material {
+public class MaterialLegacy {
 
 	private static Map<String, Integer> __nameToId = new HashMap<>();
 
@@ -2054,7 +2054,7 @@ public class Material {
 
 	public static void init() {
 		try {
-			for (Field field : Material.class.getDeclaredFields()) {
+			for (Field field : MaterialLegacy.class.getDeclaredFields()) {
 				String name = field.getName();
 				name = name.toLowerCase();
 				if (!name.startsWith("__") && !name.startsWith("$")) {
@@ -2084,7 +2084,7 @@ public class Material {
 		return s;
 	}
 
-	public static int get(McaBlock block) {
+	public static int get(Block block) {
 		String name = block.getName();
 		name = removePrefix(name, "minecraft:");
 		// ugly and preliminary
@@ -2122,9 +2122,9 @@ public class Material {
 	}
 
 	public static String getName(int id) {
-		if (id >= Material.__LENGTH || id < 0) {
+		if (id >= MaterialLegacy.__LENGTH || id < 0) {
 			return "unkown texture id " + id;
 		}
-		return __idToName[id];
+		return "minecraft:" + __idToName[id];
 	}
 }

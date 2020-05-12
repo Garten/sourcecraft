@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import basic.IOConsumer;
 import basic.Loggger;
 import basic.RunnableThrowing;
-import basic.ThrowingRunnableWith;
 
 public abstract class NbtReader {
 
@@ -168,8 +168,8 @@ public abstract class NbtReader {
 		}
 	}
 
-	public void doCompond(ThrowingRunnableWith<String> action) throws IOException {
-		int tag = this.stream.readUnsignedByte();
+	public void doCompond(IOConsumer<String> action) throws IOException {
+		int tag = this.stream.readUnsignedByte(); // readTag
 		while (tag != NbtTag.END) {
 			String title = this.readTitle();
 			action.run(title);
@@ -177,12 +177,16 @@ public abstract class NbtReader {
 		}
 	}
 
-	public void doListOfCompounds(RunnableThrowing runnable) throws IOException {
+	public void doListOfCompounds(RunnableThrowing action) throws IOException {
+		this.doListOfCompounds(i -> action.run());
+	}
+
+	public void doListOfCompounds(IOConsumer<Integer> action) throws IOException {
 		int tagId = this.readTag();
 		if (tagId == NbtTag.COMPOUND) {
 			int listLength = this.readLength();
 			for (int i = 0; i < listLength; i++) {
-				runnable.run();
+				action.run(Integer.valueOf(i));
 			}
 		} else {
 			Loggger.warn("File corrupted: Unexpected Tag.");

@@ -1,26 +1,29 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.addable.ConvertAction;
 
 /**
  *
  *
  */
-public class EndPortalFrame extends Addable {
+public class EndPortalFrame extends ConvertAction {
 
 	public EndPortalFrame() {
 
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestXZ(p, material);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position end = context.getCuboidFinder()
+				.getBestXZ(p, material);
 		int parts = 4;
 		Position offset = new Position(0, 0, 0);
 		Position negativeOffset = new Position(0, 1, 0);
-		this.map.addDetail(this.map.createCuboid(p, end, parts, offset, negativeOffset, material));
-		this.map.markAsConverted(p, end);
+		context.addDetail(context.createCuboid(p, end, parts, offset, negativeOffset, material));
+		context.markAsConverted(p, end);
 	}
 
 }

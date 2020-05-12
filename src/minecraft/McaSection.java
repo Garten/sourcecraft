@@ -1,12 +1,14 @@
 package minecraft;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import basic.Loggger;
 import basic.Tuple;
 import minecraft.reader.nbt.BitNbtReader;
 import minecraft.reader.nbt.NbtReader;
-import source.Material;
+import source.MaterialLegacy;
 
 public class McaSection {
 
@@ -14,7 +16,8 @@ public class McaSection {
 
 	private int firstYPosition;
 
-	private int[][][] block = new int[Minecraft.CHUNK_SIZE_X][Minecraft.SECTION_SIZE_Y][Minecraft.CHUNK_SIZE_Z];
+	private int[][][] rawBlocks = new int[Minecraft.CHUNK_SIZE_X][Minecraft.SECTION_SIZE_Y][Minecraft.CHUNK_SIZE_Z];
+	private Map<Integer, Block> palette = new HashMap<Integer, Block>();
 
 	public McaSection(WorldPiece convertee) {
 		this.worldPiece = convertee;
@@ -24,8 +27,8 @@ public class McaSection {
 		return this.worldPiece;
 	}
 
-	public int getBlock(Position position) {
-		return this.block[position.x][position.y][position.z];
+	public Block getBlock(Position p) {
+		return this.palette.get(Integer.valueOf(this.rawBlocks[p.x][p.y][p.z]));
 	}
 
 	public int getFirstYPosition() {
@@ -39,7 +42,7 @@ public class McaSection {
 		for (int y = 0; y < Minecraft.SECTION_SIZE_Y; y++) {
 			for (int z = 0; z < Minecraft.CHUNK_SIZE_Z; z++) {
 				for (int x = 0; x < Minecraft.CHUNK_SIZE_X; x++) {
-					this.block[x][y][z] = reader.readBits();
+					this.rawBlocks[x][y][z] = reader.readBits();
 				}
 			}
 		}
@@ -49,7 +52,7 @@ public class McaSection {
 		return length / 64;
 	}
 
-	public void translateRawInfo(McaBlock[] mapping) {
+	public void translateRawInfo(Block[] mapping) {
 		if (mapping == null) {
 			// some sections are empty and come without a mapping
 			return;
@@ -57,12 +60,12 @@ public class McaSection {
 		for (int y = 0; y < Minecraft.SECTION_SIZE_Y; y++) {
 			for (int z = 0; z < Minecraft.CHUNK_SIZE_Z; z++) {
 				for (int x = 0; x < Minecraft.CHUNK_SIZE_X; x++) {
-					int rawId = this.block[x][y][z];
+					int rawId = this.rawBlocks[x][y][z];
 					if (rawId >= 0 && rawId < mapping.length) {
-						McaBlock block = mapping[rawId];
-						this.block[x][y][z] = Material.get(block);
+						Block block = mapping[rawId];
+						this.rawBlocks[x][y][z] = MaterialLegacy.get(block);
 					} else {
-						this.block[x][y][z] = Material._UNKOWN;
+						this.rawBlocks[x][y][z] = MaterialLegacy._UNKOWN;
 						Loggger.warn("unknown block encoding " + rawId + " at " + new Position(x, y, z).toString());
 					}
 				}
@@ -101,5 +104,9 @@ public class McaSection {
 			end.y = 0;
 		}
 		return new Tuple<>(new Area(start, end), target);
+	}
+
+	public void addPalette(Integer i, Block block) {
+		this.palette.put(i, block);
 	}
 }

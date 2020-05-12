@@ -25,18 +25,18 @@ import source.SkinManager;
 
 public class Converter {
 
-	private ConverterData converterData;
+	private ConvertTask converterData;
 
 	private BlockConverterContext blockContent;
 
-	public Converter(ConverterData converterData) {
+	public Converter(ConvertTask converterData) {
 		this.converterData = converterData;
 		DefaultSourceMap target = new DefaultSourceMap(converterData.getTexturePack(), converterData.getOption()
 				.getScale());
 		this.blockContent = new BlockConverterContext(converterData, target);
 	}
 
-	public Converter open(File fileFolder, ConverterData converterData) throws IOException {
+	public Converter open(File fileFolder, ConvertTask converterData) throws IOException {
 		Place place = converterData.getPlace();
 		SkinManager.init(converterData.getTexturePack(), converterData.getOption()
 				.getScale());
@@ -84,11 +84,13 @@ public class Converter {
 	}
 
 	public void addMcaSection(McaSection section) {
+		// TODO sections occur that with negative volume
 		Tuple<Area, Position> toWrite = section.getBoundAndTarget();
 		Position target = toWrite.getSecond();
 		for (Position offset : toWrite.getFirst()) {
-			this.blockContent.setMaterial(Position.add(target, offset), section.getBlock(offset));
-			this.blockContent.setIsNextToAir(Position.add(target, offset), false);
+			Position writePos = Position.add(target, offset);
+			this.blockContent.setMaterial(writePos, section.getBlock(offset));
+			this.blockContent.setIsNextToAir(writePos, false);
 		}
 	}
 
@@ -118,7 +120,7 @@ public class Converter {
 
 	}
 
-	public void getMinecraftMap(ConverterData converterData) {
+	public void getMinecraftMap(ConvertTask converterData) {
 		File fileFolder = Minecraft.getRegionFolder(converterData.getPlace())
 				.toFile();
 		try {

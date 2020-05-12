@@ -10,7 +10,7 @@ import periphery.ConvertOption;
 import periphery.Periphery;
 import periphery.Place;
 import periphery.TexturePack;
-import source.Material;
+import source.MaterialLegacy;
 
 public class Main {
 
@@ -34,7 +34,7 @@ public class Main {
 	}
 
 	public Main() {
-		Material.init();
+		MaterialLegacy.init();
 		Periphery.init();
 
 		this.gui = new Gui(TITLE + " " + VERSION);
@@ -45,7 +45,7 @@ public class Main {
 			this.saveNewPlace();
 
 			File output = new File(this.gui.getOutputFile());
-			ConverterData data = this.getConverterData();
+			ConvertTask data = this.getConverterData();
 			if (data == null) {
 				return;
 			}
@@ -125,8 +125,8 @@ public class Main {
 		}
 	}
 
-	public ConverterData getConverterData() {
-		ConverterData converterData = new ConverterData();
+	public ConvertTask getConverterData() {
+		ConvertTask converterData = new ConvertTask();
 
 		Place place = this.gui.getPlaceFromCoordinates();
 		World world = this.gui.getWorld();

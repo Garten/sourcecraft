@@ -1,23 +1,26 @@
 package source.addable.addable;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 
-public class SnowBlock extends Addable {
+public class SnowBlock extends ConvertAction {
 
 	public SnowBlock() {
-		int[] temp = { Material.SNOW };
+		int[] temp = { MaterialLegacy.SNOW };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestXZ(p, material);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position end = context.getCuboidFinder()
+				.getBestXZ(p, material);
 		int parts = 8;
 		Position offset = new Position(0, 0, 0);
 		Position negativeOffset = new Position(0, 7, 0);
-		this.map.addDetail(this.map.createCuboid(p, end, parts, offset, negativeOffset, material));
-		this.map.markAsConverted(p, end);
+		context.addDetail(context.createCuboid(p, end, parts, offset, negativeOffset, material));
+		context.markAsConverted(p, end);
 	}
 }

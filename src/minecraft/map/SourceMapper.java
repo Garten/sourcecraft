@@ -1,6 +1,11 @@
 package minecraft.map;
 
+import java.io.File;
+import java.io.IOException;
+
+import minecraft.ConvertingReport;
 import minecraft.Position;
+import periphery.SourceGame;
 import vmfWriter.Solid;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
@@ -52,16 +57,6 @@ public abstract class SourceMapper implements MinecraftMap, SourceMap {
 		this.target.addSolidEntity(solidEnttiy);
 	}
 
-	// @Override
-	// public Ramp createRamp(Cuboid cuboid, Orientation orientation) {
-	// return new Ramp(cuboid, orientation);
-	// }
-	// @Override
-	// public Ramp createRampCuttet(Cuboid cuboid, Orientation orientation,
-	// Orientation cut1, Orientation cut2) {
-	// return this.target.createRampCuttet(cuboid, orientation, cut1, cut2);
-	// }
-	//
 	@Override
 	public void setCameraPosition(Position origin) {
 		this.target.setCameraPosition(origin);
@@ -72,4 +67,12 @@ public abstract class SourceMapper implements MinecraftMap, SourceMap {
 		this.target.setCameraLook(position);
 	}
 
+	@Override
+	public ConvertingReport write(File file, SourceGame game) throws IOException {
+		this.prepareWrite(game);
+		this.target.write(file, game);
+		return null;
+	}
+
+	public abstract ConvertingReport prepareWrite(SourceGame game);
 }

@@ -1,8 +1,13 @@
 package source.addable.addable;
 
+import minecraft.Block;
+import minecraft.Blocks;
+import minecraft.Material;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.Property;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 import vmfWriter.Angles;
 import vmfWriter.Color;
 import vmfWriter.entity.pointEntity.pointEntity.Light;
@@ -12,7 +17,7 @@ import vmfWriter.entity.pointEntity.pointEntity.PropStatic;
  * Add torch props and light entities
  *
  */
-public class CssLamp extends Addable {
+public class CssLamp extends ConvertAction {
 
 	private final static String TORCH_MODEL = "models/props/cs_italy/it_lantern1.mdl";
 	private final static String TORCH_HOLDER_MODEL = "models/props/cs_italy/it_lampholder1.mdl";
@@ -35,75 +40,72 @@ public class CssLamp extends Addable {
 			new Angles(0, 90, 0));
 
 	public CssLamp() {
-		int[] temp = { Material.TORCH, Material.WALL_TORCH$EAST, Material.WALL_TORCH$WEST, Material.WALL_TORCH$SOUTH,
-				Material.WALL_TORCH$NORTH };
+		int[] temp = { MaterialLegacy.TORCH, MaterialLegacy.WALL_TORCH$EAST, MaterialLegacy.WALL_TORCH$WEST,
+				MaterialLegacy.WALL_TORCH$SOUTH, MaterialLegacy.WALL_TORCH$NORTH };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
+	public void add(ConverterContext context, Position p, Block block) {
 		int d = 0;
 		// x=EAST
 		// z=SOUTH
-		this.map.setPointToGrid(p);
+		context.setPointToGrid(p);
 
-		if (material == 50) { // on ground
-			this.map.movePointInGridDimension(0.5, 0, 0.5);
-			this.map.movePointExactly(new Position(0, 10, 0));
-		} else if (material == 341) { // pointing east
-			this.map.movePointInGridDimension(0, 0, 0.5);
-			this.map.movePointExactly(new Position(0, -6, 0));
-			this.map.addPointEntity(CssLamp.TORCH_HOLDER_EAST);
-			this.map.movePointExactly(new Position(8, 22, 0));
+		if (block.equals(Material.torch.get())) { // on ground
+			context.movePointInGridDimension(0.5, 0, 0.5);
+			context.movePointExactly(new Position(0, 10, 0));
+		} else if (block.equals(Blocks.get(t -> t.setName(Material.wall_torch)
+				.addProperty(Property.facing, Property.Facing.east)))) { // pointing east
+																			// block == 341
+			context.movePointInGridDimension(0, 0, 0.5);
+			context.movePointExactly(new Position(0, -6, 0));
+			context.addPointEntity(CssLamp.TORCH_HOLDER_EAST);
+			context.movePointExactly(new Position(8, 22, 0));
 			d = 1;
-		} else if (material == 342) { // pointing west
-			this.map.movePointInGridDimension(1, 0, 0.5);
-			this.map.movePointExactly(new Position(0, -6, 0));
-			this.map.addPointEntity(CssLamp.TORCH_HOLDER_WEST);
-			this.map.movePointExactly(new Position(0 - 8, 22, 0));
+		} else if (block.equals(Blocks.get(t -> t.setName(Material.wall_torch)
+				.addProperty(Property.facing, Property.Facing.west)))) { // pointing west
+			context.movePointInGridDimension(1, 0, 0.5);
+			context.movePointExactly(new Position(0, -6, 0));
+			context.addPointEntity(CssLamp.TORCH_HOLDER_WEST);
+			context.movePointExactly(new Position(0 - 8, 22, 0));
 			d = 2;
-		} else if (material == 343) { // pointing south // !
-			this.map.movePointInGridDimension(0.5, 0, 0);
-			this.map.movePointExactly(new Position(0, -6, 0));
-			this.map.addPointEntity(CssLamp.TORCH_HOLDER_SOUTH);
-			this.map.movePointExactly(new Position(0, 22, 8));
+		} else if (block.equals(Blocks.get(t -> t.setName(Material.wall_torch)
+				.addProperty(Property.facing, Property.Facing.south)))) { // pointing south // !
+			context.movePointInGridDimension(0.5, 0, 0);
+			context.movePointExactly(new Position(0, -6, 0));
+			context.addPointEntity(CssLamp.TORCH_HOLDER_SOUTH);
+			context.movePointExactly(new Position(0, 22, 8));
 			d = 4;
-		} else if (material == 344) { // pointing north
-			this.map.movePointInGridDimension(0.5, 0, 1);
-			this.map.movePointExactly(new Position(0, -6, 0));
-			this.map.addPointEntity(CssLamp.TORCH_HOLDER_NORTH);
-			this.map.movePointExactly(new Position(0, 22, -8));
+		} else if (block.equals(Blocks.get(t -> t.setName(Material.wall_torch)
+				.addProperty(Property.facing, Property.Facing.north)))) { // pointing north
+			context.movePointInGridDimension(0.5, 0, 1);
+			context.movePointExactly(new Position(0, -6, 0));
+			context.addPointEntity(CssLamp.TORCH_HOLDER_NORTH);
+			context.movePointExactly(new Position(0, 22, -8));
 			d = 3;
 
 		}
-		this.map.addPointEntity(CssLamp.TORCH);
+		context.addPointEntity(CssLamp.TORCH);
 
-		this.map.movePointExactly(new Position(10, 0, 0));
+		context.movePointExactly(new Position(10, 0, 0));
 		if (d != 2) {
-			this.map.addPointEntity(CssLamp.LIGHT);
-			// map.addLight( red, green, blue, brigthness, distance50,
-			// distance100 );
+			context.addPointEntity(CssLamp.LIGHT);
 		}
-		this.map.movePointExactly(new Position(-20, 0, 0));
+		context.movePointExactly(new Position(-20, 0, 0));
 		if (d != 1) {
-			this.map.addPointEntity(CssLamp.LIGHT);
-			// map.addLight( red, green, blue, brigthness, distance50,
-			// distance100 );
+			context.addPointEntity(CssLamp.LIGHT);
 		}
-		this.map.movePointExactly(new Position(10, 0, 0));
-		this.map.movePointExactly(new Position(0, 0, 10));
+		context.movePointExactly(new Position(10, 0, 0));
+		context.movePointExactly(new Position(0, 0, 10));
 		if (d != 3) {
-			this.map.addPointEntity(CssLamp.LIGHT);
-			// map.addLight( red, green, blue, brigthness, distance50,
-			// distance100 );
+			context.addPointEntity(CssLamp.LIGHT);
 		}
-		this.map.movePointExactly(new Position(0, 0, -20));
+		context.movePointExactly(new Position(0, 0, -20));
 		if (d != 4) {
-			this.map.addPointEntity(CssLamp.LIGHT);
-			// map.addLight( red, green, blue, brigthness, distance50,
-			// distance100 );
+			context.addPointEntity(CssLamp.LIGHT);
 		}
-		this.map.markAsConverted(p);
+		context.markAsConverted(p);
 	}
 
 }

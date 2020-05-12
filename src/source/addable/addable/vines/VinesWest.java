@@ -1,29 +1,32 @@
 package source.addable.addable.vines;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
-import source.addable.Addable;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
+import source.addable.ConvertAction;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
 /**
  *
  *
  */
-public class VinesWest extends Addable {
+public class VinesWest extends ConvertAction {
 
 	public VinesWest() {
-		int[] temp = { Material.VINES };
+		int[] temp = { MaterialLegacy.VINES };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
-		Position end = this.cuboidFinder.getBestY(p, material);
+	public void add(ConverterContext context, Position p, Block material) {
+		Position end = context.getCuboidFinder()
+				.getBestY(p, material);
 		int parts = 8;
 		Position offset = new Position(0, 0, 0);
 		Position negativeOffset = new Position(7, 0, 0);
-		this.map.addSolidEntity(
-				new FuncIllusionary(this.map.createCuboid(p, end, parts, offset, negativeOffset, material)));
-		this.map.markAsConverted(p, end);
+		context.addSolidEntity(
+				new FuncIllusionary(context.createCuboid(p, end, parts, offset, negativeOffset, material)));
+		context.markAsConverted(p, end);
 	}
 }

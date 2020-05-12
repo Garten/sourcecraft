@@ -1,7 +1,9 @@
 package source.addable.addable.torch;
 
+import minecraft.Block;
 import minecraft.Position;
-import source.Material;
+import minecraft.map.ConverterContext;
+import source.MaterialLegacy;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
 public class TorchEast extends Torch {
@@ -14,12 +16,12 @@ public class TorchEast extends Torch {
 	public final static int distance100 = 256;
 
 	public TorchEast() {
-		int[] temp = { Material.WALL_TORCH$EAST };
+		int[] temp = { MaterialLegacy.WALL_TORCH$EAST };
 		super.setMaterialUsedFor(temp);
 	}
 
 	@Override
-	public void add(Position p, int material) {
+	public void add(ConverterContext context, Position p, Block material) {
 		int parts = 32;
 		Position[] pointOffset = new Position[8];
 		pointOffset[0] = new Position(0, 6, 18); // a
@@ -32,11 +34,15 @@ public class TorchEast extends Torch {
 		pointOffset[7] = new Position(4, 4, 14); // h
 
 		Position point = new Position(p);
-		this.map.addSolidEntity(
-				new FuncIllusionary(this.map.createFree8Point(point, point, parts, pointOffset, true, material)));
-		this.map.setPointToGrid(p);
-		this.map.movePointInGridDimension((7.0 / 20.0), 0.7, 0.5);
-		this.addFlame();
-		this.map.markAsConverted(p);
+		context.addSolidEntity(
+				new FuncIllusionary(context.createFree8Point(point, point, parts, pointOffset, true, material)));
+		context.setPointToGrid(p);
+		context.movePointInGridDimension((7.0 / 20.0), 0.7, 0.5);
+		this.addFlame(context);
+		context.markAsConverted(p);
+
+//		textureshift: -92
+//		textureshift -24
+//		rotation 28
 	}
 }

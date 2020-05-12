@@ -1,49 +1,67 @@
 package minecraft.map;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Predicate;
+
+import com.google.common.collect.ImmutableSet;
+
 import basic.Tuple;
+import cuboidFinder.CuboidFinder;
+import cuboidFinder.DefaultCuboidFinder;
+import minecraft.Block;
+import minecraft.ConvertingReport;
+import minecraft.Material;
 import minecraft.Position;
 import minecraft.SubBlockPosition;
 import periphery.SourceGame;
-import source.Material;
-import source.MaterialFilter;
 import source.SkinManager;
-import source.addable.Addable;
-import source.addable.AddableManager;
+import source.addable.ConvertAction;
+import source.addable.ConvertActions;
 import vmfWriter.Cuboid;
-import vmfWriter.Orientation;
-import vmfWriter.Ramp;
 
 public abstract class ConverterContext extends SourceMapper {
 
-	protected AddableManager addableManager;
+	private CuboidFinder cuboidFinder = new DefaultCuboidFinder(this);
+	protected ConvertActions convertActions;
 	private int scale;
 
 	public ConverterContext() {
 	}
 
-	public ConverterContext setAddableManager(AddableManager addableManager) {
-		this.addableManager = addableManager;
+	public CuboidFinder getCuboidFinder() {
+		return this.cuboidFinder;
+	}
+
+	public ConverterContext setAddableManager(ConvertActions addableManager) {
+		this.convertActions = addableManager;
 		return this;
 	}
 
-	public abstract void addObjects(SourceMap target, SourceGame game);
+	@Override
+	public ConvertingReport prepareWrite(SourceGame game) {
+		this.addObjects(game);
+		return null;
+	}
 
-	public void addSubBlock(Position position, SubBlockPosition pos, int materialInt) {
+	public abstract void addObjects(SourceGame game);
+
+	public void addSubBlock(Position position, SubBlockPosition pos, Block materialInt) {
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isAir(Position position) {
-		int material = this.getMaterial(position);
-		return material == Material.AIR || material == Material.VOID_AIR || material == Material.CAVE_AIR
-				|| material == Material._UNSET;
+	public boolean isAirLegacy(Position position) {
+		Block block = this.getMaterial(position);
+		return ImmutableSet.of(Material.air.getName(), Material.void_air.getName(), Material.cave_air.getName())
+				.contains(block.getName());
 	}
 
 	@Override
-	public boolean isAirBlockInitiate(Position position) {
-		int material = this.getMaterial(position);
-		Addable addable = this.addableManager.getAddable(material);
-		if (addable != null) {
-			return addable.isAirBlock();
+	public boolean isAir(Position position) {
+		Block block = this.getMaterial(position);
+		ConvertAction action = this.convertActions.getAction(block);
+		if (action != null) {
+			return action.isAirBlock();
 		}
 		return true;
 	}
@@ -61,7 +79,7 @@ public abstract class ConverterContext extends SourceMapper {
 	@Override
 	public void movePointInGridDimension(double x, double y, double z) {
 		// ugly
-		super.target.movePointInGridDimension(x * this.scale, -z * this.scale, y * this.scale);
+		this.target.movePointInGridDimension(x * this.scale, -z * this.scale, y * this.scale);
 	}
 
 	@Override
@@ -89,23 +107,34 @@ public abstract class ConverterContext extends SourceMapper {
 		this.target.setPointToGrid(this.convert(position));
 	}
 
-	@Override
-	public boolean hasOrHadMaterial(Position position, int... materials) {
-		for (int material : materials) {
-			if (this.getMaterial(position) == material || this.getMaterial(position) == -material) {
-				return true;
-			}
-		}
-		return false;
+	public boolean hasOrHadMaterial(Position position, Block block) {
+		return this.hasOrHadMaterial(position, found -> found.equals(block));
+	}
+
+	public boolean hasOrHadMaterial(Position position, Collection<Block> container) {
+		return this.hasOrHadMaterial(position, block -> container.contains(block));
 	}
 
 	@Override
-	public boolean hasOrHadMaterial(Position position, MaterialFilter filter) {
-		return filter.filter(this.getMaterial(position));
+	public boolean hasOrHadMaterial(Position position, Predicate<Block> container) {
+		return container.test(this.getMaterial(position));
+	}
+
+	public boolean hasMaterial(Position position, Block block) {
+		return this.hasMaterial(position, Arrays.asList(block));
+	}
+
+	public boolean hasMaterial(Position position, Collection<Block> blocks) {
+		return (!this.isConverted(position)) && this.hasOrHadMaterial(position, blocks);
 	}
 
 	@Override
-	public Cuboid createCuboid(Position start, Position end, int material) {
+	public boolean hasMaterial(Position position, Predicate<Block> container) {
+		return (!this.isConverted(position)) && this.hasOrHadMaterial(position, container);
+	}
+
+	@Override
+	public Cuboid createCuboid(Position start, Position end, Block material) {
 		return new Cuboid(this.convertPositions(start, end), SkinManager.INSTANCE.getSkin(material));
 	}
 
@@ -120,7 +149,7 @@ public abstract class ConverterContext extends SourceMapper {
 
 	@Override
 	public Cuboid createCuboid(Position start, Position end, int parts, Position offset, Position negativeOffset,
-			int material) {
+			Block material) {
 		double grid = (double) (this.getScale()) / (double) (parts);
 		Position startNew = new Position(start.x * this.getScale() + offset.x * grid,
 				(-end.z - 1) * this.getScale() + negativeOffset.z * grid, start.y * this.getScale() + offset.y * grid);
@@ -129,18 +158,9 @@ public abstract class ConverterContext extends SourceMapper {
 		return new Cuboid(new Tuple<>(startNew, endNew), SkinManager.INSTANCE.getSkin(material));
 	}
 
-	@Override
-	public Ramp createRamp(Cuboid cuboid, Orientation orientation) {
-		return new Ramp(cuboid, orientation);
-	}
+	protected abstract boolean isConverted(Position position);
 
-	@Override
-	public boolean hasMaterial(Position position, int... materials) {
-		for (int material : materials) {
-			if (this.getMaterial(position) == material) {
-				return true;
-			}
-		}
-		return false;
+	public ConvertActions getActions() {
+		return this.convertActions;
 	}
 }

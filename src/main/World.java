@@ -60,7 +60,7 @@ public class World {
 			this.playerPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
 			this.worldSpawnPosition.enlarge(new Position(-20, -30, -20), new Position(20, 30, 20));
 		} catch (IOException e) {
-			Loggger.log("Cannot find world \"" + name + "\" in ");
+			Loggger.log("Cannot find world \"" + name + "\" in " + parent);
 		}
 	}
 
