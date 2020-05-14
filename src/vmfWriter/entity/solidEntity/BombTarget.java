@@ -2,7 +2,7 @@ package vmfWriter.entity.solidEntity;
 
 import java.io.IOException;
 
-import source.SkinManager;
+import converter.SkinManager;
 import vmfWriter.Cuboid;
 import vmfWriter.ValveWriter;
 

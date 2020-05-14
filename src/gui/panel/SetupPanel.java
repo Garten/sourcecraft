@@ -2,6 +2,7 @@ package gui.panel;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +15,6 @@ import javax.swing.event.DocumentListener;
 
 import com.google.common.util.concurrent.Runnables;
 
-import basic.RunnableWith;
 import gui.Gui;
 
 public class SetupPanel extends JPanel {
@@ -36,8 +36,8 @@ public class SetupPanel extends JPanel {
 
 	private JLabel lbl_Issourcesdkinstalled;
 
-	private RunnableWith<String> selectMinecraftPath;
-	private RunnableWith<String> selectSourcePath;
+	private Consumer<String> selectMinecraftPath;
+	private Consumer<String> selectSourcePath;
 
 	private JButton btnContinue_SetupContinue;
 	private Runnable uponContinue = Runnables.doNothing();
@@ -85,11 +85,11 @@ public class SetupPanel extends JPanel {
 		return this.textField_SourcePath.getText();
 	}
 
-	public void setSelectMinecraftPath(RunnableWith<String> selectMinecraftPath) {
+	public void setSelectMinecraftPath(Consumer<String> selectMinecraftPath) {
 		this.selectMinecraftPath = selectMinecraftPath;
 	}
 
-	public void setSelectSourcePath(RunnableWith<String> selectSourcePath) {
+	public void setSelectSourcePath(Consumer<String> selectSourcePath) {
 		this.selectSourcePath = selectSourcePath;
 	}
 
@@ -168,7 +168,7 @@ public class SetupPanel extends JPanel {
 				this.btnContinue_SetupContinue);
 		btnSelectPath.addActionListener(e -> {
 			String path = this.textField_MinecraftPath.getText();
-			this.selectMinecraftPath.run(path);
+			this.selectMinecraftPath.accept(path);
 		});
 		this.panel_Setup.add(btnSelectPath);
 
@@ -177,7 +177,7 @@ public class SetupPanel extends JPanel {
 		btnNewButton.setFont(Gui.DEFAULT_FONT);
 		btnNewButton.addActionListener(e -> {
 			String path = this.textField_SourcePath.getText();
-			this.selectSourcePath.run(path);
+			this.selectSourcePath.accept(path);
 		});
 		this.panel_Setup.add(btnNewButton);
 

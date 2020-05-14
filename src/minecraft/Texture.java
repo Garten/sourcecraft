@@ -2,6 +2,8 @@ package minecraft;
 
 import java.util.function.Supplier;
 
+import periphery.Minecraft;
+
 /**
  * @author tim
  *

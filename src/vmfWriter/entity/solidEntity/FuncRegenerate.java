@@ -2,7 +2,7 @@ package vmfWriter.entity.solidEntity;
 
 import java.io.IOException;
 
-import source.SkinManager;
+import converter.SkinManager;
 import vmfWriter.Solid;
 import vmfWriter.ValveWriter;
 import vmfWriter.entity.pointEntity.PointEntity;

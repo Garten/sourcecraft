@@ -2,6 +2,7 @@ package gui.panel;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -17,7 +18,6 @@ import javax.swing.SwingConstants;
 import com.google.common.util.concurrent.Runnables;
 
 import basic.Loggger;
-import basic.RunnableWith;
 import gui.Gui;
 import gui.SimpleTextFieldChangeListener;
 import periphery.SourceGame;
@@ -31,13 +31,15 @@ public class OutputPanel extends JPanel {
 	private static final long serialVersionUID = -4352653661573645784L;
 
 	private JComboBox<SourceGame> comboBox_SelectGame;
-	private RunnableWith<String> uponSelectGame;
-	private RunnableWith<String> uponSelectGameIntern = gameName -> this.uponSelectGame.run(gameName);
+	private Consumer<String> uponSelectGame = input -> {
+	};
+	private Consumer<String> uponSelectGameIntern = gameName -> this.uponSelectGame.accept(gameName);
 
 	private JTextField textField_OutputFile;
 
-	private RunnableWith<String> buttonSelectOutputFile = RunnableWith.INSTANCE;
-	private RunnableWith<String> buttonSelectOutputFileIntern = input -> this.buttonSelectOutputFile.run(input);
+	private Consumer<String> buttonSelectOutputFile = input -> {
+	};
+	private Consumer<String> buttonSelectOutputFileIntern = input -> this.buttonSelectOutputFile.accept(input);
 
 	private JLabel lbl_OutputExists;
 
@@ -57,11 +59,11 @@ public class OutputPanel extends JPanel {
 		this.comboBox_SelectGame.setModel(games);
 	}
 
-	public void setUponSelectedGame(RunnableWith<String> uponSelectGame) {
+	public void setUponSelectedGame(Consumer<String> uponSelectGame) {
 		this.uponSelectGame = uponSelectGame;
 	}
 
-	public void setButtonSelectOutputFile(RunnableWith<String> selectOutputFile) {
+	public void setButtonSelectOutputFile(Consumer<String> selectOutputFile) {
 		this.buttonSelectOutputFile = selectOutputFile;
 	}
 
@@ -177,7 +179,7 @@ public class OutputPanel extends JPanel {
 		btnNewButton_SelectOutputFile.addActionListener(arg0 -> {
 			String path = this.textField_OutputFile.getText();
 			Loggger.log("path: " + path);
-			this.buttonSelectOutputFileIntern.run(path);
+			this.buttonSelectOutputFileIntern.accept(path);
 		});
 		panel_Output.add(btnNewButton_SelectOutputFile);
 
@@ -196,7 +198,7 @@ public class OutputPanel extends JPanel {
 		this.comboBox_SelectGame.setFont(Gui.DEFAULT_FONT);
 		this.comboBox_SelectGame.addActionListener(arg0 -> {
 			String gameName = ((SourceGame) this.comboBox_SelectGame.getSelectedItem()).getLongName();
-			this.uponSelectGameIntern.run(gameName);
+			this.uponSelectGameIntern.accept(gameName);
 		});
 		sl_panel_Output.putConstraint(SpringLayout.NORTH, this.comboBox_SelectGame, 6, SpringLayout.SOUTH,
 				lbl_SourceGame);

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.text.NumberFormat;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -20,11 +21,10 @@ import javax.swing.text.NumberFormatter;
 
 import com.google.common.util.concurrent.Runnables;
 
-import basic.RunnableWith;
 import gui.Gui;
 import gui.WorldComboboxRenderer;
-import main.World;
 import minecraft.Position;
+import minecraft.World;
 import periphery.Place;
 
 public class InputPanel extends JPanel {
@@ -68,19 +68,21 @@ public class InputPanel extends JPanel {
 	// private RunnableWithArgument<Boolean> rememberAsToggleIntern = b ->
 	// rememberAsToggle.run(b);
 
-	private RunnableWith<LabeledCoordinates> loadLabeledCoordinates = player -> Runnables.doNothing();
-	private RunnableWith<LabeledCoordinates> loadLabeledCoordinatesIntern = player -> this.loadLabeledCoordinates
-			.run(player);
+	private Consumer<LabeledCoordinates> loadLabeledCoordinates = player -> Runnables.doNothing();
+	private Consumer<LabeledCoordinates> loadLabeledCoordinatesIntern = player -> this.loadLabeledCoordinates
+			.accept(player);
 
-	private RunnableWith<Place> loadPlace = place -> Runnables.doNothing();
-	private RunnableWith<Place> loadPlaceIntern = place -> this.loadPlace.run(place);
+	private Consumer<Place> loadPlace = place -> {
+	};
+	private Consumer<Place> loadPlaceIntern = place -> this.loadPlace.accept(place);
 
 	private JButton btn_Delete;
-	private RunnableWith<Place> deletePlace = place -> Runnables.doNothing();
+	private Consumer<Place> deletePlace = place -> {
+	};
 
 	private Runnable uponContinue = Runnables.doNothing();
 
-	private RunnableWith<World> uponWorldSelected = world -> Runnables.doNothing();
+	private Consumer<World> uponWorldSelected = world -> Runnables.doNothing();
 
 	public InputPanel() {
 		this.initialize();
@@ -115,7 +117,7 @@ public class InputPanel extends JPanel {
 			World world = new World(worldName);
 			this.comboBox_World.setSelectedItem(world);
 		}
-		this.uponWorldSelected.run((World) this.comboBox_World.getSelectedItem());
+		this.uponWorldSelected.accept((World) this.comboBox_World.getSelectedItem());
 	}
 
 	public World getWorld() {
@@ -170,15 +172,15 @@ public class InputPanel extends JPanel {
 				.getZ() + "");
 	}
 
-	public void setLoadCoordinates(RunnableWith<LabeledCoordinates> loadCoordinates) {
+	public void setLoadCoordinates(Consumer<LabeledCoordinates> loadCoordinates) {
 		this.loadLabeledCoordinates = loadCoordinates;
 	}
 
-	public void setLoadPlace(RunnableWith<Place> loadPlace) {
+	public void setLoadPlace(Consumer<Place> loadPlace) {
 		this.loadPlace = loadPlace;
 	}
 
-	public void setUponWorldSelected(RunnableWith<World> uponWorldSelected) {
+	public void setUponWorldSelected(Consumer<World> uponWorldSelected) {
 		this.uponWorldSelected = uponWorldSelected;
 	}
 
@@ -253,8 +255,8 @@ public class InputPanel extends JPanel {
 		panel_Input.add(lbl_Minecraftworld);
 
 		this.comboBox_World = new JComboBox<>();
-		this.comboBox_World
-				.addActionListener(arg0 -> this.uponWorldSelected.run((World) this.comboBox_World.getSelectedItem()));
+		this.comboBox_World.addActionListener(
+				arg0 -> this.uponWorldSelected.accept((World) this.comboBox_World.getSelectedItem()));
 		this.comboBox_World.setRenderer(new WorldComboboxRenderer());
 		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.comboBox_World, 6, SpringLayout.SOUTH,
 				lbl_Minecraftworld);
@@ -436,19 +438,19 @@ public class InputPanel extends JPanel {
 		sl_panel_Load.putConstraint(SpringLayout.EAST, this.btn_Delete, 0, SpringLayout.EAST, this.comboBox_Place);
 		this.btn_Delete.addActionListener(arg -> {
 			Place place = this.getPlace();
-			this.deletePlace.run(place);
+			this.deletePlace.accept(place);
 		});
 		panel_Load.add(this.btn_Delete);
 
 		this.comboBox_Place.addActionListener(arg0 -> {
 			Place selectedItem = (Place) this.comboBox_Place.getSelectedItem();
 			// Place place = selectedItem.getPlace();
-			this.loadPlaceIntern.run(selectedItem);
+			this.loadPlaceIntern.accept(selectedItem);
 		});
 
 		this.comboBox_LabeledCoordinates.addActionListener(arg0 -> {
 			LabeledCoordinates selectedItem = (LabeledCoordinates) this.comboBox_LabeledCoordinates.getSelectedItem();
-			this.loadLabeledCoordinatesIntern.run(selectedItem);
+			this.loadLabeledCoordinatesIntern.accept(selectedItem);
 		});
 		// end load panel
 
@@ -460,7 +462,7 @@ public class InputPanel extends JPanel {
 		button.setFont(Gui.FONT_CONTINUE);
 	}
 
-	public void setDeletePlace(RunnableWith<Place> deletePlace) {
+	public void setDeletePlace(Consumer<Place> deletePlace) {
 		this.deletePlace = deletePlace;
 	}
 

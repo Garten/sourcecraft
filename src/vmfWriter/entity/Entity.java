@@ -37,7 +37,7 @@ public abstract class Entity extends ValveElement {
 	public ValveWriter openEntity(ValveWriter writer) throws IOException {
 		return writer.open(ValveElement.ENTITY_TAG)
 				.put(ValveElement.ID_TAG, writer.getCounter()
-						.getBrushId())
+						.getNewBrushId())
 				.put(ValveElement.CLASSNAME_TAG, this.getName());
 	}
 

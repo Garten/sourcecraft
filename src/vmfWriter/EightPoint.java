@@ -85,7 +85,7 @@ public abstract class EightPoint extends Solid {
 
 		writer.open(SIDE_TAG)
 				.put(ValveElement.ID_TAG, writer.getCounter()
-						.getSideId())
+						.getNewSideId())
 				.put(PLANE_TAG, "(" + first.getString() + ") (" + second.getString() + ") (" + third.getString() + ")")
 				.put(MATERIAL_TAG, skin)
 				.put(UAXIS_TAG, "[" + uAxis.toAxisString() + " 0] " + this.skin.scale * textureScale1)

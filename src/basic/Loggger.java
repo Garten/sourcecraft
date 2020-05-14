@@ -71,4 +71,8 @@ public class Loggger {
 			stringBuilder.append("\t");
 		}
 	}
+
+	public static void breakk() {
+		Loggger.log("broken");
+	}
 }

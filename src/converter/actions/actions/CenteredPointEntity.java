@@ -1,0 +1,45 @@
+package converter.actions.actions;
+
+import converter.actions.Action;
+import converter.mapper.Mapper;
+import minecraft.Block;
+import minecraft.Position;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
+
+public class CenteredPointEntity extends Action {
+
+	private RotateablePointEntity entity;
+	private int yOffset;
+
+	public CenteredPointEntity() {
+
+	}
+
+	public CenteredPointEntity(String name) {
+		this.setEntity(new RotateablePointEntity().setName(name));
+	}
+
+	@Override
+	public void add(Mapper context, Position position, Block material) {
+		context.setPointToGrid(position);
+		context.movePointInGridDimension(0.5, 0, 0.5);
+		int verticalAngle = (int) (Math.random() * 360);
+		context.addPointEntity(this.getEntity()
+				.setRotation(verticalAngle));
+		context.markAsConverted(position);
+	}
+
+	public CenteredPointEntity setEntity(RotateablePointEntity entity) {
+		this.entity = entity;
+		return this;
+	}
+
+	protected RotateablePointEntity getEntity() {
+		return this.entity;
+	}
+
+	@Override
+	public boolean isAirBlock() {
+		return true;
+	}
+}

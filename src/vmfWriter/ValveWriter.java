@@ -124,7 +124,7 @@ public class ValveWriter {
 
 	public void putBrushID() throws IOException {
 		this.put(ValveElement.ID_TAG, this.getCounter()
-				.getBrushId());
+				.getNewBrushId());
 	}
 
 }

@@ -17,7 +17,7 @@ public class Free8Point extends Cuboid {
 	public void writeVmf(ValveWriter writer) throws IOException {
 		writer.open(Solid.SOLID_TAG)
 				.put(ValveElement.ID_TAG, writer.getCounter()
-						.getBrushId());
+						.getNewBrushId());
 		if (this.align) {
 			this.writeSide(writer, this.aTop, this.eTop, this.hTop, this.skin.materialTop, this.textureScaleX,
 					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);

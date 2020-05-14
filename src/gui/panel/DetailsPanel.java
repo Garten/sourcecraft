@@ -1,6 +1,7 @@
 package gui.panel;
 
 import java.awt.EventQueue;
+import java.util.function.Consumer;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -14,7 +15,6 @@ import javax.swing.SpringLayout;
 
 import com.google.common.util.concurrent.Runnables;
 
-import basic.RunnableWith;
 import gui.Gui;
 
 public class DetailsPanel extends JPanel {
@@ -31,9 +31,10 @@ public class DetailsPanel extends JPanel {
 	private JComboBox<String> comboBox_ConverterOptions;
 	private JCheckBox chckbx_CopyTextures;
 
-	private RunnableWith<String> uponSelectTexturePack = place -> Runnables.doNothing();
-	private RunnableWith<String> uponSelectTexturePackIntern = texturePack -> this.uponSelectTexturePack
-			.run(texturePack);
+	private Consumer<String> uponSelectTexturePack = place -> {
+	};
+	private Consumer<String> uponSelectTexturePackIntern = texturePack -> this.uponSelectTexturePack
+			.accept(texturePack);
 
 	private Runnable run = Runnables.doNothing();
 
@@ -48,7 +49,7 @@ public class DetailsPanel extends JPanel {
 		this.comboBox_Textures.setSelectedItem(texturePack);
 	}
 
-	public void setUponSelectTexturePack(RunnableWith<String> uponSelectTexturePack) {
+	public void setUponSelectTexturePack(Consumer<String> uponSelectTexturePack) {
 		this.uponSelectTexturePack = uponSelectTexturePack;
 	}
 
@@ -197,7 +198,7 @@ public class DetailsPanel extends JPanel {
 
 		this.comboBox_Textures.addActionListener(arg0 -> {
 			String texturePack = (String) this.comboBox_Textures.getSelectedItem();
-			this.uponSelectTexturePackIntern.run(texturePack);
+			this.uponSelectTexturePackIntern.accept(texturePack);
 		});
 	}
 }

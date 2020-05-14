@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import main.World;
+import minecraft.World;
 
 public class WorldComboboxRenderer extends JLabel implements ListCellRenderer<Object> {
 

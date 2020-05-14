@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import basic.Loggger;
-import main.Steam;
 import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public class SourceGame {

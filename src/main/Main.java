@@ -5,12 +5,15 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import basic.Loggger;
+import converter.Converter;
 import gui.Gui;
+import minecraft.MaterialLegacy;
+import minecraft.World;
 import periphery.ConvertOption;
 import periphery.Periphery;
 import periphery.Place;
+import periphery.Steam;
 import periphery.TexturePack;
-import source.MaterialLegacy;
 
 public class Main {
 
@@ -39,7 +42,7 @@ public class Main {
 
 		this.gui = new Gui(TITLE + " " + VERSION);
 
-		new GuiLogic().run(this.gui);
+		new GuiLogic().accept(this.gui);
 
 		this.gui.setUponRun(() -> {
 			this.saveNewPlace();

@@ -3,6 +3,8 @@ package minecraft;
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
+import periphery.Minecraft;
+
 public enum Material implements Supplier<Block> {
 	acacia_button,
 	acacia_door,

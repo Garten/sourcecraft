@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import basic.IOConsumer;
+import periphery.Minecraft;
 
 /**
  * Class that lets you create immutable {@code Block} instances without

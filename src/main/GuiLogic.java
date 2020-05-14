@@ -8,21 +8,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
 
 import basic.Loggger;
-import basic.RunnableWith;
 import gui.Gui;
 import gui.panel.LabeledCoordinates;
-import minecraft.Minecraft;
 import minecraft.Position;
+import minecraft.World;
+import periphery.Minecraft;
 import periphery.Periphery;
 import periphery.Place;
 import periphery.SourceGame;
+import periphery.Steam;
 import periphery.TexturePack;
 
-public class GuiLogic implements RunnableWith<Gui> {
+public class GuiLogic implements Consumer<Gui> {
 
 	private static final String VMF_ENDING = ".vmf";
 	private Gui gui;
@@ -34,7 +36,7 @@ public class GuiLogic implements RunnableWith<Gui> {
 	private boolean sourcePathOk = false;
 
 	@Override
-	public void run(Gui gui) {
+	public void accept(Gui gui) {
 		this.gui = gui;
 		this.initSetup();
 		this.initInput();

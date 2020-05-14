@@ -14,12 +14,12 @@ public class Counter {
 		this.sideId = 0; // fist is 1
 	}
 
-	public int getBrushId() {
+	public int getNewBrushId() {
 		this.brushId++;
 		return this.brushId;
 	}
 
-	public int getSideId() {
+	public int getNewSideId() {
 		this.sideId++;
 		return this.sideId;
 	}
