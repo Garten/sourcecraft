@@ -2,9 +2,9 @@ package gui.panel;
 
 import java.awt.EventQueue;
 import java.awt.GridLayout;
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -19,13 +19,12 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
-import basic.Loggger;
-import basic.RunnableEmpty;
-import basic.RunnableWith;
+import com.google.common.util.concurrent.Runnables;
+
 import gui.Gui;
 import gui.WorldComboboxRenderer;
-import main.World;
 import minecraft.Position;
+import minecraft.World;
 import periphery.Place;
 
 public class InputPanel extends JPanel {
@@ -69,18 +68,21 @@ public class InputPanel extends JPanel {
 	// private RunnableWithArgument<Boolean> rememberAsToggleIntern = b ->
 	// rememberAsToggle.run(b);
 
-	private RunnableWith<LabeledCoordinates> loadLabeledCoordinates = player -> RunnableEmpty.doNothing();
-	private RunnableWith<LabeledCoordinates> loadLabeledCoordinatesIntern = player -> this.loadLabeledCoordinates.run(player);
+	private Consumer<LabeledCoordinates> loadLabeledCoordinates = player -> Runnables.doNothing();
+	private Consumer<LabeledCoordinates> loadLabeledCoordinatesIntern = player -> this.loadLabeledCoordinates
+			.accept(player);
 
-	private RunnableWith<Place> loadPlace = place -> RunnableEmpty.doNothing();
-	private RunnableWith<Place> loadPlaceIntern = place -> this.loadPlace.run(place);
+	private Consumer<Place> loadPlace = place -> {
+	};
+	private Consumer<Place> loadPlaceIntern = place -> this.loadPlace.accept(place);
 
 	private JButton btn_Delete;
-	private RunnableWith<Place> deletePlace = place -> RunnableEmpty.doNothing();
+	private Consumer<Place> deletePlace = place -> {
+	};
 
-	private Runnable uponContinue = RunnableEmpty.INSTANCE;
+	private Runnable uponContinue = Runnables.doNothing();
 
-	private RunnableWith<World> uponWorldSelected = world -> RunnableEmpty.doNothing();
+	private Consumer<World> uponWorldSelected = world -> Runnables.doNothing();
 
 	public InputPanel() {
 		this.initialize();
@@ -112,14 +114,10 @@ public class InputPanel extends JPanel {
 
 	public void setWorld(String worldName) {
 		if (worldName != null) {
-			try {
-				World world = new World(worldName);
-				this.comboBox_World.setSelectedItem(world);
-			} catch (IOException e) {
-				Loggger.log("cannot set world to \"" + worldName + "\"");
-			}
+			World world = new World(worldName);
+			this.comboBox_World.setSelectedItem(world);
 		}
-		this.uponWorldSelected.run((World) this.comboBox_World.getSelectedItem());
+		this.uponWorldSelected.accept((World) this.comboBox_World.getSelectedItem());
 	}
 
 	public World getWorld() {
@@ -135,11 +133,11 @@ public class InputPanel extends JPanel {
 		}
 		place.setWorld(object.toString());
 		try {
-			Position start = new Position(Integer.valueOf(this.textField_FromX.getText()), Integer.valueOf(this.textField_FromY.getText()),
-					Integer.valueOf(this.textField_FromZ.getText()));
+			Position start = new Position(Integer.valueOf(this.textField_FromX.getText()),
+					Integer.valueOf(this.textField_FromY.getText()), Integer.valueOf(this.textField_FromZ.getText()));
 			place.setStart(start);
-			Position end = new Position(Integer.valueOf(this.textField_ToX.getText()), Integer.valueOf(this.textField_ToY.getText()),
-					Integer.valueOf(this.textField_ToZ.getText()));
+			Position end = new Position(Integer.valueOf(this.textField_ToX.getText()),
+					Integer.valueOf(this.textField_ToY.getText()), Integer.valueOf(this.textField_ToZ.getText()));
 			place.setEnd(end);
 		} catch (NumberFormatException e) {
 			return null;
@@ -174,15 +172,15 @@ public class InputPanel extends JPanel {
 				.getZ() + "");
 	}
 
-	public void setLoadCoordinates(RunnableWith<LabeledCoordinates> loadCoordinates) {
+	public void setLoadCoordinates(Consumer<LabeledCoordinates> loadCoordinates) {
 		this.loadLabeledCoordinates = loadCoordinates;
 	}
 
-	public void setLoadPlace(RunnableWith<Place> loadPlace) {
+	public void setLoadPlace(Consumer<Place> loadPlace) {
 		this.loadPlace = loadPlace;
 	}
 
-	public void setUponWorldSelected(RunnableWith<World> uponWorldSelected) {
+	public void setUponWorldSelected(Consumer<World> uponWorldSelected) {
 		this.uponWorldSelected = uponWorldSelected;
 	}
 
@@ -244,8 +242,10 @@ public class InputPanel extends JPanel {
 		JButton btnButton_InputContinue = new JButton(Gui.CONTINUE_TEXT);
 		this.configureContinueButton(btnButton_InputContinue);
 		btnButton_InputContinue.addActionListener(arg -> this.uponContinue.run());
-		this.sl_panel_Input.putConstraint(SpringLayout.SOUTH, btnButton_InputContinue, -10, SpringLayout.SOUTH, panel_Input);
-		this.sl_panel_Input.putConstraint(SpringLayout.EAST, btnButton_InputContinue, -10, SpringLayout.EAST, panel_Input);
+		this.sl_panel_Input.putConstraint(SpringLayout.SOUTH, btnButton_InputContinue, -10, SpringLayout.SOUTH,
+				panel_Input);
+		this.sl_panel_Input.putConstraint(SpringLayout.EAST, btnButton_InputContinue, -10, SpringLayout.EAST,
+				panel_Input);
 		panel_Input.add(btnButton_InputContinue);
 
 		JLabel lbl_Minecraftworld = new JLabel("Minecraft-World");
@@ -255,35 +255,45 @@ public class InputPanel extends JPanel {
 		panel_Input.add(lbl_Minecraftworld);
 
 		this.comboBox_World = new JComboBox<>();
-		this.comboBox_World.addActionListener(arg0 -> this.uponWorldSelected.run((World) this.comboBox_World.getSelectedItem()));
+		this.comboBox_World.addActionListener(
+				arg0 -> this.uponWorldSelected.accept((World) this.comboBox_World.getSelectedItem()));
 		this.comboBox_World.setRenderer(new WorldComboboxRenderer());
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.comboBox_World, 6, SpringLayout.SOUTH, lbl_Minecraftworld);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.comboBox_World, 0, SpringLayout.WEST, lbl_Minecraftworld);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.comboBox_World, 6, SpringLayout.SOUTH,
+				lbl_Minecraftworld);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.comboBox_World, 0, SpringLayout.WEST,
+				lbl_Minecraftworld);
 		this.sl_panel_Input.putConstraint(SpringLayout.EAST, this.comboBox_World, -6, SpringLayout.EAST, this);
 		this.comboBox_World.setFont(Gui.DEFAULT_FONT);
 		panel_Input.add(this.comboBox_World);
 
 		JLabel lbl_Coordinates = new JLabel("Coordinates");
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, lbl_Coordinates, 20, SpringLayout.SOUTH, this.comboBox_World);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, lbl_Coordinates, 20, SpringLayout.SOUTH,
+				this.comboBox_World);
 		this.sl_panel_Input.putConstraint(SpringLayout.WEST, lbl_Coordinates, 10, SpringLayout.WEST, panel_Input);
 		lbl_Coordinates.setFont(Gui.DEFAULT_FONT);
 		panel_Input.add(lbl_Coordinates);
 
 		this.comboBox_LabeledCoordinates = new JComboBox<>();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.comboBox_LabeledCoordinates, 6, SpringLayout.SOUTH, lbl_Coordinates);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.comboBox_LabeledCoordinates, 0, SpringLayout.WEST, lbl_Coordinates);
-		this.sl_panel_Input.putConstraint(SpringLayout.EAST, this.comboBox_LabeledCoordinates, -6, SpringLayout.EAST, this);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.comboBox_LabeledCoordinates, 6, SpringLayout.SOUTH,
+				lbl_Coordinates);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.comboBox_LabeledCoordinates, 0, SpringLayout.WEST,
+				lbl_Coordinates);
+		this.sl_panel_Input.putConstraint(SpringLayout.EAST, this.comboBox_LabeledCoordinates, -6, SpringLayout.EAST,
+				this);
 		this.comboBox_LabeledCoordinates.setFont(Gui.DEFAULT_FONT);
 		panel_Input.add(this.comboBox_LabeledCoordinates);
 
 		JLabel lblNewLabel_From = new JLabel(InputPanel.FROM);
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, lblNewLabel_From, 10, SpringLayout.SOUTH, this.comboBox_LabeledCoordinates);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, lblNewLabel_From, 10, SpringLayout.SOUTH,
+				this.comboBox_LabeledCoordinates);
 		this.sl_panel_Input.putConstraint(SpringLayout.WEST, lblNewLabel_From, 40, SpringLayout.WEST, this);
 		panel_Input.add(lblNewLabel_From);
 
 		this.textField_FromX = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromX, 10, SpringLayout.SOUTH, lblNewLabel_From);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromX, 0, SpringLayout.WEST, lblNewLabel_From);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromX, 10, SpringLayout.SOUTH,
+				lblNewLabel_From);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromX, 0, SpringLayout.WEST,
+				lblNewLabel_From);
 		this.textField_FromX.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_FromX.addActionListener(arg0 -> {
 		});
@@ -291,8 +301,10 @@ public class InputPanel extends JPanel {
 		this.textField_FromX.setColumns(10);
 
 		this.textField_FromY = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromY, 6, SpringLayout.SOUTH, this.textField_FromX);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromY, 0, SpringLayout.WEST, this.textField_FromX);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromY, 6, SpringLayout.SOUTH,
+				this.textField_FromX);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromY, 0, SpringLayout.WEST,
+				this.textField_FromX);
 		this.textField_FromY.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_FromY.addActionListener(arg0 -> {
 		});
@@ -300,8 +312,10 @@ public class InputPanel extends JPanel {
 		this.textField_FromY.setColumns(10);
 
 		this.textField_FromZ = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromZ, 6, SpringLayout.SOUTH, this.textField_FromY);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromZ, 0, SpringLayout.WEST, this.textField_FromX);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_FromZ, 6, SpringLayout.SOUTH,
+				this.textField_FromY);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_FromZ, 0, SpringLayout.WEST,
+				this.textField_FromX);
 		this.textField_FromZ.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_FromZ.addActionListener(arg0 -> {
 		});
@@ -309,8 +323,10 @@ public class InputPanel extends JPanel {
 		this.textField_FromZ.setColumns(10);
 
 		this.textField_ToX = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToX, 0, SpringLayout.NORTH, this.textField_FromX);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToX, 6, SpringLayout.EAST, this.textField_FromX);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToX, 0, SpringLayout.NORTH,
+				this.textField_FromX);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToX, 6, SpringLayout.EAST,
+				this.textField_FromX);
 		this.textField_ToX.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_ToX.addActionListener(e -> {
 		});
@@ -323,8 +339,10 @@ public class InputPanel extends JPanel {
 		this.textField_ToX.setColumns(10);
 
 		this.textField_ToY = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToY, 0, SpringLayout.NORTH, this.textField_FromY);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToY, 6, SpringLayout.EAST, this.textField_FromY);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToY, 0, SpringLayout.NORTH,
+				this.textField_FromY);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToY, 6, SpringLayout.EAST,
+				this.textField_FromY);
 		this.textField_ToY.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_ToY.addActionListener(e -> {
 		});
@@ -332,8 +350,10 @@ public class InputPanel extends JPanel {
 		this.textField_ToY.setColumns(10);
 
 		this.textField_ToZ = new JTextField();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToZ, 0, SpringLayout.NORTH, this.textField_FromZ);
-		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToZ, 6, SpringLayout.EAST, this.textField_FromZ);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, this.textField_ToZ, 0, SpringLayout.NORTH,
+				this.textField_FromZ);
+		this.sl_panel_Input.putConstraint(SpringLayout.WEST, this.textField_ToZ, 6, SpringLayout.EAST,
+				this.textField_FromZ);
 		this.textField_ToZ.setHorizontalAlignment(SwingConstants.TRAILING);
 		this.textField_ToZ.addActionListener(e -> {
 		});
@@ -356,7 +376,8 @@ public class InputPanel extends JPanel {
 		panel_Input.add(lbl_Z);
 
 		JPanel panel_LoadSave = new JPanel();
-		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, panel_LoadSave, 20, SpringLayout.SOUTH, this.textField_FromZ);
+		this.sl_panel_Input.putConstraint(SpringLayout.NORTH, panel_LoadSave, 20, SpringLayout.SOUTH,
+				this.textField_FromZ);
 		this.sl_panel_Input.putConstraint(SpringLayout.SOUTH, panel_LoadSave, -6, SpringLayout.SOUTH, panel_Input);
 		this.sl_panel_Input.putConstraint(SpringLayout.WEST, panel_LoadSave, 0, SpringLayout.WEST, lbl_Minecraftworld);
 		this.sl_panel_Input.putConstraint(SpringLayout.EAST, panel_LoadSave, -6, SpringLayout.EAST, panel_Input);
@@ -382,7 +403,8 @@ public class InputPanel extends JPanel {
 		panel_Save.add(this.rdbtn_RememberAs);
 
 		this.textField_RememberAs = new JTextField();
-		sl_panel_Save.putConstraint(SpringLayout.NORTH, this.textField_RememberAs, 6, SpringLayout.SOUTH, this.rdbtn_RememberAs);
+		sl_panel_Save.putConstraint(SpringLayout.NORTH, this.textField_RememberAs, 6, SpringLayout.SOUTH,
+				this.rdbtn_RememberAs);
 		sl_panel_Save.putConstraint(SpringLayout.WEST, this.textField_RememberAs, 10, SpringLayout.WEST, panel_Save);
 		sl_panel_Save.putConstraint(SpringLayout.EAST, this.textField_RememberAs, -10, SpringLayout.EAST, panel_Save);
 		this.textField_RememberAs.setFont(Gui.DEFAULT_FONT);
@@ -416,19 +438,19 @@ public class InputPanel extends JPanel {
 		sl_panel_Load.putConstraint(SpringLayout.EAST, this.btn_Delete, 0, SpringLayout.EAST, this.comboBox_Place);
 		this.btn_Delete.addActionListener(arg -> {
 			Place place = this.getPlace();
-			this.deletePlace.run(place);
+			this.deletePlace.accept(place);
 		});
 		panel_Load.add(this.btn_Delete);
 
 		this.comboBox_Place.addActionListener(arg0 -> {
 			Place selectedItem = (Place) this.comboBox_Place.getSelectedItem();
 			// Place place = selectedItem.getPlace();
-			this.loadPlaceIntern.run(selectedItem);
+			this.loadPlaceIntern.accept(selectedItem);
 		});
 
 		this.comboBox_LabeledCoordinates.addActionListener(arg0 -> {
 			LabeledCoordinates selectedItem = (LabeledCoordinates) this.comboBox_LabeledCoordinates.getSelectedItem();
-			this.loadLabeledCoordinatesIntern.run(selectedItem);
+			this.loadLabeledCoordinatesIntern.accept(selectedItem);
 		});
 		// end load panel
 
@@ -440,7 +462,7 @@ public class InputPanel extends JPanel {
 		button.setFont(Gui.FONT_CONTINUE);
 	}
 
-	public void setDeletePlace(RunnableWith<Place> deletePlace) {
+	public void setDeletePlace(Consumer<Place> deletePlace) {
 		this.deletePlace = deletePlace;
 	}
 

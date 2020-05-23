@@ -17,21 +17,33 @@ public class Free8Point extends Cuboid {
 	public void writeVmf(ValveWriter writer) throws IOException {
 		writer.open(Solid.SOLID_TAG)
 				.put(ValveElement.ID_TAG, writer.getCounter()
-						.getBrushId());
+						.getNewBrushId());
 		if (this.align) {
-			this.writeSide(writer, this.b, this.f, this.g, this.skin.materialTop, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
-			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
-			this.writeSide(writer, this.a, this.e, this.f, this.skin.materialLeft, this.textureScaleX, this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
-			this.writeSide(writer, this.h, this.d, this.c, this.skin.materialRight, this.textureScaleX, this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
-			this.writeSide(writer, this.e, this.h, this.g, this.skin.materialBack, this.textureScaleY, this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
-			this.writeSide(writer, this.d, this.a, this.b, this.skin.materialFront, this.textureScaleY, this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
+			this.writeSide(writer, this.aTop, this.eTop, this.hTop, this.skin.materialTop, this.textureScaleX,
+					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX,
+					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+			this.writeSide(writer, this.a, this.e, this.eTop, this.skin.materialLeft, this.textureScaleX,
+					this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
+			this.writeSide(writer, this.h, this.d, this.dTop, this.skin.materialRight, this.textureScaleX,
+					this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
+			this.writeSide(writer, this.e, this.h, this.hTop, this.skin.materialBack, this.textureScaleY,
+					this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
+			this.writeSide(writer, this.d, this.a, this.aTop, this.skin.materialFront, this.textureScaleY,
+					this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
 		} else {
-			this.writeSide(writer, this.b, this.f, this.g, this.skin.materialTop, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
-			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
-			this.writeSide(writer, this.a, this.e, this.f, this.skin.materialLeft, this.textureScaleX, this.textureScaleZ, FRONT_U_AXIS, LEFT_V_AXIS);
-			this.writeSide(writer, this.h, this.d, this.c, this.skin.materialRight, this.textureScaleX, this.textureScaleZ, FRONT_U_AXIS, LEFT_V_AXIS);
-			this.writeSide(writer, this.e, this.h, this.g, this.skin.materialBack, this.textureScaleY, this.textureScaleZ, LEFT_U_AXIS, FRONT_V_AXIS);
-			this.writeSide(writer, this.d, this.a, this.b, this.skin.materialFront, this.textureScaleY, this.textureScaleZ, LEFT_U_AXIS, FRONT_V_AXIS);
+			this.writeSide(writer, this.aTop, this.eTop, this.hTop, this.skin.materialTop, this.textureScaleX,
+					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX,
+					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+			this.writeSide(writer, this.a, this.e, this.eTop, this.skin.materialLeft, this.textureScaleX,
+					this.textureScaleZ, FRONT_U_AXIS, LEFT_V_AXIS);
+			this.writeSide(writer, this.h, this.d, this.dTop, this.skin.materialRight, this.textureScaleX,
+					this.textureScaleZ, FRONT_U_AXIS, LEFT_V_AXIS);
+			this.writeSide(writer, this.e, this.h, this.hTop, this.skin.materialBack, this.textureScaleY,
+					this.textureScaleZ, LEFT_U_AXIS, FRONT_V_AXIS);
+			this.writeSide(writer, this.d, this.a, this.aTop, this.skin.materialFront, this.textureScaleY,
+					this.textureScaleZ, LEFT_U_AXIS, FRONT_V_AXIS);
 		}
 		writer.open(ValveElement.EDITOR_TAG)
 				.put(ValveElement.COLOR, "0 215 172")

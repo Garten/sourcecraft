@@ -1,47 +1,41 @@
 package periphery;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 import basic.Loggger;
-import main.ConverterData;
-import main.World;
-import minecraft.Minecraft;
-import source.addable.addable.Block;
-import source.addable.addable.Cactus;
-import source.addable.addable.CssLamp;
-import source.addable.addable.EndPortalFrame;
-import source.addable.addable.Fence;
-import source.addable.addable.Fire;
-import source.addable.addable.Liquid;
-import source.addable.addable.Pane;
-import source.addable.addable.PlayerSpawnCss;
-import source.addable.addable.Slab;
-import source.addable.addable.SnowBlock;
-import source.addable.addable.TransparentBlock;
-import source.addable.addable.stairs.StairsEast;
-import source.addable.addable.stairs.StairsHighEast;
-import source.addable.addable.stairs.StairsHighNorth;
-import source.addable.addable.stairs.StairsHighSouth;
-import source.addable.addable.stairs.StairsHighWest;
-import source.addable.addable.stairs.StairsNorth;
-import source.addable.addable.stairs.StairsSouth;
-import source.addable.addable.stairs.StairsWest;
-import source.addable.addable.tf2.LilypadTf2;
-import source.addable.addable.tf2.PlayerSpawnTf2;
-import source.addable.addable.tf2.SupplyTf2;
-import source.addable.addable.tf2.TallGrassTf2;
-import source.addable.addable.torch.Torch;
-import source.addable.addable.torch.TorchEast;
-import source.addable.addable.torch.TorchNorth;
-import source.addable.addable.torch.TorchSouth;
-import source.addable.addable.torch.TorchWest;
-import source.addable.addable.vines.VinesEast;
-import source.addable.addable.vines.VinesNorth;
-import source.addable.addable.vines.VinesSouth;
-import source.addable.addable.vines.VinesWest;
+import converter.actions.actions.Cactus;
+import converter.actions.actions.CssLamp;
+import converter.actions.actions.DetailBlock;
+import converter.actions.actions.EndPortalFrame;
+import converter.actions.actions.Fence;
+import converter.actions.actions.Fire;
+import converter.actions.actions.LilypadTf2;
+import converter.actions.actions.Liquid;
+import converter.actions.actions.Pane;
+import converter.actions.actions.PlayerSpawnCss;
+import converter.actions.actions.PlayerSpawnTf2;
+import converter.actions.actions.SlabBottom;
+import converter.actions.actions.SlabTop;
+import converter.actions.actions.SnowBlock;
+import converter.actions.actions.Solid;
+import converter.actions.actions.SupplyTf2;
+import converter.actions.actions.TallGrassTf2;
+import converter.actions.actions.Torch;
+import converter.actions.actions.TorchEast;
+import converter.actions.actions.TorchNorth;
+import converter.actions.actions.TorchSouth;
+import converter.actions.actions.TorchWest;
+import converter.actions.actions.VinesEast;
+import converter.actions.actions.VinesNorth;
+import converter.actions.actions.VinesSouth;
+import converter.actions.actions.VinesWest;
+import main.ConvertTask;
+import minecraft.World;
 import vmfWriter.Color;
 
 public class Config {
@@ -201,11 +195,11 @@ public class Config {
 		return this.windowPosY;
 	}
 
-	public void setMinecraftPath(File path) {
+	public void setMinecraftPath(Path path) {
 		this.minecraftPath = path.toString();
 	}
 
-	public void setSteamPath(File path) {
+	public void setSteamPath(Path path) {
 		if (path == null) {
 			return;
 		}
@@ -220,23 +214,18 @@ public class Config {
 		return new File(this.minecraftPath);
 	}
 
-	public File getMinceraftSavePath() {
-		return new File(this.minecraftPath + File.separator + Minecraft.SAVES_FOLDER);
+	public Path getMinceraftSavePath() {
+		if (this.minecraftPath == null) {
+			return null;
+		}
+		return Paths.get(this.minecraftPath);
 	}
 
-	public File getSteamPath() {
+	public Path getSteamPath() {
 		if (this.steamPath == null) {
 			return null;
 		}
-		return new File(this.steamPath);
-	}
-
-	public static boolean verifyMinecraftDirectory(File path) {
-		File saves = new File(path + File.separator + Minecraft.SAVES_FOLDER);
-		if (saves.exists() && saves.isDirectory()) {
-			return true;
-		}
-		return false;
+		return Paths.get(this.steamPath);
 	}
 
 	public File getWorldPath(World world) {
@@ -271,7 +260,7 @@ public class Config {
 		return this.savePath;
 	}
 
-	public void setConvertData(ConverterData converterData) {
+	public void setConvertData(ConvertTask converterData) {
 		this.setPlace(converterData.getPlace()
 				.getDisplayName());
 		this.setGame(converterData.getGame()
@@ -285,18 +274,6 @@ public class Config {
 	public static Config getDetaulftConfig() {
 		Config config = new Config();
 		config.games = SourceGame.createDefaults();
-//		config.games.add(SourceGame.create()
-//				.setLongName("Team Fortress 2")
-//				.setShortName("tf")
-//				.setDefaultConvertOption("defaultTf2"));
-//		config.games.add(SourceGame.create()
-//				.setLongName("Counter-Strike Source")
-//				.setShortName("cstrike")
-//				.setDefaultConvertOption("defaultCss"));
-//		config.games.add(SourceGame.create()
-//				.setLongName("Garrysmod")
-//				.setShortName("garrysmod")
-//				.setDefaultConvertOption("defaultGmod"));
 		config.options.add(ConvertOption.create()
 				.setName("default")
 				.setScale(40)
@@ -316,21 +293,14 @@ public class Config {
 				.addAddable(TorchEast.class.getSimpleName())
 				.addAddable(Torch.class.getSimpleName())
 				.addAddable(SnowBlock.class.getSimpleName())
-				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(DetailBlock.class.getSimpleName())
 				.addAddable(Liquid.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
-				.addAddable(StairsWest.class.getSimpleName())
-				.addAddable(StairsSouth.class.getSimpleName())
-				.addAddable(StairsNorth.class.getSimpleName())
-				.addAddable(StairsEast.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
-				.addAddable(Block.class.getSimpleName())
-				.addAddable(StairsHighEast.class.getSimpleName())
-				.addAddable(StairsHighWest.class.getSimpleName())
-				.addAddable(StairsHighNorth.class.getSimpleName())
-				.addAddable(StairsHighSouth.class.getSimpleName()));
+				.addAddable(SlabBottom.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
+				.addAddable(SlabTop.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultTf2")
 				.setScale(48)
@@ -345,28 +315,21 @@ public class Config {
 				.addAddable(TorchWest.class.getSimpleName())
 				.addAddable(TorchSouth.class.getSimpleName())
 				.addAddable(TorchNorth.class.getSimpleName())
-				.addAddable(Block.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
+				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
-				.addAddable(StairsEast.class.getSimpleName())
-				.addAddable(StairsNorth.class.getSimpleName())
-				.addAddable(StairsSouth.class.getSimpleName())
-				.addAddable(StairsWest.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
 				.addAddable(Liquid.class.getSimpleName())
 				.addAddable(TallGrassTf2.class.getSimpleName())
-				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(DetailBlock.class.getSimpleName())
 				.addAddable(SnowBlock.class.getSimpleName())
 				.addAddable(VinesSouth.class.getSimpleName())
 				.addAddable(VinesNorth.class.getSimpleName())
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(StairsHighEast.class.getSimpleName())
-				.addAddable(StairsHighWest.class.getSimpleName())
-				.addAddable(StairsHighNorth.class.getSimpleName())
-				.addAddable(StairsHighSouth.class.getSimpleName())
+				.addAddable(SlabTop.class.getSimpleName())
 				.addAddable(Torch.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultCss")
@@ -375,28 +338,21 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(StairsHighSouth.class.getSimpleName())
-				.addAddable(StairsHighNorth.class.getSimpleName())
-				.addAddable(StairsHighWest.class.getSimpleName())
-				.addAddable(StairsHighEast.class.getSimpleName())
-				.addAddable(Block.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
+				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fire.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
-				.addAddable(StairsEast.class.getSimpleName())
-				.addAddable(StairsNorth.class.getSimpleName())
-				.addAddable(StairsSouth.class.getSimpleName())
-				.addAddable(StairsWest.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
 				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(DetailBlock.class.getSimpleName())
 				.addAddable(SnowBlock.class.getSimpleName())
 				.addAddable(VinesSouth.class.getSimpleName())
 				.addAddable(VinesNorth.class.getSimpleName())
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
+				.addAddable(SlabTop.class.getSimpleName())
 				.addAddable(PlayerSpawnCss.class.getSimpleName())
 				.addAddable(CssLamp.class.getSimpleName())
 				.addAddable(PlayerSpawnCss.class.getSimpleName()));
@@ -407,28 +363,27 @@ public class Config {
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(Block.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
+				.addAddable(Solid.class.getSimpleName())
+				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
-				.addAddable(StairsEast.class.getSimpleName())
-				.addAddable(StairsNorth.class.getSimpleName())
-				.addAddable(StairsSouth.class.getSimpleName())
-				.addAddable(StairsWest.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
 				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(TransparentBlock.class.getSimpleName())
+				.addAddable(DetailBlock.class.getSimpleName())
 				.addAddable(SnowBlock.class.getSimpleName())
 				.addAddable(VinesSouth.class.getSimpleName())
 				.addAddable(VinesNorth.class.getSimpleName())
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(StairsHighEast.class.getSimpleName())
-				.addAddable(StairsHighWest.class.getSimpleName())
-				.addAddable(StairsHighNorth.class.getSimpleName())
-				.addAddable(StairsHighSouth.class.getSimpleName()));
+				.addAddable(SlabTop.class.getSimpleName())
+				.addAddable(TorchNorth.class.getSimpleName())
+				.addAddable(TorchSouth.class.getSimpleName())
+				.addAddable(TorchWest.class.getSimpleName())
+				.addAddable(TorchEast.class.getSimpleName())
+				.addAddable(Torch.class.getSimpleName()));
 		config.setPack("minecraft_original");
+		config.setGame("Garrysmod");
 		return config;
 	}
 

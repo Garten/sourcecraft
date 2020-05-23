@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import main.World;
+import minecraft.World;
 
 public class WorldComboboxRenderer extends JLabel implements ListCellRenderer<Object> {
 
@@ -28,7 +28,8 @@ public class WorldComboboxRenderer extends JLabel implements ListCellRenderer<Ob
 	 * returns the label, set up to display the text and image.
 	 */
 	@Override
-	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+			boolean cellHasFocus) {
 		this.setText("<No Minecraft World Found>");
 		if (value instanceof World) {
 			World world = (World) value;

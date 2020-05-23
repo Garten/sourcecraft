@@ -6,9 +6,11 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +18,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import basic.RunnableWith;
 import basic.Validator;
 import gui.panel.DetailsPanel;
 import gui.panel.InputPanel;
@@ -24,7 +25,7 @@ import gui.panel.LabeledCoordinates;
 import gui.panel.OutputPanel;
 import gui.panel.ResultPanel;
 import gui.panel.SetupPanel;
-import main.World;
+import minecraft.World;
 import periphery.Place;
 import periphery.SourceGame;
 
@@ -139,30 +140,30 @@ public class Gui {
 		this.tabbedPane.setEnabledAt(3, enabled);
 	}
 
-	public void setMinecraftPath(File path) {
+	public void setMinecraftPath(Path path) {
 		this.setupPanel.setMinecraftPath(path.toString());
 	}
 
-	public String getMincraftPath() {
-		return this.setupPanel.getMincraftPath();
+	public Path getMincraftPath() {
+		return Paths.get(this.setupPanel.getMincraftPath());
 	}
 
-	public void setSourcePath(File file) {
+	public void setSourcePath(Path file) {
 		if (file == null) {
 			return;
 		}
 		this.setupPanel.setSourcePath(file.toString());
 	}
 
-	public File getSourcePath() {
-		return new File(this.setupPanel.getSourcePath());
+	public Path getSourcePath() {
+		return Paths.get(this.setupPanel.getSourcePath());
 	}
 
-	public void setSelectMinecraftPath(RunnableWith<String> selectMinecraftPath) {
+	public void setSelectMinecraftPath(Consumer<String> selectMinecraftPath) {
 		this.setupPanel.setSelectMinecraftPath(selectMinecraftPath);
 	}
 
-	public void setSelectSourcePath(RunnableWith<String> selectSourcePath) {
+	public void setSelectSourcePath(Consumer<String> selectSourcePath) {
 		this.setupPanel.setSelectSourcePath(selectSourcePath);
 	}
 
@@ -187,15 +188,15 @@ public class Gui {
 		this.inputPanel.setPossiblePlaces(placeSelectOptions);
 	}
 
-	public void setLoadCoordinates(RunnableWith<LabeledCoordinates> loadCoordinates) {
+	public void setLoadCoordinates(Consumer<LabeledCoordinates> loadCoordinates) {
 		this.inputPanel.setLoadCoordinates(loadCoordinates);
 	}
 
-	public void setLoadPlace(RunnableWith<Place> loadPlace) {
+	public void setLoadPlace(Consumer<Place> loadPlace) {
 		this.inputPanel.setLoadPlace(loadPlace);
 	}
 
-	public void setUponWorldSelected(RunnableWith<World> uponWorldSelected) {
+	public void setUponWorldSelected(Consumer<World> uponWorldSelected) {
 		this.inputPanel.setUponWorldSelected(uponWorldSelected);
 	}
 
@@ -231,7 +232,7 @@ public class Gui {
 		return this.inputPanel.getPlace();
 	}
 
-	public void setDeletePlace(RunnableWith<Place> deletePlace) {
+	public void setDeletePlace(Consumer<Place> deletePlace) {
 		this.inputPanel.setDeletePlace(deletePlace);
 	}
 
@@ -244,11 +245,11 @@ public class Gui {
 		this.outputPanel.setOutputFileName(outputFile);
 	}
 
-	public void setUponSelectedGame(RunnableWith<String> uponSelectGame) {
+	public void setUponSelectedGame(Consumer<String> uponSelectGame) {
 		this.outputPanel.setUponSelectedGame(uponSelectGame);
 	}
 
-	public void setButtonSelectOutputFile(RunnableWith<String> selectOutputFile) {
+	public void setButtonSelectOutputFile(Consumer<String> selectOutputFile) {
 		this.outputPanel.setButtonSelectOutputFile(selectOutputFile);
 	}
 
@@ -261,7 +262,7 @@ public class Gui {
 	}
 
 	public SourceGame getSourceGame() {
-		return this.outputPanel.getSourceGame();
+		return this.outputPanel.getSelectedGame();
 	}
 
 	public String getOutputFile() {
@@ -419,7 +420,7 @@ public class Gui {
 		this.detailsPanel.setTexturePack(texturePack);
 	}
 
-	public void setUponSelectTexturePack(RunnableWith<String> uponSelectTexturePack) {
+	public void setUponSelectTexturePack(Consumer<String> uponSelectTexturePack) {
 		this.detailsPanel.setUponSelectTexturePack(uponSelectTexturePack);
 	}
 
@@ -429,5 +430,13 @@ public class Gui {
 
 	public String getTexturePack() {
 		return this.detailsPanel.getTexturePack();
+	}
+
+	public void setSelectedGame(SourceGame game) {
+		this.outputPanel.setSelectedGame(game);
+	}
+
+	public void setSelectedConverterOptions(String convertOption) {
+		this.detailsPanel.setSelectedConverterOptions(convertOption);
 	}
 }

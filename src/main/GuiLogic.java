@@ -4,23 +4,27 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
 
 import basic.Loggger;
-import basic.RunnableWith;
 import gui.Gui;
 import gui.panel.LabeledCoordinates;
-import minecraft.Minecraft;
 import minecraft.Position;
-import periphery.Config;
+import minecraft.World;
+import periphery.Minecraft;
 import periphery.Periphery;
 import periphery.Place;
 import periphery.SourceGame;
+import periphery.Steam;
 import periphery.TexturePack;
 
-public class GuiLogic implements RunnableWith<Gui> {
+public class GuiLogic implements Consumer<Gui> {
 
 	private static final String VMF_ENDING = ".vmf";
 	private Gui gui;
@@ -32,7 +36,7 @@ public class GuiLogic implements RunnableWith<Gui> {
 	private boolean sourcePathOk = false;
 
 	@Override
-	public void run(Gui gui) {
+	public void accept(Gui gui) {
 		this.gui = gui;
 		this.initSetup();
 		this.initInput();
@@ -69,56 +73,37 @@ public class GuiLogic implements RunnableWith<Gui> {
 		});
 	}
 
-	private void initDetails() {
-		String[] convertOptionNames = Periphery.CONFIG.getConvertOptionNames();
-		this.gui.setPossibleConverterOptions(convertOptionNames);
+	private void initSetup() {
+		this.gui.setMinecraftPath(Minecraft.getCorrectMinecraftPath());
+		this.updatedMinecraftPath();
+		this.gui.setEditedTextFieldMinecraftPath(this::updatedMinecraftPath);
 
-		String[] textureNames = Periphery.detectTexturePacks();
-		this.gui.setPossibleTextures(textureNames);
-		final String texturePack = Periphery.CONFIG.getTexturePack();
-		this.gui.setSelectedTexturePack(texturePack);
-		this.informAboutTexturePack(texturePack);
-		this.gui.setUponSelectTexturePack(pack -> {
-			this.informAboutTexturePack(pack);
-		});
-	}
+		// steam path
+		this.gui.setSourcePath(Steam.getSteamPath());
+		this.updateDisplayForSteam();
+		this.gui.setEditedTextFieldSourcePath(this::updateDisplayForSteam);
 
-	private void initOutput() {
-		this.gui.setPossibleGames(Periphery.CONFIG.getGames());
-
-		this.gui.setUponSelectedGame(gameName -> {
-			SourceGame game = Periphery.CONFIG.getGame(gameName);
-			this.handleGameSelect(game);
-		});
-		SourceGame game = Periphery.CONFIG.getGame();
-
-		this.handleGameSelect(game);
-
-		this.gui.setButtonSelectOutputFile(path -> {
-			Loggger.log("searching new output for " + path);
-			File newFile = this.changeFile(new File(path));
-			if (newFile.isDirectory()) {
-				newFile = new File(newFile, "test.vmf");
-			}
-			Loggger.log(newFile.toString());
-			this.gui.setOutputFileName(newFile.toString());
-			Periphery.CONFIG.setSavePath(newFile.toString());
+		this.gui.setSelectMinecraftPath(path -> {
+			Path newPath = this.changePath(Paths.get(path));
+			this.gui.setMinecraftPath(newPath);
+			Periphery.CONFIG.setMinecraftPath(newPath);
 			Periphery.write();
 		});
 
-		this.gui.setUponEditOutput(this::testOutputFile);
-		this.testOutputFile();
+		this.gui.setSelectSourcePath(path -> {
+			Path newPath = this.changePath(Paths.get(path));
+			this.gui.setSourcePath(newPath);
+			Periphery.CONFIG.setSteamPath(newPath);
+			Periphery.write();
+		});
 	}
 
 	private void initInput() {
-
 		// world
-		Vector<World> worldNames = Minecraft.getPossibleWorlds();
-		this.gui.setPossibleWorlds(worldNames);
+		this.gui.setPossibleWorlds(Minecraft.getPossibleWorlds());
 
 		// place
-		Vector<Place> placeNames = Periphery.PLACES.getPlaces();
-		this.gui.setPossiblePlaces(placeNames);
+		this.gui.setPossiblePlaces(Periphery.PLACES.getPlaces());
 
 		this.gui.setValidatePlace(place -> {
 			if (place == null) {
@@ -162,43 +147,64 @@ public class GuiLogic implements RunnableWith<Gui> {
 
 			labeledCoordinates.add(playerPosition);
 			labeledCoordinates.add(world.getWorldSpawnPosition());
-			labeledCoordinates.add(new LabeledCoordinates("World origin", new Position(-20, 45, -20), new Position(20, 150, 20)));
+			labeledCoordinates
+					.add(new LabeledCoordinates("World origin", new Position(-20, 45, -20), new Position(20, 150, 20)));
 			this.gui.setPossibleCoordinates(labeledCoordinates);
 			this.gui.setLabeledCoordinates(new LabeledCoordinates(World.PLAYER_POSITION));
 		});
 		this.gui.setWorld(Place.getWorld(currentPlace));
 	}
 
-	private void initSetup() {
-		this.gui.setMinecraftPath(Minecraft.getMinecraftPath());
-		this.updatedMinecraftPath();
-		this.gui.setEditedTextFieldMinecraftPath(this::updatedMinecraftPath);
-
-		// steam path
-		this.gui.setSourcePath(Steam.getSteamPath());
-		this.updateDisplayForSteam();
-		this.gui.setEditedTextFieldSourcePath(this::updateDisplayForSteam);
-
-		this.gui.setSelectMinecraftPath(path -> {
-			File newPath = this.changePath(new File(path));
-			this.gui.setMinecraftPath(newPath);
-			Periphery.CONFIG.setMinecraftPath(newPath);
-			Periphery.write();
-		});
-
-		this.gui.setSelectSourcePath(path -> {
-			File newPath = this.changePath(new File(path));
-			this.gui.setSourcePath(newPath);
-			Periphery.CONFIG.setSteamPath(newPath);
-			Periphery.write();
+	private void initDetails() {
+		String[] convertOptionNames = Periphery.CONFIG.getConvertOptionNames();
+		this.gui.setPossibleConverterOptions(convertOptionNames);
+		this.gui.setSelectedConverterOptions(Periphery.CONFIG.getConvertOption());
+		String[] textureNames = Periphery.detectTexturePacks();
+		this.gui.setPossibleTextures(textureNames);
+		final String texturePack = Periphery.CONFIG.getTexturePack();
+		this.gui.setSelectedTexturePack(texturePack);
+		this.informAboutTexturePack(texturePack);
+		this.gui.setUponSelectTexturePack(pack -> {
+			this.informAboutTexturePack(pack);
 		});
 	}
 
+	private void initOutput() {
+		this.gui.setUponSelectedGame(gameName -> {
+			SourceGame game = Periphery.CONFIG.getGame(gameName);
+			String fileName = Steam.getGamePathString(game);
+			if (fileName != null) {
+				fileName += File.separator + "test" + VMF_ENDING;
+				Loggger.log("changing output to " + fileName);
+				this.gui.setOutputFileName(fileName);
+			}
+		});
+		this.gui.setPossibleGames(Periphery.CONFIG.getGames());
+		this.gui.setSelectedGame(Periphery.CONFIG.getGame());
+
+		this.gui.setButtonSelectOutputFile(path -> {
+			Loggger.log("searching new output for " + path);
+			Path newFile = this.changeFile(Paths.get(path));
+			if (Files.isDirectory(newFile)) {
+				newFile = Paths.get(newFile.toString(), "test.vmf");
+			}
+			Loggger.log(newFile.toString());
+			this.gui.setOutputFileName(newFile.toString());
+			Periphery.CONFIG.setSavePath(newFile.toString());
+			Periphery.write();
+		});
+
+		this.gui.setUponEditOutput(this::testOutputFile);
+		this.testOutputFile();
+	}
+
 	private void updatedMinecraftPath() {
-		String minecraftPathString = this.gui.getMincraftPath();
-		if (Config.verifyMinecraftDirectory(new File(minecraftPathString))) {
+		Path minecraftPath = this.gui.getMincraftPath();
+		if (Minecraft.isMinecraftInputDirectory(minecraftPath)) {
 			this.gui.setTextFieldMincraftPathColor(COLOR_DIRECTORY_FOUND);
 			this.minecraftPathOk = true;
+			Periphery.CONFIG.setMinecraftPath(minecraftPath);
+			this.initInput();
 		} else {
 			this.gui.setTextFieldMincraftPathColor(COLOR_DIRECTORY_MISSING);
 			this.minecraftPathOk = false;
@@ -207,7 +213,7 @@ public class GuiLogic implements RunnableWith<Gui> {
 	}
 
 	private void updateDisplayForSteam() {
-		File steamPath = this.gui.getSourcePath();
+		Path steamPath = this.gui.getSourcePath();
 		if (Steam.isSteamPath(steamPath)) {
 			this.gui.setTextFieldSteamPathColor(COLOR_DIRECTORY_FOUND);
 //			gui.setLabelIssourcesdkinstalled("Source SDK is installed."); // TODO
@@ -232,31 +238,22 @@ public class GuiLogic implements RunnableWith<Gui> {
 		this.gui.setVisibleTextTexturesUpToDate(upToDate);
 	}
 
-	private void handleGameSelect(SourceGame game) {
-		String fileName = Steam.getGamePathString(game);
-		if (fileName != null) {
-			fileName += File.separator + "test" + VMF_ENDING;
-			Loggger.log("changing output to " + fileName);
-			this.gui.setOutputFileName(fileName);
-		}
-	}
-
 	private void testOutputFile() {
 		String outputName = this.gui.getOutputFile();
 		File output = new File(outputName);
 		this.gui.setOutputExistsVisibel(output.exists());
 	}
 
-	public File changePath(File path) {
+	public Path changePath(Path path) {
 		return this.changePath(path, JFileChooser.DIRECTORIES_ONLY);
 	}
 
-	public File changeFile(File file) {
-		return this.changePath(file, JFileChooser.FILES_AND_DIRECTORIES);
+	public Path changeFile(Path path) {
+		return this.changePath(path, JFileChooser.FILES_AND_DIRECTORIES);
 	}
 
-	private File changePath(File field, int selectionFlag) {
-		File current = field;
+	private Path changePath(Path field, int selectionFlag) {
+		File current = field.toFile(); // ugly
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(selectionFlag);
 		if (current.exists()) {
@@ -274,6 +271,6 @@ public class GuiLogic implements RunnableWith<Gui> {
 				current = fileChooser.getSelectedFile();
 			}
 		}
-		return current;
+		return Paths.get(current.toString()); // ugly
 	}
 }

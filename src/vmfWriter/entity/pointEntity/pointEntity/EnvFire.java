@@ -8,16 +8,15 @@ import vmfWriter.entity.pointEntity.PointEntity;
 
 public class EnvFire extends PointEntity {
 
-	private int fireSize;
+	private int fireSize = 3;
 
-	public EnvFire(int fireSize) {
+	public EnvFire() {
 		super();
-		this.fireSize = fireSize;
 	}
 
 	@Override
 	public EnvFire create(Position origin) {
-		EnvFire result = new EnvFire(this.fireSize);
+		EnvFire result = new EnvFire();
 		result.setOrigin(origin);
 		return result;
 	}
@@ -31,21 +30,27 @@ public class EnvFire extends PointEntity {
 	private static final String HEALTH_TAG = "health";
 	private static final String IGNITIONPOINT_TAG = "ignitionpoint";
 	private static final String SPAWNFLAGS_TAG = "spawnflags";
-	private static final String STARTDISABLED_TAG = "StartDisabled"; // TODO GroßKleinSchreibung?
+	private static final String STARTDISABLED_TAG = "StartDisabled";
 
 	@Override
 	public String getName() {
 		return "env_fire";
 	}
 
+	public EnvFire setFireSize(int fireSize) {
+		this.fireSize = fireSize;
+		return this;
+	}
+
 	@Override
 	public void writeVmfSpecific(ValveWriter writer) throws IOException {
 		writer.put(FIREATTACK_TAG, FIREATTACK)
-				.put(FIRESIZE_TAG, this.fireSize)
+				.put("damagescale", "1.0")
+				.put(FIRESIZE_TAG, this.fireSize) //
 				.put(FIRETYPE_TAG, FIRETYPE)
 				.put(HEALTH_TAG, 60)
 				.put(IGNITIONPOINT_TAG, 32)
-				.put(SPAWNFLAGS_TAG, 5)
+				.put(SPAWNFLAGS_TAG, 21) // 16// 25
 				.put(STARTDISABLED_TAG, 0);
 	}
 

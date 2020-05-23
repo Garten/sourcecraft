@@ -1,8 +1,10 @@
 package minecraft;
 
+import java.util.Objects;
+
 import basic.Loggger;
 
-public class Position {
+public class Position implements Comparable<Position> {
 
 	public int x;
 	public int y;
@@ -18,6 +20,11 @@ public class Position {
 		this.z = z;
 	}
 
+	public static Position create(Position template) {
+		return new Position(template.x, template.y, template.z);
+	}
+
+	@Deprecated
 	public Position(Position p) {
 		this.x = p.x;
 		this.y = p.y;
@@ -58,12 +65,34 @@ public class Position {
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Position) {
-			Position other = (Position) object;
-			return this.x == other.x && this.y == other.y && this.z == other.z;
+	public int hashCode() {
+		return Objects.hash(this.x, this.y, this.z);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
 		}
-		return false;
+		if (!(obj instanceof Position)) {
+			return false;
+		}
+		Position other = (Position) obj;
+		return this.x == other.x && this.y == other.y && this.z == other.z;
+	}
+
+	@Override
+	public int compareTo(Position other) {
+		int xDiff = this.x - other.x;
+		if (xDiff != 0) {
+			return xDiff;
+		}
+		int yDiff = this.y - other.y;
+		if (yDiff != 0) {
+			return yDiff;
+		}
+		int zDiff = this.z - other.z;
+		return zDiff;
 	}
 
 	@Override
@@ -222,10 +251,5 @@ public class Position {
 			target.z = cap.z - 1;
 		}
 		return target;
-	}
-
-	public int compareTo(Position other) {
-		// TODO
-		return 0;
 	}
 }

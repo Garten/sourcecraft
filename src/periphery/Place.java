@@ -1,6 +1,8 @@
 package periphery;
 
-import minecraft.Bounds;
+import java.util.Objects;
+
+import minecraft.Area;
 import minecraft.Position;
 
 public class Place {
@@ -69,8 +71,8 @@ public class Place {
 		return this.displayName;
 	}
 
-	public Bounds createBound() {
-		return new Bounds(this.getStart(), this.getEnd());
+	public Area createBound() {
+		return new Area(this.getStart(), this.getEnd());
 	}
 
 	public Place setTo(Place other) {
@@ -100,6 +102,24 @@ public class Place {
 			changed = true;
 		}
 		return changed;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.displayName, this.end, this.start, this.world);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Place)) {
+			return false;
+		}
+		Place other = (Place) obj;
+		return Objects.equals(this.displayName, other.displayName) && Objects.equals(this.end, other.end)
+				&& Objects.equals(this.start, other.start) && Objects.equals(this.world, other.world);
 	}
 
 }

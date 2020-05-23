@@ -37,12 +37,14 @@ public class Light extends PointEntity {
 				.put("_distance", 0)
 				.put("_fifty_percent_distance", this.distance50)
 				.put("_hardfalloff", 0)
-				.put("_light", this.color.getRed() + " " + this.color.getGreen() + " " + this.color.getBlue() + " " + this.color.getAlpha())
+				.put("_light",
+						this.color.getRed() + " " + this.color.getGreen() + " " + this.color.getBlue() + " "
+								+ this.color.getAlpha())
 				.put("_lightHDR", "-1 -1 -1 1")
 				.put("_lightscaleHDR", 1)
 				.put("_linear_attn", 0)
 				.put("_quadratic_attn", 1)
-				.put("zero_percent_distance", this.distance100)
+				.put("_zero_percent_distance", this.distance100)
 				.put("style", 0);
 	}
 }

@@ -11,12 +11,12 @@ public class Cuboid extends EightPoint {
 	public Cuboid(Cuboid other) {
 		this.skin = other.skin; // TODO copy skin
 		this.a = other.a;
-		this.b = other.b;
-		this.c = other.c;
+		this.aTop = other.aTop;
+		this.dTop = other.dTop;
 		this.d = other.d;
 		this.e = other.e;
-		this.f = other.f;
-		this.g = other.g;
+		this.eTop = other.eTop;
+		this.hTop = other.hTop;
 		this.h = other.h;
 		this.textureScaleX = other.textureScaleX;
 		this.textureScaleY = other.textureScaleY;
@@ -33,12 +33,12 @@ public class Cuboid extends EightPoint {
 			}
 		} else {
 			this.a = p[0];
-			this.b = p[1];
-			this.c = p[2];
+			this.aTop = p[1];
+			this.dTop = p[2];
 			this.d = p[3];
 			this.e = p[4];
-			this.f = p[5];
-			this.g = p[6];
+			this.eTop = p[5];
+			this.hTop = p[6];
 			this.h = p[7];
 		}
 	}
@@ -65,10 +65,10 @@ public class Cuboid extends EightPoint {
 		this.d = this.a.getOffset(xOffset, 0, 0);
 		this.h = this.a.getOffset(xOffset, yOffset, 0);
 
-		this.b = this.a.getOffset(0, 0, zOffset);
-		this.f = this.e.getOffset(0, 0, zOffset);
-		this.c = this.d.getOffset(0, 0, zOffset);
-		this.g = this.h.getOffset(0, 0, zOffset);
+		this.aTop = this.a.getOffset(0, 0, zOffset);
+		this.eTop = this.e.getOffset(0, 0, zOffset);
+		this.dTop = this.d.getOffset(0, 0, zOffset);
+		this.hTop = this.h.getOffset(0, 0, zOffset);
 	}
 
 	public Cuboid(Position fPoint, int xLength, int yLength, int zLength, int scale) {
@@ -79,14 +79,14 @@ public class Cuboid extends EightPoint {
 			zLength = -zLength + 1;
 			this.skin = new Skin("Attempted to creat invalid Cuboid", 0.25);
 		}
-		this.f = new Position(fPoint);
-		this.g = new Position(this.f.x + xLength, this.f.y, this.f.z);
-		this.b = new Position(this.f.x, this.f.y - yLength, this.f.z);
-		this.c = new Position(this.f.x + xLength, this.f.y - yLength, this.f.z);
-		this.e = new Position(this.f.x, this.f.y, this.f.z - zLength);
-		this.h = new Position(this.g.x, this.g.y, this.g.z - zLength);
-		this.a = new Position(this.b.x, this.b.y, this.b.z - zLength);
-		this.d = new Position(this.c.x, this.c.y, this.c.z - zLength);
+		this.eTop = new Position(fPoint);
+		this.hTop = new Position(this.eTop.x + xLength, this.eTop.y, this.eTop.z);
+		this.aTop = new Position(this.eTop.x, this.eTop.y - yLength, this.eTop.z);
+		this.dTop = new Position(this.eTop.x + xLength, this.eTop.y - yLength, this.eTop.z);
+		this.e = new Position(this.eTop.x, this.eTop.y, this.eTop.z - zLength);
+		this.h = new Position(this.hTop.x, this.hTop.y, this.hTop.z - zLength);
+		this.a = new Position(this.aTop.x, this.aTop.y, this.aTop.z - zLength);
+		this.d = new Position(this.dTop.x, this.dTop.y, this.dTop.z - zLength);
 		this.scale(scale);
 	}
 
@@ -97,26 +97,64 @@ public class Cuboid extends EightPoint {
 	}
 
 	public void cut(Orientation cut) {
-		int xLength = this.g.x - this.a.x;
-		int yLength = this.g.y - this.a.y;
-		// int zLength = g.y - a.y;
+		int xLength = this.hTop.x - this.a.x;
+		int yLength = this.hTop.y - this.a.y;
 		if (cut != null) {
 			switch (cut) {
 			case NORTH:
-				this.b.y = this.b.y + xLength;
-				this.c.y = this.c.y + xLength;
+				this.aTop.y = this.aTop.y + xLength;
+				this.dTop.y = this.dTop.y + xLength;
 				break;
 			case SOUTH:
-				this.f.y = this.f.y - xLength;
-				this.g.y = this.g.y - xLength;
+				this.eTop.y = this.eTop.y - xLength;
+				this.hTop.y = this.hTop.y - xLength;
 				break;
 			case EAST:
-				this.f.x = this.f.x + yLength;
-				this.b.x = this.b.x + yLength;
+				this.eTop.x = this.eTop.x + yLength;
+				this.aTop.x = this.aTop.x + yLength;
 				break;
 			case WEST:
-				this.c.x = this.c.x - yLength;
-				this.g.x = this.g.x - yLength;
+				this.dTop.x = this.dTop.x - yLength;
+				this.hTop.x = this.hTop.x - yLength;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public void extend(Orientation side, Orientation cut) {
+		int xLength = this.hTop.x - this.a.x;
+		int yLength = this.hTop.y - this.a.y;
+		if (cut != null) {
+			switch (cut) {
+			case NORTH:
+				if (side.equals(Orientation.EAST)) {
+					this.a.y = this.a.y - xLength;
+				} else {
+					this.d.y = this.d.y - xLength;
+				}
+				break;
+			case SOUTH:
+				if (side.equals(Orientation.EAST)) {
+					this.e.y = this.e.y + xLength;
+				} else {
+					this.h.y = this.h.y + xLength;
+				}
+				break;
+			case EAST:
+				if (side.equals(Orientation.NORTH)) {
+					this.a.x = this.a.x - yLength;
+				} else {
+					this.e.x = this.e.x - yLength;
+				}
+				break;
+			case WEST:
+				if (side.equals(Orientation.NORTH)) {
+					this.d.x = this.d.x + yLength;
+				} else {
+					this.h.x = this.h.x + yLength;
+				}
 				break;
 			default:
 				break;
@@ -131,19 +169,25 @@ public class Cuboid extends EightPoint {
 					.putBrushID();
 
 //			top
-			this.writeSide(writer, this.b, this.f, this.g, this.skin.materialTop, this.textureScaleX, this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
+			this.writeSide(writer, this.aTop, this.eTop, this.hTop, this.skin.materialTop, this.textureScaleX,
+					this.textureScaleY, TOP_U_AXIS, TOP_V_AXIS);
 //			bottom
-			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX, this.textureScaleY, BOTTOM_U_AXIS, BOTTOM_V_AXIS);
+			this.writeSide(writer, this.e, this.a, this.d, this.skin.materialBottom, this.textureScaleX,
+					this.textureScaleY, BOTTOM_U_AXIS, BOTTOM_V_AXIS);
 
-//			negative x side 
-			this.writeSide(writer, this.a, this.e, this.f, this.skin.materialLeft, this.textureScaleX, this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
+//			negative x side
+			this.writeSide(writer, this.a, this.e, this.eTop, this.skin.materialLeft, this.textureScaleX,
+					this.textureScaleZ, LEFT_U_AXIS, LEFT_V_AXIS);
 //			positive x side
-			this.writeSide(writer, this.h, this.d, this.c, this.skin.materialRight, this.textureScaleX, this.textureScaleZ, RIGHT_U_AXIS, RIGHT_V_AXIS);
+			this.writeSide(writer, this.h, this.d, this.dTop, this.skin.materialRight, this.textureScaleX,
+					this.textureScaleZ, RIGHT_U_AXIS, RIGHT_V_AXIS);
 
 //			positive y side
-			this.writeSide(writer, this.e, this.h, this.g, this.skin.materialBack, this.textureScaleY, this.textureScaleZ, BACK_U_AXIS, BACK_V_AXIS);
+			this.writeSide(writer, this.e, this.h, this.hTop, this.skin.materialBack, this.textureScaleY,
+					this.textureScaleZ, BACK_U_AXIS, BACK_V_AXIS);
 //			negative y side
-			this.writeSide(writer, this.d, this.a, this.b, this.skin.materialFront, this.textureScaleY, this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
+			this.writeSide(writer, this.d, this.a, this.aTop, this.skin.materialFront, this.textureScaleY,
+					this.textureScaleZ, FRONT_U_AXIS, FRONT_V_AXIS);
 
 			writer.open(ValveElement.EDITOR_TAG)
 					.put(ValveElement.COLOR, "0 215 172")

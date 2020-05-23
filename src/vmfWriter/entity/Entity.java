@@ -12,6 +12,8 @@ public abstract class Entity extends ValveElement {
 	public static final String ORIGIN_TAG = "origin";
 	public static final String LOGICALPOS_TAG = "logicalpos";
 
+	public String name;
+
 	@Override
 	public void writeVmf(ValveWriter writer) throws IOException {
 		this.writeStart(writer);
@@ -35,11 +37,18 @@ public abstract class Entity extends ValveElement {
 	public ValveWriter openEntity(ValveWriter writer) throws IOException {
 		return writer.open(ValveElement.ENTITY_TAG)
 				.put(ValveElement.ID_TAG, writer.getCounter()
-						.getBrushId())
+						.getNewBrushId())
 				.put(ValveElement.CLASSNAME_TAG, this.getName());
 	}
 
-	public abstract String getName();
+	public String getName() {
+		return this.name;
+	}
+
+	public Entity setName(String name) { // TODO some entities overwrite getName, for others the name is set from extern
+		this.name = name;
+		return this;
+	}
 
 	public void writeEditorWithLogicalpos(ValveWriter writer) throws IOException {
 		writer.open(ValveElement.EDITOR_TAG)

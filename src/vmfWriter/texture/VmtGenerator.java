@@ -17,6 +17,9 @@ public class VmtGenerator {
 						.endsWith(".vtf")) {
 					continue;
 				}
+				System.out.println(subFile.getName()
+						.substring(0, subFile.getName()
+								.length() - 4));
 				String vtfName = subFile.getName();
 				String plainName = vtfName.substring(0, vtfName.lastIndexOf('.'));
 				ValveWriter writer = new ValveWriter(new File(directory, plainName + ".vmt"));

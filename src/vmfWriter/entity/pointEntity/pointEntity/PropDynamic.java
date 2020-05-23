@@ -5,27 +5,30 @@ import java.io.IOException;
 import minecraft.Position;
 import vmfWriter.Color;
 import vmfWriter.ValveWriter;
-import vmfWriter.entity.pointEntity.NamedPointEntity;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
-public class PropDynamic extends NamedPointEntity {
+public class PropDynamic extends RotateablePointEntity {
 
 	private String model;
-	private int angleX = 0;
-	private int angleY = 0;
-	private int angleZ = 0;
+//	private int angleX = 0;
+//	private int angleY = 0;
+//	private int angleZ = 0;
 
 	public PropDynamic(String model, int angleX, int angleY, int angleZ) {
+		this(model, new Position(angleX, angleY, angleZ));
+	}
+
+	public PropDynamic(String model, Position angle) {
 		this.model = model;
-		this.angleX = angleX;
-		this.angleY = angleY;
-		this.angleZ = angleZ;
+		this.setRotation(angle);
 	}
 
 	@Override
 	public PropDynamic create(Position origin) {
-		PropDynamic result = new PropDynamic(this.model, this.angleX, this.angleY, this.angleZ);
+		PropDynamic result = new PropDynamic(this.model, this.angle);
 		result.setOrigin(origin);
-		return (PropDynamic) super.createNamedPointEntity(result);
+		return result;
+//		return (PropDynamic) super.createPointEntity(result);
 	}
 
 	@Override
@@ -34,9 +37,9 @@ public class PropDynamic extends NamedPointEntity {
 	}
 
 	@Override
-	public void writeVmfSpecific(ValveWriter writer) throws IOException {
-		writer.put("angles", this.angleX + " " + this.angleY + " " + this.angleZ)
-				.put("DisableBoneFollowers", false)
+	public void writeVmfSpecific2(ValveWriter writer) throws IOException {
+//		writer.put("angles", this.angleX + " " + this.angleY + " " + this.angleZ)
+		writer.put("DisableBoneFollowers", false)
 				.put("disablereceiveshadows", false)
 				.put("disableshadows", false)
 				.put("ExplodeDamage", 0)
@@ -61,7 +64,8 @@ public class PropDynamic extends NamedPointEntity {
 				.put("skin", 0)
 				.put("solid", 0)
 				.put("spawnflags", 0)
-				.put("targetname", this.getTargetName());
+//				.put("targetname", this.getTargetName())
+		;
 	}
 
 }

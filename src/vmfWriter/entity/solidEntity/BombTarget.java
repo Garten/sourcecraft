@@ -2,7 +2,7 @@ package vmfWriter.entity.solidEntity;
 
 import java.io.IOException;
 
-import source.SkinManager;
+import converter.Skins;
 import vmfWriter.Cuboid;
 import vmfWriter.ValveWriter;
 
@@ -12,7 +12,7 @@ public class BombTarget extends SolidEntity {
 
 	public BombTarget(String name, Cuboid s) {
 		super(s);
-		s.setSkin(SkinManager.TRIGGER);
+		s.setSkin(Skins.TRIGGER);
 	}
 
 	@Override

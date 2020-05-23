@@ -1,9 +1,6 @@
 package vmfWriter.entity.pointEntity.pointEntity;
 
-import java.io.IOException;
-
 import minecraft.Position;
-import vmfWriter.ValveWriter;
 import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public class InfoPlayerCT extends RotateablePointEntity {
@@ -21,8 +18,8 @@ public class InfoPlayerCT extends RotateablePointEntity {
 		return "info_player_counterterrorist";
 	}
 
-	@Override
-	public void writeVmfSpecific(ValveWriter writer) throws IOException {
-		writer.put("angles", "0 " + this.getRotation() + " 0");
-	}
+//	@Override
+//	public void writeVmfSpecific(ValveWriter writer) throws IOException {
+//		writer.put("angles", "0 " + this.getRotation() + " 0");
+//	}
 }

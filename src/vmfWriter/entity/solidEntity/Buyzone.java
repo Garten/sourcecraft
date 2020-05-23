@@ -2,7 +2,7 @@ package vmfWriter.entity.solidEntity;
 
 import java.io.IOException;
 
-import source.SkinManager;
+import converter.Skins;
 import vmfWriter.Solid;
 import vmfWriter.ValveWriter;
 
@@ -17,7 +17,7 @@ public class Buyzone extends SolidEntity {
 
 	public Buyzone(Solid s, boolean police) {
 		super(s);
-		s.setSkin(SkinManager.TRIGGER);
+		s.setSkin(Skins.TRIGGER);
 		if (police) {
 			this.teamnumber = COUNTER_TERRORIST;
 		} else {
