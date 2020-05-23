@@ -1,11 +1,8 @@
 package converter.mapper;
 
-import java.util.Collection;
-import java.util.function.Predicate;
-
 import basic.Tuple;
 import converter.ConvertingReport;
-import converter.SkinManager;
+import converter.Skins;
 import converter.actions.ActionManager;
 import converter.cuboidFinder.CuboidFinder;
 import converter.cuboidFinder.DefaultCuboidFinder;
@@ -14,6 +11,7 @@ import minecraft.Position;
 import minecraft.SubBlockPosition;
 import periphery.SourceGame;
 import vmfWriter.Cuboid;
+import vmfWriter.entity.pointEntity.PointEntity;
 
 public abstract class Mapper extends SourceMapper {
 
@@ -50,7 +48,6 @@ public abstract class Mapper extends SourceMapper {
 		return this;
 	}
 
-	@Override
 	public int getScale() {
 		return this.scale;
 	}
@@ -74,42 +71,13 @@ public abstract class Mapper extends SourceMapper {
 	}
 
 	@Override
-	public Position getMovedPointInGridDimension(Position p, double x, double y, double z) {
-		int xDistance = (int) (x * this.scale);
-		int yDistance = (int) (-z * this.scale);
-		int zDistance = (int) (y * this.scale);
-		return p.move(xDistance, yDistance, zDistance);
-	}
-
-	@Override
 	public void setPointToGrid(Position position) {
 		this.target.setPointToGrid(this.convert(position));
 	}
 
-	public boolean hasOrHadMaterial(Position position, Block block) {
-		return this.hasBlock(position, found -> found.equals(block));
-	}
-
-	public boolean hasOrHadMaterial(Position position, Collection<Block> container) {
-		return this.hasBlock(position, block -> container.contains(block));
-	}
-
-	@Override
-	public boolean hasBlock(Position position, Predicate<Block> container) {
-		return container.test(this.getBlock(position));
-	}
-
-	public boolean hasBlock(Position position, Block block) {
-		return this.hasBlock(position, query -> query.equals(block));
-	}
-
-	public boolean hasBlock(Position position, Collection<Block> blocks) {
-		return (!this.isConverted(position)) && this.hasOrHadMaterial(position, blocks);
-	}
-
 	@Override
 	public Cuboid createCuboid(Position start, Position end, Block material) {
-		return new Cuboid(this.convertPositions(start, end), SkinManager.INSTANCE.getSkin(material));
+		return new Cuboid(this.convertPositions(start, end), Skins.INSTANCE.getSkin(material));
 	}
 
 	public Tuple<Position, Position> convertPositions(Position start, Position endIn) {
@@ -129,14 +97,37 @@ public abstract class Mapper extends SourceMapper {
 				(-end.z - 1) * this.getScale() + negativeOffset.z * grid, start.y * this.getScale() + offset.y * grid);
 		Position endNew = new Position((end.x + 1) * this.getScale() - negativeOffset.x * grid,
 				-start.z * this.getScale() - offset.z * grid, (end.y + 1) * this.getScale() - negativeOffset.y * grid);
-		return new Cuboid(new Tuple<>(startNew, endNew), SkinManager.INSTANCE.getSkin(material));
+		return new Cuboid(new Tuple<>(startNew, endNew), Skins.INSTANCE.getSkin(material));
 	}
 
-	protected abstract boolean isConverted(Position position);
+//	protected abstract boolean needsConversion(Position position);
 
 	public ActionManager getActions() {
 		return this.convertActions;
 	}
 
-	public abstract boolean isNextToAir(Position position);
+	public boolean isAirBlock(Position position) {
+		return this.getActions()
+				.getAction(this.getBlock(position))
+				.isAirBlock();
+	}
+
+//	public boolean stillNeedsConversion(Position position) {
+//		return this.needsConversion(position) && (!this.isConverted(position));
+//	}
+
+	public boolean needsConversion(Position position) {
+		return true; // overwrite me
+	}
+
+	public abstract void markAsConverted(Position position);
+
+	public abstract void markAsConverted(Position position, Position end);
+
+	@Override
+	public void addPointEntitys(Position start, Position end, int space, PointEntity type) {
+		Tuple<Position, Position> conveted = this.convertPositions(start, end);
+		this.addPointEntitys(conveted.getFirst(), conveted.getSecond(), space, type);
+	}
+
 }

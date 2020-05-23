@@ -2,7 +2,8 @@ package minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+
+import basic.NameSupplier;
 
 public class BlockTemplate extends Block {
 
@@ -27,20 +28,15 @@ public class BlockTemplate extends Block {
 		return this;
 	}
 
-	public BlockTemplate addProperty(Supplier<String> property, Supplier<String> value) {
-		if (this.properties == null) {
-			this.properties = new HashMap<String, String>();
-		}
-		this.properties.put(property.get(), value.get());
-		return this;
+	public BlockTemplate addProperty(String property, String value) {
+		return this.addProperty(() -> property, () -> value);
 	}
 
-	public BlockTemplate addProperty(String property, String value) {
+	public BlockTemplate addProperty(NameSupplier property, NameSupplier value) {
 		if (this.properties == null) {
 			this.properties = new HashMap<String, String>();
 		}
-		assert property != null;
-		this.properties.put(property, value);
+		this.properties.put(property.getName(), value.getName());
 		return this;
 	}
 

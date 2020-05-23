@@ -22,7 +22,7 @@ public class BlockMap<Value> {
 		this.map = new HashMap<>();
 	}
 
-	public BlockMap<Value> put(Supplier<Block> keyHolder, Value value) {
+	public BlockMap<Value> put(Supplier<Block> keyHolder, Value value) { // TODO
 		this.map.put(keyHolder.get(), value);
 		return this;
 	}
@@ -46,7 +46,6 @@ public class BlockMap<Value> {
 			this.newKey.setName(title);
 			result = this.getFallBackNoProperties(this.newKey);
 			if (result != null) {
-				Loggger.log(key.toString() + "  ->  " + this.newKey.toString());
 				this.put(key, result);
 				return result;
 			}
@@ -55,10 +54,6 @@ public class BlockMap<Value> {
 	}
 
 	public Value getFallBackToSuffix(Block key) {
-		if (key.getName()
-				.equals("minecraft:grindstone")) {
-//			Loggger.breakk();
-		}
 		Value result = this.getFallBackNoProperties(key);
 		if (result != null) {
 			return result;
@@ -75,7 +70,6 @@ public class BlockMap<Value> {
 			this.newKey.setName(nameSpace + ":" + title);
 			result = this.getFallBackNoProperties(this.newKey);
 			if (result != null) {
-				Loggger.log(key.toString() + "  ->  " + this.newKey.toString());
 				this.put(key, result);
 				return result;
 			}
@@ -93,7 +87,6 @@ public class BlockMap<Value> {
 		this.newSimpleKey.setProperties(null);
 		value = this.map.get(this.newSimpleKey);
 		if (value != null) {
-			Loggger.log(key.toString() + "  ->  " + this.newSimpleKey.toString());
 			this.put(key, value);
 			return value;
 		}

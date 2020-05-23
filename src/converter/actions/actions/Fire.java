@@ -3,7 +3,6 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.Color;
 import vmfWriter.entity.pointEntity.pointEntity.EnvFire;
@@ -21,14 +20,9 @@ public class Fire extends Action {
 	private static Light LIGHT = new Light(Fire.FIRE_COLOR, Fire.distance50, Fire.distance100);
 	private static EnvFire ENV_FIRE;
 
-	public Fire() {
-		int[] temp = { MaterialLegacy.FIRE };
-		super.setMaterialUsedFor(temp);
-	}
-
 	@Override
 	public void add(Mapper context, Position position, Block material) {
-		this.ENV_FIRE.setFireSize(context.getScale());
+		Fire.ENV_FIRE.setFireSize(context.getScale());
 		context.setPointToGrid(position);
 		context.movePointInGridDimension(0.5, 0, 0.5);
 		context.movePointExactly(new Position(0, 1, 0));

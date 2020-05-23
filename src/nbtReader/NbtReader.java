@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import basic.IOConsumer;
-import basic.Loggger;
 import basic.IORunnable;
+import basic.Loggger;
 
 public abstract class NbtReader {
 
@@ -169,7 +169,7 @@ public abstract class NbtReader {
 	}
 
 	public void doCompond(IOConsumer<String> action) throws IOException {
-		int tag = this.stream.readUnsignedByte(); // readTag
+		int tag = this.readTag();
 		while (tag != NbtTag.END) {
 			String title = this.readTitle();
 			action.run(title);

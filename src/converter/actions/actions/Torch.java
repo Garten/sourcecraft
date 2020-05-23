@@ -3,7 +3,6 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.Color;
 import vmfWriter.entity.pointEntity.PointEntity;
@@ -25,11 +24,7 @@ public class Torch extends Action {
 	private final static String EFFECT_NAME = "flaming_arrow";
 	public final static InfoParticleSystem PARTICLE_SYSTEM = new InfoParticleSystem(Torch.EFFECT_NAME, 270, 0, 0);
 	protected static final PointEntity FLAME = new EnvFire().setFireSize(3);
-
-	public Torch() {
-		int[] temp = { MaterialLegacy.TORCH };
-		super.setMaterialUsedFor(temp);
-	}
+	public static final Torch INSTANCE = new Torch();
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {

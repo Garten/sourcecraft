@@ -15,7 +15,7 @@ import vmfWriter.SourceMap;
 import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.solidEntity.SolidEntity;
 
-public abstract class SourceMapper implements MinecraftMap, SourceMap {
+public abstract class SourceMapper extends MinecraftMap implements SourceMap {
 
 	protected SourceMap target;
 

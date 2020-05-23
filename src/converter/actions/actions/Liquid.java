@@ -3,7 +3,6 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 
 /**
@@ -11,11 +10,6 @@ import minecraft.Position;
  *
  */
 public class Liquid extends Action {
-
-	public Liquid() {
-		super.materialUsedFor = new int[] { MaterialLegacy.WATER, MaterialLegacy.LAVA, MaterialLegacy.SEAGRASS,
-				MaterialLegacy.TALL_SEAGRASS, MaterialLegacy.KELP, MaterialLegacy.KELP_PLANT };
-	}
 
 	@Override
 	public void add(Mapper context, Position position, Block material) {

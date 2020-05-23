@@ -12,7 +12,7 @@ import minecraft.Position;
 public class EndPortalFrame extends Action {
 
 	public EndPortalFrame() {
-
+// TODO
 	}
 
 	@Override

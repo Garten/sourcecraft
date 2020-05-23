@@ -1,8 +1,6 @@
 package converter.mapper;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -13,7 +11,6 @@ import converter.actions.ActionManager;
 import converter.actions.actions.DetailBlock;
 import minecraft.Block;
 import minecraft.Blocks;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import periphery.SourceGame;
 import vmfWriter.Cuboid;
@@ -21,12 +18,8 @@ import vmfWriter.Free8Point;
 import vmfWriter.Orientation;
 import vmfWriter.Ramp;
 import vmfWriter.SourceMap;
-import vmfWriter.entity.pointEntity.PointEntity;
 
 public class SubblockMapper extends Mapper {
-
-	private static final List<Integer> RAMPS_EAST = Arrays.asList(MaterialLegacy._RAMP_EAST,
-			MaterialLegacy._RAMP_NORTH_EAST, MaterialLegacy._RAMP_SOUTH_EAST);
 
 	private static final Position STEP_NORTH = new Position(0, 0, 1);
 	private static final Position STEP_SOUTH = new Position(0, 0, -1);
@@ -52,10 +45,10 @@ public class SubblockMapper extends Mapper {
 			Position end = context.getCuboidFinder()
 					.getBestZ(start, material);
 			Cuboid cuboid = context.createCuboid(start, end, material);
-			if (context.hasOrHadMaterial(Position.add(end, STEP_NORTH), this.mEnd)) {
+			if (context.hasBlock(Position.add(end, STEP_NORTH), this.mEnd)) {
 				cuboid.extend(this.orientation, Orientation.NORTH);
 			}
-			if (context.hasOrHadMaterial(Position.add(start, STEP_SOUTH), this.mStart)) {
+			if (context.hasBlock(Position.add(start, STEP_SOUTH), this.mStart)) {
 				cuboid.extend(this.orientation, Orientation.SOUTH);
 			}
 			Ramp ramp = new Ramp(cuboid, this.orientation);
@@ -77,21 +70,20 @@ public class SubblockMapper extends Mapper {
 		}
 
 		@Override
-		public void add(Mapper context, Position start, Block material) {
-			Position end = context.getCuboidFinder()
+		public void add(Mapper mapper, Position start, Block material) {
+			Position end = mapper.getCuboidFinder()
 					.getBestX(start, material);
-			Cuboid cuboid = context.createCuboid(start, end, material);
-			if (context.hasOrHadMaterial(Position.add(end, STEP_WEST), this.mEnd)) {
+			Cuboid cuboid = mapper.createCuboid(start, end, material);
+			if (mapper.hasBlock(Position.add(end, STEP_WEST), this.mEnd)) {
 				cuboid.extend(this.orientation, Orientation.WEST);
 			}
-			if (context.hasOrHadMaterial(Position.add(start, STEP_EAST), this.mStart)) {
+			if (mapper.hasBlock(Position.add(start, STEP_EAST), this.mStart)) {
 				cuboid.extend(this.orientation, Orientation.EAST);
 			}
 			Ramp ramp = new Ramp(cuboid, this.orientation);
-			context.addSolid(ramp);
-			context.markAsConverted(start, end);
+			mapper.addSolid(ramp);
+			mapper.markAsConverted(start, end);
 		}
-
 	}
 
 	public SubblockMapper(SourceMap target, int originalScale) {
@@ -116,7 +108,9 @@ public class SubblockMapper extends Mapper {
 	@Override
 	public void addObjects(SourceGame game) {
 		this.subBlocks.forEach((position, block) -> {
-			this.convertActions.add(this, position, block.get());
+			if (this.needsConversion(position)) {
+				this.convertActions.add(this, position, block.get());
+			}
 		});
 	}
 
@@ -127,17 +121,6 @@ public class SubblockMapper extends Mapper {
 			return Blocks._UNSET;
 		}
 		return value.get();
-	}
-
-	@Override
-	public boolean isAirBlock(Position position) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isNextToAir(Position position) {
-		return true;
 	}
 
 	@Override
@@ -157,7 +140,7 @@ public class SubblockMapper extends Mapper {
 	}
 
 	@Override
-	public void setMaterial(Position position, Block material) {
+	public void setBlock(Position position, Block material) {
 		this.subBlocks.put(position, new Value<Block>().set(material));
 	}
 
@@ -169,13 +152,7 @@ public class SubblockMapper extends Mapper {
 	}
 
 	@Override
-	public void addPointEntitys(Position position, Position end, int space, PointEntity type) {
-		// not supported
+	public boolean needsConversion(Position position) {
+		return !this.isConverted.contains(position);
 	}
-
-	@Override
-	protected boolean isConverted(Position position) {
-		return this.isConverted.contains(position);
-	}
-
 }

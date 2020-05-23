@@ -2,7 +2,7 @@ package vmfWriter.entity.solidEntity;
 
 import java.io.IOException;
 
-import converter.SkinManager;
+import converter.Skins;
 import vmfWriter.Solid;
 import vmfWriter.ValveWriter;
 import vmfWriter.entity.pointEntity.PointEntity;
@@ -14,7 +14,7 @@ public class FuncRegenerate extends SolidEntity {
 
 	public FuncRegenerate(Solid solid, int tf2Team, PointEntity target) {
 		super(solid);
-		solid.setSkin(SkinManager.TRIGGER);
+		solid.setSkin(Skins.TRIGGER);
 		this.tf2Team = tf2Team;
 		this.target = target.getName();
 	}

@@ -3,16 +3,10 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
 public class TorchNorth extends Action {
-
-	public TorchNorth() {
-		int[] temp = { MaterialLegacy.WALL_TORCH$NORTH };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {

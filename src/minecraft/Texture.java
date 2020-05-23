@@ -2,13 +2,10 @@ package minecraft;
 
 import java.util.function.Supplier;
 
+import basic.NameSupplier;
 import periphery.Minecraft;
 
-/**
- * @author tim
- *
- */
-public enum Texture implements Supplier<Block> {
+public enum Texture implements Supplier<Block>, NameSupplier {
 	anvil_base,
 	anvil_top_damaged_0,
 	anvil_top_damaged_1,

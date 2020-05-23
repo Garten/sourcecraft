@@ -2,9 +2,10 @@ package minecraft;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class Block implements Supplier<Block> {
+public abstract class Block implements Supplier<Block>, Predicate<Block> {
 
 	public abstract String getName();
 
@@ -23,6 +24,11 @@ public abstract class Block implements Supplier<Block> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.getName(), this.getProperties());
+	}
+
+	@Override
+	public boolean test(Block containee) {
+		return this.equals(containee);
 	}
 
 	@Override

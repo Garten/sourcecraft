@@ -1,22 +1,19 @@
 package minecraft;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
-public interface MinecraftMap {
+public abstract class MinecraftMap {
 
-	public Block getBlock(Position position);
+	public abstract Block getBlock(Position position);
 
-	public boolean isAirBlock(Position position);
+	public abstract void setBlock(Position position, Block block);
 
-	public void markAsConverted(Position position);
+	public boolean hasBlock(Position position, Predicate<Block> container) {
+		return container.test(this.getBlock(position));
+	}
 
-	public void markAsConverted(Position position, Position end);
-
-	public boolean hasBlock(Position position, Predicate<Block> container);
-
-	public int getScale();
-
-	public Position getMovedPointInGridDimension(Position position, double x, double y, double z);
-
-	public void setMaterial(Position position, Block material);
+	public boolean hasBlock(Position position, Collection<Block> blocks) {
+		return this.hasBlock(position, block -> blocks.contains(block));
+	}
 }

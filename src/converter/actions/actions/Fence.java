@@ -6,7 +6,6 @@ import converter.actions.Action;
 import converter.actions.ActionManager;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.Orientation;
 
@@ -17,13 +16,6 @@ public class Fence extends Action {
 	private static int BEAM_TOP_ON = 12;
 	private static int BEAM_MID_OFF = 8;
 	private static int BEAM_MID_ON = 5;
-
-	public Fence() {
-		int[] temp = { MaterialLegacy.ACACIA_FENCE, MaterialLegacy.BIRCH_FENCE, MaterialLegacy.DARK_OAK_FENCE,
-				MaterialLegacy.JUNGLE_FENCE, MaterialLegacy.NETHER_BRICK_FENCE, MaterialLegacy.OAK_FENCE,
-				MaterialLegacy.SPRUCE_FENCE };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public boolean hasWall(Orientation orientation) {

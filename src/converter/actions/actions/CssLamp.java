@@ -5,7 +5,6 @@ import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.Blocks;
 import minecraft.Material;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import minecraft.Property;
 import vmfWriter.Angles;
@@ -38,12 +37,6 @@ public class CssLamp extends Action {
 			new Angles(0, 270, 0));
 	private final static PropStatic TORCH_HOLDER_NORTH = new PropStatic(CssLamp.TORCH_HOLDER_MODEL,
 			new Angles(0, 90, 0));
-
-	public CssLamp() {
-		int[] temp = { MaterialLegacy.TORCH, MaterialLegacy.WALL_TORCH$EAST, MaterialLegacy.WALL_TORCH$WEST,
-				MaterialLegacy.WALL_TORCH$SOUTH, MaterialLegacy.WALL_TORCH$NORTH };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block block) {

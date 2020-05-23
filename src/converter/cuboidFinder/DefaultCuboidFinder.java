@@ -15,9 +15,8 @@ public class DefaultCuboidFinder extends CuboidFinder {
 	}
 
 	protected boolean blockValid(int xTest, int yTest, int zTest, Collection<Block> blocks) {
-		Position test = new Position(xTest, yTest, zTest);
-		assert this.map != null;
-		return (this.map.hasBlock(test, blocks) == true && this.map.isNextToAir(test) == true);
+		Position position = new Position(xTest, yTest, zTest);
+		return this.map.hasBlock(position, blocks) && this.map.needsConversion(position);
 	}
 
 	@Override

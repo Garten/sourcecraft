@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import basic.Loggger;
 import basic.Tuple;
-import converter.SkinManager;
+import converter.Skins;
 import converter.actions.Action;
 import converter.actions.CustomActionManager;
 import main.ConvertTask;
@@ -19,7 +19,6 @@ import vmfWriter.Cuboid;
 import vmfWriter.Free8Point;
 import vmfWriter.Skin;
 import vmfWriter.SourceMap;
-import vmfWriter.entity.pointEntity.PointEntity;
 import vmfWriter.entity.pointEntity.pointEntity.LightEnvironment;
 import vmfWriter.entity.pointEntity.pointEntity.ShadowControl;
 
@@ -29,11 +28,9 @@ public class BlockMapper extends Mapper {
 
 	private final Position arraySize;
 
-	private boolean[][][] isConverted;
 	private Block[][][] materialField;
-	private boolean[][][] isNextToAir;
+	private boolean[][][] needsConversion;
 
-	private boolean isAirBlock[][][];
 	private final ConvertOption convertOption;
 
 	private SubblockMapper subBlocks;
@@ -59,14 +56,14 @@ public class BlockMapper extends Mapper {
 		this.arraySize = new Position(3 + end.getX() - start.getX(), 3 + end.getY() - start.getY(),
 				3 + end.getZ() - start.getZ());
 
-		this.isNextToAir = this.createBooleanArray(this.arraySize);
-		this.isAirBlock = this.createBooleanArray(this.arraySize);
-		this.isConverted = this.createBooleanArray(this.arraySize);
+		this.needsConversion = this.createBooleanArray(this.arraySize);
+//		this.isAirBlock = this.createBooleanArray(this.arraySize);
+//		this.isConverted = this.createBooleanArray(this.arraySize);
 		this.materialField = this.createBlockArray(this.arraySize);
 
 		this.forAllPositions(p -> {
 			this.materialField[p.x][p.y][p.z] = Blocks._UNSET;
-			this.isNextToAir[p.x][p.y][p.z] = true;
+			this.needsConversion[p.x][p.y][p.z] = true;
 		});
 
 		this.subBlocks = new SubblockMapper(target, this.getScale());
@@ -84,19 +81,19 @@ public class BlockMapper extends Mapper {
 		// top + bottom
 		for (int x = 0; x < this.arraySize.getX(); x++) {
 			for (int z = 0; z < this.arraySize.getZ(); z++) {
-				this.isNextToAir[x][0][z] = true;
-				this.isNextToAir[x][this.arraySize.getY() - 1][z] = true;
+				this.needsConversion[x][0][z] = false;
+				this.needsConversion[x][this.arraySize.getY() - 1][z] = false;
 			}
 		}
 		// sides
 		for (int y = 1; y < this.arraySize.getY() - 2; y++) {
 			for (int x = 0; x < this.arraySize.getX(); x++) {
-				this.isNextToAir[x][y][0] = true;
-				this.isNextToAir[x][y][this.arraySize.getZ() - 1] = true;
+				this.needsConversion[x][y][0] = false;
+				this.needsConversion[x][y][this.arraySize.getZ() - 1] = false;
 			}
 			for (int z = 1; z < this.arraySize.getZ() - 1; z++) {
-				this.isNextToAir[0][y][z] = true;
-				this.isNextToAir[this.arraySize.getX() - 1][y][z] = true;
+				this.needsConversion[0][y][z] = false;
+				this.needsConversion[this.arraySize.getX() - 1][y][z] = false;
 			}
 		}
 	}
@@ -121,7 +118,7 @@ public class BlockMapper extends Mapper {
 		Loggger.log("run");
 		this.markBorder(); // temp fix
 		this.forAllPositions(position -> {
-			if (this.isNextToAir(position) && (!this.isConverted(position))) {
+			if (this.needsConversion(position)) {
 				this.convertActions.add(this, position, this.getBlock(position));
 			}
 		});
@@ -162,36 +159,30 @@ public class BlockMapper extends Mapper {
 			Block block = this.getBlock(position);
 			Action action = this.convertActions.getAction(block);
 			if (action.isAirBlock()) {
-				this.setAirBlock(position, true);
-				this.markNeighbors(position);
-			} else {
-				this.setAirBlock(position, false);
+//				this.setAirBlock(position, true);
+				this.markNeighborhood(position);
+//			} else {
+////				this.setAirBlock(position, false);
 			}
 		});
 	}
 
-	// marks neighbor blocks and itself to be needed
-	public void markNeighbors(Position position) {
+	public void markNeighborhood(Position position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
-		this.isNextToAir[x][y][z] = true;
-		this.isNextToAir[x + 1][y][z] = true;
-		this.isNextToAir[x - 1][y][z] = true;
-		this.isNextToAir[x][y + 1][z] = true;
-		this.isNextToAir[x][y - 1][z] = true;
-		this.isNextToAir[x][y][z + 1] = true;
-		this.isNextToAir[x][y][z - 1] = true;
+		this.needsConversion[x][y][z] = true;
+		this.needsConversion[x + 1][y][z] = true;
+		this.needsConversion[x - 1][y][z] = true;
+		this.needsConversion[x][y + 1][z] = true;
+		this.needsConversion[x][y - 1][z] = true;
+		this.needsConversion[x][y][z + 1] = true;
+		this.needsConversion[x][y][z - 1] = true;
 	}
 
-	@Override
-	public boolean isAirBlock(Position position) {
-		return this.isAirBlock[position.getX()][position.getY()][position.getZ()];
-	}
-
-	private void setAirBlock(Position position, boolean value) {
-		this.isAirBlock[position.x][position.y][position.z] = value;
-	}
+//	private void setAirBlock(Position position, boolean value) {
+//		this.isAirBlock[position.x][position.y][position.z] = value;
+//	}
 
 	@Override
 	public void markAsConverted(Position start, Position end) {
@@ -200,7 +191,7 @@ public class BlockMapper extends Mapper {
 
 	@Override
 	public void markAsConverted(Position p) {
-		this.isConverted[p.x][p.y][p.z] = true;
+		this.needsConversion[p.x][p.y][p.z] = false;
 	}
 
 	@Override
@@ -209,8 +200,8 @@ public class BlockMapper extends Mapper {
 	}
 
 	@Override
-	public boolean isNextToAir(Position p) {
-		return this.isNextToAir[p.getX()][p.getY()][p.getZ()];
+	public boolean needsConversion(Position p) {
+		return this.needsConversion[p.getX()][p.getY()][p.getZ()];
 	}
 
 	@Override
@@ -250,7 +241,7 @@ public class BlockMapper extends Mapper {
 		default:
 			break;
 		}
-		this.subBlocks.setMaterial(point, block);
+		this.subBlocks.setBlock(point, block);
 	}
 
 	/**
@@ -269,12 +260,12 @@ public class BlockMapper extends Mapper {
 		aPoint.scale(this.getScale());
 		hollow.scale(this.getScale());
 		gPoint.scale(this.getScale());
-		this.createHollow(aPoint, hollow, gPoint, SkinManager.SKYBOX);
+		this.createHollow(aPoint, hollow, gPoint, Skins.SKYBOX);
 
 		aPoint = new Position(-this.getScale() * 4, 0, (verticalHeight + 2) * this.getScale());
 		hollow = new Position(-this.getScale() * 3, this.getScale() * 1, (verticalHeight + 2 + 1) * this.getScale());
 		gPoint = new Position(0, this.getScale() * 4, (verticalHeight + 2 + 4) * this.getScale());
-		this.createHollow(aPoint, hollow, gPoint, SkinManager.SKYBOX);
+		this.createHollow(aPoint, hollow, gPoint, Skins.SKYBOX);
 
 		// addSun
 		Position p = new Position(-this.getScale() * 2, this.getScale() * 2, (verticalHeight + 4) * this.getScale());
@@ -313,13 +304,7 @@ public class BlockMapper extends Mapper {
 	}
 
 	@Override
-	public void addPointEntitys(Position start, Position end, int space, PointEntity type) {
-		Tuple<Position, Position> conveted = this.convertPositions(start, end);
-		this.addPointEntitys(conveted.getFirst(), conveted.getSecond(), space, type);
-	}
-
-	@Override
-	public void setMaterial(Position p, Block block) {
+	public void setBlock(Position p, Block block) {
 		if (block != null) {
 			this.materialField[p.getX()][p.getY()][p.getZ()] = block;
 		}
@@ -336,17 +321,12 @@ public class BlockMapper extends Mapper {
 			int newZ = (int) ((start.y + end.y - start.y) * this.getScale() + offset[i].y * grid);
 			p[i] = new Position(newX, newY, newZ);
 		}
-		Skin skin = SkinManager.INSTANCE.getSkin(material);
+		Skin skin = Skins.INSTANCE.getSkin(material);
 		Free8Point shape = new Free8Point(p, skin, align);
 		return shape;
 	}
 
 	public void setIsNextToAir(Position position, boolean value) {
-		this.isNextToAir[position.x][position.y][position.z] = value;
-	}
-
-	@Override
-	protected boolean isConverted(Position p) {
-		return this.isConverted[p.x][p.y][p.z];
+		this.needsConversion[position.x][position.y][position.z] = value;
 	}
 }

@@ -2,7 +2,6 @@ package converter.actions.actions;
 
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
@@ -14,11 +13,6 @@ public class TorchEast extends Torch {
 	public static int brigthness = 40;
 	public final static int distance50 = 96;
 	public final static int distance100 = 256;
-
-	public TorchEast() {
-		int[] temp = { MaterialLegacy.WALL_TORCH$EAST };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {

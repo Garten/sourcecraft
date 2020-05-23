@@ -53,7 +53,6 @@ public class ChunkReader extends NbtReader {
 				.put(Y, () -> section.setHeight(this.readByte()))
 				.put(BLOCK_STATES, () -> section.readBlocksRaw(this))
 				.put(PALETTE, () -> this.readPalette(section)));
-//		section.translateRawInfo(mapping.get()); // TODO lazy on output
 		return section;
 	}
 

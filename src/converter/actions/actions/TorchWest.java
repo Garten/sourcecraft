@@ -2,16 +2,10 @@ package converter.actions.actions;
 
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
 public class TorchWest extends Torch {
-
-	public TorchWest() {
-		int[] temp = { MaterialLegacy.WALL_TORCH$WEST };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {
@@ -27,7 +21,7 @@ public class TorchWest extends Torch {
 		pointOffset[6] = new Position(19, 22, 18); // g
 		pointOffset[7] = new Position(28, 4, 18); // h
 
-		Position point = new Position(p);
+		Position point = Position.create(p);
 		context.addSolidEntity(
 				new FuncIllusionary(context.createFree8Point(point, point, parts, pointOffset, true, material)));
 		context.setPointToGrid(p);

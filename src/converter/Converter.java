@@ -38,7 +38,7 @@ public class Converter {
 
 	public Converter open(File fileFolder, ConvertTask converterData) throws IOException {
 		Place place = converterData.getPlace();
-		SkinManager.init(converterData.getTexturePack(), converterData.getOption()
+		Skins.init(converterData.getTexturePack(), converterData.getOption()
 				.getScale());
 		Position start = place.getStart();
 		Position end = place.getEnd();
@@ -89,7 +89,7 @@ public class Converter {
 		Position target = toWrite.getSecond();
 		for (Position offset : toWrite.getFirst()) {
 			Position writePos = Position.add(target, offset);
-			this.blockContent.setMaterial(writePos, section.getBlock(offset));
+			this.blockContent.setBlock(writePos, section.getBlock(offset));
 			this.blockContent.setIsNextToAir(writePos, false);
 		}
 	}
