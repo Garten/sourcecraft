@@ -224,12 +224,13 @@ public class Skins {
 		this.put(Material.redstone_lamp, Texture.redstone_lamp_on);
 		this.put(Material.spruce_trapdoor, Texture.door_spruce_upper);
 		this.put(Material.wall_torch, Texture.torch_on);
+		this.put(Material.torch, Texture.torch_on);
 
 		// temporary fixes
 		this.put(Material.campfire, Texture.magma);
 		this.put(Material.lantern, Texture.magma);
 		this.put(Material.blast_furnace, Texture.furnace_front_on);
-		this.put(Material.torch, Texture.magma);
+		// this.put(Material.torch, Texture.magma);
 
 		// special
 		this.skins.put(Blocks.get("sourcecraft:ramp"), PLAYER_CLIP);
