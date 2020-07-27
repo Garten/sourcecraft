@@ -3,10 +3,17 @@ package minecraft;
 import basic.NameSupplier;
 
 public enum Property implements NameSupplier {
+	type,
 	half,
 	facing,
 	shape,
 	waterlogged;
+
+	public enum Type implements NameSupplier {
+		top,
+		bottom,
+		double$;
+	}
 
 	public enum Half implements NameSupplier {
 		top,

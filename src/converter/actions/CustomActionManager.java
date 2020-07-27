@@ -10,8 +10,7 @@ import converter.actions.actions.Fire;
 import converter.actions.actions.Liquid;
 import converter.actions.actions.NoAction;
 import converter.actions.actions.PlayerSpawnCss;
-import converter.actions.actions.SlabBottom;
-import converter.actions.actions.SlabTop;
+import converter.actions.actions.Slab;
 import converter.actions.actions.Solid;
 import converter.actions.actions.Stairs;
 import converter.actions.actions.TallGrassTf2;
@@ -57,12 +56,7 @@ public class CustomActionManager extends ActionManager {
 		}
 		this.actions.put(Material._fence, new Fence());
 		this.actions.put(Material._stairs, new Stairs());
-		this.actions.put(Blocks.get(t -> t.setName(Material._slab)
-				.addProperty(Property.half, Property.Half.top)
-				.addProperty(Property.waterlogged, Property.Waterlogged.false$)), new SlabTop());
-		this.actions.put(Blocks.get(t -> t.setName(Material._slab)
-				.addProperty(Property.half, Property.Half.bottom)
-				.addProperty(Property.waterlogged, Property.Waterlogged.false$)), new SlabBottom());
+		this.actions.put(Material._slab, new Slab());
 		this.actions.put(Material.torch, Torch.INSTANCE);
 		this.actions.put(Material.wall_torch, Torch.INSTANCE);
 		this.actions.put(Material.cactus, new Cactus());
