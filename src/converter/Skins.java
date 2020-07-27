@@ -149,7 +149,8 @@ public class Skins {
 				this.createSkinTopBottom(Texture.dirt_podzol_side, Texture.dirt_podzol_top, Texture.dirt));
 		this.put(Material.mycelium,
 				this.createSkinTopBottom(Texture.mycelium_side, Texture.mycelium_top, Texture.dirt));
-//
+		this.put(Material.grass_path, this.createSkinTopBottom(Texture.grass_path_side, Texture.grass_path_top, Texture.dirt));
+
 		this.put(Material.packed_ice, Texture.ice_packed);
 		this.put(Material.snow_block, Texture.snow);
 
