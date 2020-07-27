@@ -2,19 +2,7 @@ package converter.actions;
 
 import java.util.Collection;
 
-import converter.actions.actions.Cactus;
-import converter.actions.actions.CenteredPointEntity;
-import converter.actions.actions.DetailBlock;
-import converter.actions.actions.Fence;
-import converter.actions.actions.Fire;
-import converter.actions.actions.Liquid;
-import converter.actions.actions.NoAction;
-import converter.actions.actions.PlayerSpawnCss;
-import converter.actions.actions.Slab;
-import converter.actions.actions.Solid;
-import converter.actions.actions.Stairs;
-import converter.actions.actions.TallGrassTf2;
-import converter.actions.actions.Torch;
+import converter.actions.actions.*;
 import converter.mapper.Mapper;
 import minecraft.Blocks;
 import minecraft.Material;
@@ -61,6 +49,7 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material.wall_torch, Torch.INSTANCE);
 		this.actions.put(Material.cactus, new Cactus());
 		this.actions.put(Material.fire, new Fire());
+		this.actions.put(Material._trapdoor, new Trapdoor());
 
 		// tf2
 		this.actions.put(Material.grass, new TallGrassTf2());

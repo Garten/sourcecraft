@@ -107,6 +107,8 @@ public class Skins {
 			if (name.endsWith("_log")) { // except dark oak
 				String textureName = "log_" + name.substring(0, name.length() - "_log".length());
 				this.put(material, this.createSkin(() -> textureName, () -> textureName + "_top"));
+			} else if (name.endsWith("_trapdoor")) {
+				this.put(material, name);
 			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
@@ -223,7 +225,6 @@ public class Skins {
 		this.put(Material.end_portal_frame,
 				this.createSkinTopBottom(Texture.endframe_side, Texture.endframe_top, Texture.end_stone));
 		this.put(Material.redstone_lamp, Texture.redstone_lamp_on);
-		this.put(Material.spruce_trapdoor, Texture.door_spruce_upper);
 		this.put(Material.wall_torch, Texture.torch_on);
 		this.put(Material.torch, Texture.torch_on);
 
