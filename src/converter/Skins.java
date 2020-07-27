@@ -109,10 +109,11 @@ public class Skins {
 				this.put(material, this.createSkin(() -> textureName, () -> textureName + "_top"));
 			} else if (name.endsWith("_trapdoor")) {
 				this.put(material, name);
+			} else if (name.endsWith("_stained_glass")) {
+				this.put(material, "glass_" + name.substring(0, name.length() - "_stained_glass".length()));
 			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
-			} else if (this.putPrefixMadeSuffix(material, Material._stained_glass)) {
 			}
 		}
 		// exceptions
