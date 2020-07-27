@@ -344,6 +344,7 @@ public enum Texture implements Supplier<Block>, NameSupplier {
 	sapling_spruce,
 	sea_lantern,
 	slime,
+	smooth_stone,
 	snow,
 	soul_sand,
 	sponge,
