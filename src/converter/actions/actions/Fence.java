@@ -1,12 +1,10 @@
 package converter.actions.actions;
 
-import java.util.function.Predicate;
-
 import converter.actions.Action;
-import converter.actions.ActionManager;
 import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.Position;
+import minecraft.Property;
 import vmfWriter.Orientation;
 
 public class Fence extends Action {
@@ -16,6 +14,7 @@ public class Fence extends Action {
 	private static int BEAM_TOP_ON = 12;
 	private static int BEAM_MID_OFF = 8;
 	private static int BEAM_MID_ON = 5;
+	private Mapper context;
 
 	@Override
 	public boolean hasWall(Orientation orientation) {
@@ -23,108 +22,111 @@ public class Fence extends Action {
 	}
 
 	@Override
-	public void add(Mapper context, Position p, Block material) {
+	public void add(Mapper context, Position p, Block block) {
+		this.context = context;
 		Position end = context.getCuboidFinder()
-				.getBestY(p, material);
-		// pole
+				.getBestY(p, block);
+		Position startOffset = new Position(3, 0, 3);
+		Position endOffset = new Position(3, 0, 3);
+		this.addPole(p, end, block, startOffset, endOffset);
+		this.addBeams(p, end, block, startOffset, endOffset);
+		this.context.markAsConverted(p, end);
+	}
+	
+	private void addPole(Position p, Position end, Block block, Position startOffset, Position endOffset) {
 		int parts = 8;
-		Position offset = new Position(3, 0, 3);
-		Position negativeOffset = new Position(3, 0, 3);
-		context.addDetail(context.createCuboid(p, end, parts, offset, negativeOffset, material));
-		context.markAsConverted(p, end);
-		// add beams
-		parts = 16;
+		this.context.addDetail(context.createCuboid(p, end, parts, startOffset, endOffset, block));
+	}
+
+	private void addBeams(Position p, Position end, Block block, Position startOffset, Position endOffset) {
+		boolean north = block.getProperty(Property.north).equals("true");
+		boolean south = block.getProperty(Property.south).equals("true");
+		boolean east = block.getProperty(Property.east).equals("true");
+		boolean west = block.getProperty(Property.west).equals("true");
+		int parts = 16;
 		while (p.getY() <= end.getY()) {
-			if (context.hasBlock(p.getOffset(1, 0, 0), material)) {
-				offset = new Position(10, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(10, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
-				offset = new Position(10, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(10, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
-			} else if (context.hasBlock(p.getOffset(1, 0, 0),
-					new MaterialWallFilter(context.getActions(), Orientation.EAST))) {
-				offset = new Position(10, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(parts, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
-				offset = new Position(10, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(parts, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(1, 0, 0), parts, offset, negativeOffset, material));
+			if (east && west) {
+				this.addEWBeams(p, startOffset, endOffset, parts, block);
+			} else if (east) {
+				this.addEastBeams(p, startOffset, endOffset, parts, block);
+			} else if (west) {
+				this.addWestBeams(p, startOffset, endOffset, parts, block);
 			}
 
-			if (context.hasBlock(p.getOffset(-1, 0, 0),
-					new MaterialWallFilter(context.getActions(), Orientation.WEST))) {
-				offset = new Position(parts, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(10, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
-				offset = new Position(parts, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
-				negativeOffset = new Position(10, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
-				context.addDetail(
-						context.createCuboid(p.getOffset(-1, 0, 0), p, parts, offset, negativeOffset, material));
+			if (north && south) {
+				this.addNSBeams(p, startOffset, endOffset, parts, block);
+			} else if (south) {
+				this.addSouthBeams(p, startOffset, endOffset, parts, block);
+			} else if (north) {
+				this.addNorthBeams(p, startOffset, endOffset, parts, block);
 			}
-
-			if (context.hasBlock(p.getOffset(0, 0, 1), material)) {
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, 10);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 10);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, 10);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 10);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
-			} else if (context.hasBlock(p.getOffset(0, 0, 1),
-					new MaterialWallFilter(context.getActions(), Orientation.SOUTH))) {
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, 10);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, parts);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, 10);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, parts);
-				context.addDetail(
-						context.createCuboid(p, p.getOffset(0, 0, 1), parts, offset, negativeOffset, material));
-			}
-
-			if (context.hasBlock(p.getOffset(0, 0, -1),
-					new MaterialWallFilter(context.getActions(), Orientation.NORTH))) {
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, parts);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 10);
-				context.addDetail(
-						context.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
-				offset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, parts);
-				negativeOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 10);
-				context.addDetail(
-						context.createCuboid(p.getOffset(0, 0, -1), p, parts, offset, negativeOffset, material));
-			}
-
 			p.move(0, 1, 0);
-			// Block.getMaterialUsedForStatic()
 		}
 	}
 
-	private class MaterialWallFilter implements Predicate<Block> {
+	private void addEWBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(0, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(parts, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(1, 0, 0), parts, startOffset, endOffset, block));
+		startOffset = new Position(0, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(parts, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(1, 0, 0), parts, startOffset, endOffset, block));
+	}
 
-		private ActionManager manager;
-		private Orientation orientation;
+	private void addNSBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, parts);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 0);
+		context.addDetail(
+			context.createCuboid(p.getOffset(0, 0, -1), p, parts, startOffset, endOffset, block));
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, parts);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 0);
+		context.addDetail(
+				context.createCuboid(p.getOffset(0, 0, -1), p, parts, startOffset, endOffset, block));
+	}
 
-		public MaterialWallFilter(ActionManager manager, Orientation orientation) {
-			this.manager = manager;
-			this.orientation = orientation;
-		}
+	private void addEastBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(10, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(parts, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(1, 0, 0), parts, startOffset, endOffset, block));
+		startOffset = new Position(10, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(parts, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(1, 0, 0), parts, startOffset, endOffset, block));
+	}
 
-		@Override
-		public boolean test(Block material) {
-			Action addable = this.manager.getAction(material);
-			if (addable != null) {
-				return this.manager.getAction(material)
-						.hasWall(this.orientation);
-			} else {
-				return false;
-			}
-		}
+	private void addWestBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(parts, Fence.BEAM_TOP_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(10, Fence.BEAM_TOP_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p.getOffset(-1, 0, 0), p, parts, startOffset, endOffset, block));
+		startOffset = new Position(parts, Fence.BEAM_MID_ON, Fence.BEAM_SIDE);
+		endOffset = new Position(10, Fence.BEAM_MID_OFF, Fence.BEAM_SIDE);
+		context.addDetail(
+			context.createCuboid(p.getOffset(-1, 0, 0), p, parts, startOffset, endOffset, block));
+	}
+
+	private void addSouthBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, 10);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, parts);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(0, 0, 1), parts, startOffset, endOffset, block));
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, 10);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, parts);
+		context.addDetail(
+			context.createCuboid(p, p.getOffset(0, 0, 1), parts, startOffset, endOffset, block));
+	}
+
+	private void addNorthBeams(Position p, Position startOffset, Position endOffset, int parts, Block block) {
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_ON, parts);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_TOP_OFF, 10);
+		context.addDetail(
+			context.createCuboid(p.getOffset(0, 0, -1), p, parts, startOffset, endOffset, block));
+		startOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_ON, parts);
+		endOffset = new Position(Fence.BEAM_SIDE, Fence.BEAM_MID_OFF, 10);
+		context.addDetail(
+				context.createCuboid(p.getOffset(0, 0, -1), p, parts, startOffset, endOffset, block));
 	}
 }
