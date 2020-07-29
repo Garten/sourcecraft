@@ -50,6 +50,7 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material.cactus, new Cactus());
 		this.actions.put(Material.fire, new Fire());
 		this.actions.put(Material._trapdoor, new Trapdoor());
+		this.actions.put(Material.ladder, new Ladder());
 
 		// tf2
 		this.actions.put(Material.grass, new TallGrassTf2());

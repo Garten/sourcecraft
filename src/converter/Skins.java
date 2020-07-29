@@ -27,6 +27,7 @@ public class Skins {
 	public static final Skin TRIGGER = new Skin("tools/toolstrigger", DEFAULT_SCALE);
 	public static final Skin SKYBOX = new Skin("tools/toolsskybox", DEFAULT_SCALE);
 	private static final Skin PLAYER_CLIP = new Skin("tools/toolsplayerclip", DEFAULT_SCALE);
+	private static final Skin LADDER = new Skin("tools/toolsinvisibleladder", DEFAULT_SCALE);
 
 	public static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
 
@@ -237,6 +238,7 @@ public class Skins {
 
 		// special
 		this.skins.put(Blocks.get("sourcecraft:ramp"), PLAYER_CLIP);
+		this.skins.put(Blocks.get("sourcecraft:ladder"), LADDER);
 	}
 
 	private void put(Texture block) {
