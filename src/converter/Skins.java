@@ -112,6 +112,8 @@ public class Skins {
 				this.put(material, name);
 			} else if (name.endsWith("_stained_glass")) {
 				this.put(material, "glass_" + name.substring(0, name.length() - "_stained_glass".length()));
+			} else if (name.endsWith("_carpet")) {
+				this.put(material, "wool_" + name.substring(0, name.length() - "_carpet".length()));
 			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
