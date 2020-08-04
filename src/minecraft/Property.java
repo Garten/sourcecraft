@@ -5,6 +5,7 @@ import basic.NameSupplier;
 public enum Property implements NameSupplier {
 	east,
 	half,
+	face,
 	facing,
 	north,
 	open,
@@ -25,6 +26,12 @@ public enum Property implements NameSupplier {
 		double$;
 	}
 	
+	public enum Face implements NameSupplier {
+		ceiling, 
+		floor,
+		wall
+	}
+
 	public enum Facing implements NameSupplier {
 		north,
 		east,
