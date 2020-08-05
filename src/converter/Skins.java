@@ -147,6 +147,7 @@ public class Skins {
 		this.put(Material.red_nether_brick_, Texture.red_nether_brick);
 		this.put(Material.stone_bricks, Texture.stonebrick);
 		this.put(Material.stone_brick_, Texture.stonebrick);
+		this.put(Material.bricks, Texture.brick);
 		this.put(Material.oak_, Texture.planks_oak);
 		this.put(Material.dark_oak_, Texture.planks_big_oak);
 		this.put(Material.spruce_, Texture.planks_spruce);
