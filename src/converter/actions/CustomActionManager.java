@@ -32,7 +32,7 @@ public class CustomActionManager extends ActionManager {
 				Material.red_tulip, Material.orange_tulip, Material.white_tulip, Material.pink_tulip,
 				Material.oxeye_daisy, Material.cornflower, Material.lily_of_the_valley, Material.wither_rose,
 				Material.lilac, Material.rose_bush, Material.peony, Material.sugar_cane, Material.seagrass,
-				Material.tall_seagrass, Material.sweet_berry_bush }) {
+				Material.tall_seagrass, Material.sweet_berry_bush, Material._pressure_plate }) {
 			this.actions.put(m, NoAction.INSTANCE);
 		}
 		for (Material m : new Material[] { Material._leaves, Material.glass, Material.ice }) {
