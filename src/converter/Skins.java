@@ -188,6 +188,7 @@ public class Skins {
 		this.put(Material.bone_block, this.createSkin(Texture.bone_block_side, Texture.bone_block_top));
 
 		this.put(Material.nether_quartz_ore, Texture.quartz_ore);
+		this.put(Material.quartz_, Texture.quartz_block_side);
 		this.put(Material.quartz_block, this.createSkinTopBottom(Texture.quartz_block_side, Texture.quartz_block_top,
 				Texture.quartz_block_bottom));
 		this.put(Material.chiseled_quartz_block,
