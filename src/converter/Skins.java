@@ -117,6 +117,10 @@ public class Skins {
 			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._concrete)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._concrete_powder)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._terracotta)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._glazed_terracotta)) {
 			}
 		}
 		// exceptions
