@@ -53,6 +53,7 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material.ladder, new Ladder());
 		this.actions.put(Material._carpet, new Carpet());
 		this.actions.put(Material._pane, new Pane());
+		this.actions.put(Material.iron_bars, new Pane());
 		this.actions.put(Material.chest, new Chest());
 		this.actions.put(Material._button, new Button());
 
