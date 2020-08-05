@@ -239,6 +239,7 @@ public enum Texture implements Supplier<Block>, NameSupplier {
 	hardened_clay_stained_yellow,
 	hay_block_side,
 	hay_block_top,
+	honeycomb_block,
 	hopper_inside,
 	hopper_outside,
 	hopper_top,
