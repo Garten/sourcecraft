@@ -52,6 +52,7 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material._trapdoor, new Trapdoor());
 		this.actions.put(Material.ladder, new Ladder());
 		this.actions.put(Material._carpet, new Carpet());
+		this.actions.put(Material.chest, new Chest());
 		this.actions.put(Material._button, new Button());
 
 		// tf2

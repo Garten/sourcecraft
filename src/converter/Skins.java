@@ -114,7 +114,9 @@ public class Skins {
 				this.put(material, "glass_" + name.substring(0, name.length() - "_stained_glass".length()));
 			} else if (name.endsWith("_carpet")) {
 				this.put(material, "wool_" + name.substring(0, name.length() - "_carpet".length()));
-			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
+			} else if (name.equals("chest")) {
+				this.put(material, this.createSkinTopFront(() -> "chest_side", () -> "chest_top", () -> "chest_front", Orientation.NORTH));
+		    } else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._concrete)) {
