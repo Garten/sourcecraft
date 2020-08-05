@@ -151,6 +151,7 @@ public class Skins {
 		this.put(Material.oak_, Texture.planks_oak);
 		this.put(Material.dark_oak_, Texture.planks_big_oak);
 		this.put(Material.spruce_, Texture.planks_spruce);
+		this.put(Material.birch_, Texture.planks_birch);
 		this.put(Material.acacia_, Texture.planks_acacia);
 		// exceptions
 
