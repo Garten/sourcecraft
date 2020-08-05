@@ -7,12 +7,10 @@ import vmfWriter.ValveWriter;
 
 public class RotateablePointEntity extends PointEntity {
 
-//	private int rotation;
-
 	protected Position angle = new Position();
 
 	public RotateablePointEntity() {
-
+//		this.putProperty("angles", new Position());
 	}
 
 	public RotateablePointEntity setRotation(int rotation) {
@@ -25,7 +23,10 @@ public class RotateablePointEntity extends PointEntity {
 		RotateablePointEntity result = new RotateablePointEntity();
 		result.setName(this.getName());
 		result.setOrigin(origin);
-		result.setAngle(this.angle);
+		result.setAngle(this.getAngle()
+				.copy());
+//		result.putProperty("angles", result.getProperty("angles")
+//				.copy());
 		return result;
 	}
 
@@ -50,7 +51,6 @@ public class RotateablePointEntity extends PointEntity {
 	@Override
 	public final void writeVmfSpecific(ValveWriter writer) throws IOException {
 		writer.put("angles", this.angle);
-//		writer.put("angles", "0 " + this.getRotation() + " 0");
 		this.writeVmfSpecific2(writer);
 	}
 

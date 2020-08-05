@@ -100,8 +100,6 @@ public abstract class Mapper extends SourceMapper {
 		return new Cuboid(new Tuple<>(startNew, endNew), Skins.INSTANCE.getSkin(material));
 	}
 
-//	protected abstract boolean needsConversion(Position position);
-
 	public ActionManager getActions() {
 		return this.convertActions;
 	}
@@ -111,10 +109,6 @@ public abstract class Mapper extends SourceMapper {
 				.getAction(this.getBlock(position))
 				.isAirBlock();
 	}
-
-//	public boolean stillNeedsConversion(Position position) {
-//		return this.needsConversion(position) && (!this.isConverted(position));
-//	}
 
 	public boolean needsConversion(Position position) {
 		return true; // overwrite me

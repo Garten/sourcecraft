@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import basic.Loggger;
+import converter.Orientation;
 import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.Position;
-import vmfWriter.Orientation;
 import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public abstract class Action {

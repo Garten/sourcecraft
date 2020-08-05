@@ -1,12 +1,12 @@
 package converter.actions.actions;
 
 import basic.Loggger;
+import converter.Orientation;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.MaterialLegacy;
 import minecraft.Position;
-import vmfWriter.Orientation;
 import vmfWriter.Solid;
 import vmfWriter.entity.Tf2Team;
 import vmfWriter.entity.pointEntity.pointEntity.PropDynamic;

@@ -3,8 +3,9 @@ package minecraft;
 import java.util.Objects;
 
 import basic.Loggger;
+import vmfWriter.VmfValue;
 
-public class Position implements Comparable<Position> {
+public class Position implements Comparable<Position>, VmfValue {
 
 	public int x;
 	public int y;
@@ -251,5 +252,10 @@ public class Position implements Comparable<Position> {
 			target.z = cap.z - 1;
 		}
 		return target;
+	}
+
+	@Override
+	public String getVmf() {
+		return this.getX() + " " + this.getY() + " " + this.getZ();
 	}
 }

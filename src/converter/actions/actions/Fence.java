@@ -2,12 +2,12 @@ package converter.actions.actions;
 
 import java.util.function.Predicate;
 
+import converter.Orientation;
 import converter.actions.Action;
 import converter.actions.ActionManager;
 import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.Position;
-import vmfWriter.Orientation;
 
 public class Fence extends Action {
 

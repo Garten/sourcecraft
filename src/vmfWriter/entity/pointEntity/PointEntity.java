@@ -15,11 +15,11 @@ public abstract class PointEntity extends Entity {
 	}
 
 	public PointEntity(Position origin) {
-		this.origin = new Position(origin);
+		this.origin = Position.create(origin);
 	}
 
 	protected void setOrigin(Position origin) {
-		this.origin = new Position(origin);
+		this.origin = Position.create(origin);
 	}
 
 	public abstract PointEntity create(Position origin);

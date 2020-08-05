@@ -39,9 +39,6 @@ public class BlockMap<Value> {
 			if (i < 1) {
 				break;
 			}
-			if (title.contains("ramp")) {
-				Loggger.log("break");
-			}
 			title = title.substring(0, i);
 			this.newKey.setName(title);
 			result = this.getFallBackNoProperties(this.newKey);

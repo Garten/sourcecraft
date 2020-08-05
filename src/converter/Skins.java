@@ -9,7 +9,6 @@ import minecraft.Blocks;
 import minecraft.Material;
 import minecraft.Texture;
 import periphery.TexturePack;
-import vmfWriter.Orientation;
 import vmfWriter.Skin;
 
 public class Skins {
@@ -118,7 +117,7 @@ public class Skins {
 		this.put(Material.dark_oak_leaves, Texture.leaves_big_oak);
 		this.put(Material.dark_oak_planks, Texture.planks_big_oak);
 
-		// material-prefixe
+		// material-prefixes
 		this.put(Material.andesite, Texture.stone_andesite);
 		this.put(Material.diorite, Texture.stone_diorite);
 		this.put(Material.granite, Texture.stone_granite);
@@ -137,6 +136,7 @@ public class Skins {
 		this.put(Material.red_nether_brick_, Texture.red_nether_brick);
 		this.put(Material.stone_bricks, Texture.stonebrick);
 		this.put(Material.stone_brick_, Texture.stonebrick);
+		this.put(Material.infested_stone_bricks, Texture.stonebrick);
 		this.put(Material.oak_, Texture.planks_oak);
 		this.put(Material.dark_oak_, Texture.planks_big_oak);
 		this.put(Material.spruce_, Texture.planks_spruce);

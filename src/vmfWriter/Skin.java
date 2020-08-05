@@ -1,5 +1,7 @@
 package vmfWriter;
 
+import converter.Orientation;
+
 /**
  *
  *

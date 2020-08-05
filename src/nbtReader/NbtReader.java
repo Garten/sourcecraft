@@ -8,7 +8,7 @@ import basic.IOConsumer;
 import basic.IORunnable;
 import basic.Loggger;
 
-public abstract class NbtReader {
+public class NbtReader {
 
 	public static final int SHORT_LENGTH = 2;
 	public static final int INT_LENGTH = 4;
@@ -155,16 +155,21 @@ public abstract class NbtReader {
 	}
 
 	public void doCompound(NbtTasks onNamedTags) throws IOException {
-		int tag = this.stream.readUnsignedByte();
-		while (tag != NbtTag.END) {
-			String title = this.readTitle();
-			IORunnable action = onNamedTags.get(new NamedTag(tag, title));
-			if (action == null) {
-				this.skipTagAfterTitle(tag);
-			} else {
-				action.run();
+		try {
+			int tag = this.readTag();
+			while (tag != NbtTag.END) {
+				String title = this.readTitle();
+//				Loggger.log(NbtTag.get(tag) + " " + title);
+				IORunnable action = onNamedTags.get(new NamedTag(tag, title));
+				if (action == null) {
+					this.skipTagAfterTitle(tag);
+				} else {
+					action.run();
+				}
+				tag = this.readTag();
 			}
-			tag = this.readTag();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -229,6 +234,10 @@ public abstract class NbtReader {
 
 	public long readLong() throws IOException {
 		return this.stream.readLong();
+	}
+
+	public void close() throws IOException {
+		this.stream.close();
 	}
 
 }

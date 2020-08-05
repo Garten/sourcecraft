@@ -171,8 +171,8 @@ public class RegionFile {
 		return ret;
 	}
 
-	private void debug(String mode, int x, int z, String in) {
-		Loggger.log("region " + mode + " " + this.fileName.getName() + "[" + x + "," + z + "] = " + in, 1);
+	private void throwIO(String mode, ChunkPosition position, String in) throws IOException {
+		throw new IOException("region " + mode + " " + this.fileName.getName() + position.toString() + " = " + in);
 	}
 
 	private void debug(String mode, int x, int z, int count, String in) {
@@ -180,68 +180,55 @@ public class RegionFile {
 				1);
 	}
 
+	public NbtReader getNbtReader(ChunkPosition chunkPosition) throws IOException {
+		return new NbtReader(getChunkDataInputStream(chunkPosition));
+	}
+
 	/**
 	 * gets an (uncompressed) stream representing the chunk data returns null if the
 	 * chunk is not found or an error occurs
 	 */
-	public synchronized DataInputStream getChunkDataInputStream(int x, int z) {
-		if (this.outOfBounds(x, z)) {
-			this.debug("read", x, z, "out of bounds");
-			return null;
+	public synchronized DataInputStream getChunkDataInputStream(ChunkPosition chunkPosition) throws IOException {
+		if (chunkPosition.outOfBounds()) {
+			this.throwIO("read", chunkPosition, "out of bounds");
+		}
+		int offset = this.getOffset(chunkPosition);
+
+		int sectorNumber = offset >> 8;
+		int numSectors = offset & 0xFF;
+
+		if (sectorNumber + numSectors > this.sectorFree.size()) {
+			this.throwIO("read", chunkPosition, "invalid sector");
 		}
 
-		try {
-			int offset = this.getOffset(x, z);
-			if (offset == 0) {
-				Loggger.log("chunk " + x + " " + z + " not present in file " + this.fileName.getName());
-				return null;
-			}
+		this.file.seek(sectorNumber * RegionFile.SECTOR_BYTES);
+		int length = this.file.readInt();
 
-			int sectorNumber = offset >> 8;
-			int numSectors = offset & 0xFF;
-
-			if (sectorNumber + numSectors > this.sectorFree.size()) {
-				this.debug("read", x, z, "invalid sector");
-				return null;
-			}
-
-			this.file.seek(sectorNumber * RegionFile.SECTOR_BYTES);
-			int length = this.file.readInt();
-
-			if (length > RegionFile.SECTOR_BYTES * numSectors) {
-				this.debug("read", x, z, "invalid length: " + length + " > 4096 * " + numSectors);
-				return null;
-			}
-
-			byte version = this.file.readByte();
-			if (version == RegionFile.VERSION_GZIP) {
-				byte[] data = new byte[length - 1];
-				this.file.read(data);
-				DataInputStream ret = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(data)));
-				// debug("READ", x, z, " = found");
-				return ret;
-			} else if (version == RegionFile.VERSION_DEFLATE) {
-				byte[] data = new byte[length - 1];
-				this.file.read(data);
-				DataInputStream ret = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
-				// debug("READ", x, z, " = found");
-				return ret;
-			}
-
-			this.debug("read", x, z, "unknown version " + version);
-			return null;
-		} catch (IOException e) {
-			this.debug("read", x, z, "exception");
-			return null;
+		if (length > RegionFile.SECTOR_BYTES * numSectors) {
+			this.throwIO("read", chunkPosition,
+					"invalid length: " + length + " > " + RegionFile.SECTOR_BYTES + " * " + numSectors);
 		}
+
+		byte version = this.file.readByte();
+		if (version == RegionFile.VERSION_GZIP) {
+			byte[] data = new byte[length - 1];
+			this.file.read(data);
+			return new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(data)));
+		} else if (version == RegionFile.VERSION_DEFLATE) {
+			byte[] data = new byte[length - 1];
+			this.file.read(data);
+			return new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
+		}
+		this.throwIO("read", chunkPosition, "unknown version " + version);
+		return null;
 	}
 
-	public DataOutputStream getChunkDataOutputStream(int x, int z) {
-		if (this.outOfBounds(x, z)) {
+	public DataOutputStream getChunkDataOutputStream(ChunkPosition chunkPosition) {
+		if (chunkPosition.outOfBounds()) {
 			return null;
 		}
-
-		return new DataOutputStream(new DeflaterOutputStream(new ChunkBuffer(x, z)));
+		return new DataOutputStream(
+				new DeflaterOutputStream(new ChunkBuffer(chunkPosition.getX(), chunkPosition.getZ())));
 	}
 
 	/*
@@ -267,7 +254,7 @@ public class RegionFile {
 	/* write a chunk at (x,z) with length bytes of data to disk */
 	protected synchronized void write(int x, int z, byte[] data, int length) {
 		try {
-			int offset = this.getOffset(x, z);
+			int offset = this.getOffset(new ChunkPosition(x, z));
 			int sectorNumber = offset >> 8;
 			int sectorsAllocated = offset & 0xFF;
 			int sectorsNeeded = (length + RegionFile.CHUNK_HEADER_SIZE) / RegionFile.SECTOR_BYTES + 1;
@@ -351,17 +338,17 @@ public class RegionFile {
 		this.file.write(data, 0, length); // chunk data
 	}
 
-	/* is this an invalid chunk coordinate? */
-	private boolean outOfBounds(int x, int z) {
-		return x < 0 || x >= Minecraft.MAX_CHUNK_IN_FILE_X || z < 0 || z >= Minecraft.MAX_CHUNK_IN_FILE_Z;
+	private int getOffset(ChunkPosition chunkPosition) throws IOException {
+		int offset = this.offsets[chunkPosition.getX() + chunkPosition.getZ() * Minecraft.MAX_CHUNK_IN_FILE_X];
+		if (offset == 0) {
+			throw new IOException(
+					"chunk " + chunkPosition.toString() + " not present in file " + this.fileName.getName());
+		}
+		return offset;
 	}
 
-	private int getOffset(int x, int z) {
-		return this.offsets[x + z * Minecraft.MAX_CHUNK_IN_FILE_X];
-	}
-
-	public boolean hasChunk(int x, int z) {
-		return this.getOffset(x, z) != 0;
+	public boolean hasChunk(ChunkPosition chunkPosition) throws IOException {
+		return this.getOffset(chunkPosition) != 0;
 	}
 
 	private void setOffset(int x, int z, int offset) throws IOException {

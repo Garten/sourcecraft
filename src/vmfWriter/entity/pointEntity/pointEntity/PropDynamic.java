@@ -10,9 +10,6 @@ import vmfWriter.entity.pointEntity.RotateablePointEntity;
 public class PropDynamic extends RotateablePointEntity {
 
 	private String model;
-//	private int angleX = 0;
-//	private int angleY = 0;
-//	private int angleZ = 0;
 
 	public PropDynamic(String model, int angleX, int angleY, int angleZ) {
 		this(model, new Position(angleX, angleY, angleZ));
@@ -28,7 +25,6 @@ public class PropDynamic extends RotateablePointEntity {
 		PropDynamic result = new PropDynamic(this.model, this.angle);
 		result.setOrigin(origin);
 		return result;
-//		return (PropDynamic) super.createPointEntity(result);
 	}
 
 	@Override
@@ -38,7 +34,6 @@ public class PropDynamic extends RotateablePointEntity {
 
 	@Override
 	public void writeVmfSpecific2(ValveWriter writer) throws IOException {
-//		writer.put("angles", this.angleX + " " + this.angleY + " " + this.angleZ)
 		writer.put("DisableBoneFollowers", false)
 				.put("disablereceiveshadows", false)
 				.put("disableshadows", false)

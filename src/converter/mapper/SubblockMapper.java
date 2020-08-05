@@ -6,6 +6,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import basic.Value;
+import converter.Orientation;
 import converter.actions.Action;
 import converter.actions.ActionManager;
 import converter.actions.actions.DetailBlock;
@@ -15,7 +16,6 @@ import minecraft.Position;
 import periphery.SourceGame;
 import vmfWriter.Cuboid;
 import vmfWriter.Free8Point;
-import vmfWriter.Orientation;
 import vmfWriter.Ramp;
 import vmfWriter.SourceMap;
 

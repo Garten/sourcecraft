@@ -7,6 +7,7 @@ import java.util.Map;
 import basic.Tuple;
 import minecraft.Area;
 import minecraft.Block;
+import minecraft.Blocks;
 import minecraft.Position;
 import periphery.Minecraft;
 
@@ -49,7 +50,7 @@ public class Section {
 	}
 
 	private int getUnitLength(int length) {
-		return length / 64;
+		return length / BitNbtReader.LONG_SIZE;
 	}
 
 	public void setHeight(int height) {
@@ -87,5 +88,33 @@ public class Section {
 
 	public void addPalette(Integer i, Block block) {
 		this.palette.put(i, block);
+	}
+
+	private static final NamedTag Y = new NamedTag(NbtTag.BYTE, "Y");
+	private static final NamedTag PALETTE = new NamedTag(NbtTag.LIST, "Palette");
+	private static final NamedTag BLOCK_STATES = new NamedTag(NbtTag.LONG_ARRAY, "BlockStates");
+
+	public Section readNbt(NbtReader reader) throws IOException {
+		reader.doCompound(NbtTasks.I.create()
+				.put(Y, () -> this.setHeight(reader.readByte()))
+				.put(BLOCK_STATES, () -> this.readBlocksRaw(reader))
+				.put(PALETTE, () -> reader.doListOfCompounds(pos -> {
+					this.addPalette(pos, this.readBlock(reader));
+				})));
+		return this;
+	}
+
+	private static final NamedTag PALETTE_NAME = new NamedTag(NbtTag.STRING, "Name");
+	private static final NamedTag PALETTE_PROPERTIES = new NamedTag(NbtTag.COMPOUND, "Properties");
+
+	private Block readBlock(NbtReader reader) throws IOException {
+		return Blocks.I.getIO(template -> {
+			reader.doCompound(NbtTasks.I.create()
+					.put(PALETTE_NAME, () -> template.setName(reader.readString()))
+					.put(PALETTE_PROPERTIES, () -> reader.doCompond(title -> {
+						String property = reader.readString();
+						template.addProperty(title, property);
+					})));
+		});
 	}
 }

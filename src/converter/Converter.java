@@ -12,12 +12,13 @@ import converter.mapper.BlockMapper;
 import main.ConvertTask;
 import minecraft.Area;
 import minecraft.Position;
+import nbtReader.Chunk;
 import nbtReader.ChunkPosition;
-import nbtReader.ChunkReader;
-import nbtReader.Section;
+import nbtReader.NbtReader;
 import nbtReader.PlayerInLevelReader;
 import nbtReader.PlayerReader;
 import nbtReader.RegionFile;
+import nbtReader.Section;
 import nbtReader.WorldPiece;
 import periphery.Minecraft;
 import periphery.Place;
@@ -65,25 +66,12 @@ public class Converter {
 		File file = Minecraft.getFileOfChunk(fileFolder, worldPiece);
 		this.logReadingChunk(worldPiece, file);
 		RegionFile regionfile = new RegionFile(file);
-		if (file.exists() == false) {
-			throw new IOException("File does not exist: " + file.toString());
-		}
-		DataInputStream inputStream = regionfile.getChunkDataInputStream(worldPiece.getLocalChunk()
-				.getX(),
-				worldPiece.getLocalChunk()
-						.getZ());
-		if (inputStream == null) {
-			// throw new IOException("cannot find chunk in " + file.toString());
-			Loggger.log("cannot find chunk file " + file.toString());
-		} else {
-			// Create NBTReader for chunk.
-			ChunkReader reader = new ChunkReader(inputStream, this, worldPiece);
-			reader.readChunk();
-			inputStream.close();
-		}
+		NbtReader reader = regionfile.getNbtReader(worldPiece.getLocalChunkPosition());
+		new Chunk().readNbt(reader, worldPiece, this);
+		reader.close();
 	}
 
-	public void addMcaSection(Section section) {
+	public void addSection(Section section) {
 		// TODO sections occur that with negative volume
 		Tuple<Area, Position> toWrite = section.getBoundAndTarget();
 		Position target = toWrite.getSecond();

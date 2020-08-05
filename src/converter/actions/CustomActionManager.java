@@ -20,8 +20,7 @@ import converter.mapper.Mapper;
 import minecraft.Blocks;
 import minecraft.Material;
 import minecraft.Property;
-import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerCT;
-import vmfWriter.entity.pointEntity.pointEntity.InfoPlayerT;
+import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public class CustomActionManager extends ActionManager {
 
@@ -79,8 +78,12 @@ public class CustomActionManager extends ActionManager {
 		// css
 //		this.actions.put(Material.torch, new CssLamp());
 //		this.actions.put(Material.wall_torch, new CssLamp());
-		this.actions.put(Material.end_portal_frame, new PlayerSpawnCss(new InfoPlayerT().setRotation(0), false));
-		this.actions.put(Material.ender_chest, new PlayerSpawnCss(new InfoPlayerCT().setRotation(180), true));
+		this.actions.put(Material.end_portal_frame,
+				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_terrorist")
+						.setRotation(0), false));
+		this.actions.put(Material.ender_chest,
+				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_counterterrorist")
+						.setRotation(180), true));
 		return this;
 	}
 }

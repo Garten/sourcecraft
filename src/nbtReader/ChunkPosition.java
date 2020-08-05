@@ -53,4 +53,8 @@ public class ChunkPosition {
 	public String toFileName() {
 		return "r." + this.x + "." + this.z + "." + Minecraft.ANVIL_ENDING;
 	}
+
+	public boolean outOfBounds() {
+		return x < 0 || x >= Minecraft.MAX_CHUNK_IN_FILE_X || z < 0 || z >= Minecraft.MAX_CHUNK_IN_FILE_Z;
+	}
 }

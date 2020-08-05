@@ -84,7 +84,7 @@ public class WorldPiece {
 		return this.globalChunkPosition;
 	}
 
-	public ChunkPosition getLocalChunk() {
+	public ChunkPosition getLocalChunkPosition() {
 		return this.localChunkPosition;
 	}
 

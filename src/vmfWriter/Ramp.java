@@ -3,6 +3,7 @@ package vmfWriter;
 import java.io.IOException;
 
 import basic.Tuple;
+import converter.Orientation;
 import minecraft.Position;
 
 public class Ramp extends Cuboid {

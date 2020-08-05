@@ -1,9 +1,12 @@
 package vmfWriter.entity;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.HashMap;
 
 import vmfWriter.ValveElement;
 import vmfWriter.ValveWriter;
+import vmfWriter.VmfValue;
 
 public abstract class Entity extends ValveElement {
 
@@ -14,9 +17,12 @@ public abstract class Entity extends ValveElement {
 
 	public String name;
 
+	private HashMap<String, VmfValue> properties = new HashMap<>();
+
 	@Override
 	public void writeVmf(ValveWriter writer) throws IOException {
 		this.writeStart(writer);
+		this.writeProperties(writer);
 		this.writeVmfSpecific(writer);
 		this.writeEnd(writer);
 	}
@@ -27,6 +33,24 @@ public abstract class Entity extends ValveElement {
 
 	public void writeVmfSpecific(ValveWriter writer) throws IOException {
 
+	}
+
+	public void writeProperties(ValveWriter writer) throws IOException {
+		properties.forEach((key, value) -> {
+			try {
+				writer.put(key, value.getVmf());
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		});
+	}
+
+	public void putProperty(String property, VmfValue value) {
+		this.properties.put(property, value);
+	}
+
+	public VmfValue getProperty(String property) {
+		return this.properties.get(property);
 	}
 
 	protected void writeEnd(ValveWriter writer) throws IOException {
@@ -45,7 +69,7 @@ public abstract class Entity extends ValveElement {
 		return this.name;
 	}
 
-	public Entity setName(String name) { // TODO some entities overwrite getName, for others the name is set from extern
+	public Entity setName(String name) {
 		this.name = name;
 		return this;
 	}

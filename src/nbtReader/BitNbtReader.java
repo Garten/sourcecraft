@@ -4,12 +4,12 @@ import java.io.IOException;
 
 public class BitNbtReader {
 
-	private static final int LONG_END = 64;
+	static final int LONG_SIZE = 64;
 
 	private NbtReader source;
 	private long amount;
-	private long currentByte;
-	private long currentPos = LONG_END;
+	private long currentLong;
+	private long currentPos = LONG_SIZE;
 
 	public BitNbtReader(NbtReader source, int amount) {
 		this.source = source;
@@ -19,12 +19,29 @@ public class BitNbtReader {
 	public int readBits() throws IOException {
 		long result = 0;
 		long resultPos = 0;
+		if (this.currentPos + this.amount - 1 >= LONG_SIZE) {
+			this.currentPos = 0;
+			this.currentLong = this.source.readLong();
+		}
 		for (int i = 0; i < this.amount; i++) {
-			if (this.currentPos == LONG_END) {
+			long bit = (this.currentLong >> this.currentPos) & 1L;
+			long mask = (bit << resultPos);
+			result = result | mask;
+			resultPos++;
+			this.currentPos++;
+		}
+		return (int) result;
+	}
+
+	public int readBitsBeforeVersion16() throws IOException {
+		long result = 0;
+		long resultPos = 0;
+		for (int i = 0; i < this.amount; i++) {
+			if (this.currentPos == LONG_SIZE) {
 				this.currentPos = 0;
-				this.currentByte = this.source.readLong();
+				this.currentLong = this.source.readLong();
 			}
-			long bit = (this.currentByte >> this.currentPos) & 1L;
+			long bit = (this.currentLong >> this.currentPos) & 1L;
 			long mask = (bit << resultPos);
 			result = result | mask;
 			resultPos++;

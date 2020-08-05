@@ -1,12 +1,12 @@
 package converter.actions.actions;
 
 import basic.Loggger;
+import converter.Orientation;
 import converter.Skins;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
 import minecraft.Position;
-import vmfWriter.Orientation;
 
 public class Solid extends Action {
 

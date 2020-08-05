@@ -1,4 +1,4 @@
-package vmfWriter;
+package converter;
 
 public enum Orientation {
 	NORTH,
