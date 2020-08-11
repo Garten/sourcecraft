@@ -3,7 +3,7 @@
 an easy to use Minecraft to Source Engine Converter. It converts a given piece of Minecraft World into a map in .vmf-format that can be opened by Hammer Editor. It still needs to be compiled by Hammer Editor (/the Source-Engine compile tools). Aim of this project though is that no further steps or Hammer-Editor editing skills are needed. That is sourcecraft createas a (after compiling) a runnable and playable map with spawn-points and so on.
 
 ### what is needed
-- Minecraft world of version 1.13 or newer (tested with 1.15) either created in singleplayer or by a Minecraft server.
+- Minecraft world of version 1.13 through 1.15 (tested with 1.15) either created in singleplayer or by a Minecraft server.
 - Java Runtime Enviroment 1.8 or newer
 - Recommended: Steam with installed target Source-Engine game and installed 'Source SDK'. The latter includes the Hammer Editor and the compile tools. You should have launched your target game and 'Source SDK' for your target game at least once. Then sourcecraft suggets to create the output-map at the correct path for the Hammer Editor. It can also copy the required textures to the correct path.
 
