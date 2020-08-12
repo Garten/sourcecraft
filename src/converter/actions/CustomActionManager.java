@@ -56,6 +56,7 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material.iron_bars, new Pane());
 		this.actions.put(Material.chest, new Chest());
 		this.actions.put(Material._button, new Button());
+		this.actions.put(Material.grass_path, new GrassPath());
 
 		// tf2
 		this.actions.put(Material.grass, new TallGrassTf2());
