@@ -19,8 +19,7 @@ import converter.actions.actions.Liquid;
 import converter.actions.actions.Pane;
 import converter.actions.actions.PlayerSpawnCss;
 import converter.actions.actions.PlayerSpawnTf2;
-import converter.actions.actions.SlabBottom;
-import converter.actions.actions.SlabTop;
+import converter.actions.actions.Slab;
 import converter.actions.actions.SnowBlock;
 import converter.actions.actions.Solid;
 import converter.actions.actions.SupplyTf2;
@@ -298,9 +297,8 @@ public class Config {
 				.addAddable(Pane.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(SlabBottom.class.getSimpleName())
 				.addAddable(Solid.class.getSimpleName())
-				.addAddable(SlabTop.class.getSimpleName()));
+				.addAddable(Slab.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultTf2")
 				.setScale(48)
@@ -316,7 +314,7 @@ public class Config {
 				.addAddable(TorchSouth.class.getSimpleName())
 				.addAddable(TorchNorth.class.getSimpleName())
 				.addAddable(Solid.class.getSimpleName())
-				.addAddable(SlabBottom.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
@@ -329,7 +327,6 @@ public class Config {
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(SlabTop.class.getSimpleName())
 				.addAddable(Torch.class.getSimpleName()));
 		config.options.add(ConvertOption.create()
 				.setName("defaultCss")
@@ -339,7 +336,7 @@ public class Config {
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
 				.addAddable(Solid.class.getSimpleName())
-				.addAddable(SlabBottom.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fire.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
@@ -352,7 +349,6 @@ public class Config {
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(SlabTop.class.getSimpleName())
 				.addAddable(PlayerSpawnCss.class.getSimpleName())
 				.addAddable(CssLamp.class.getSimpleName())
 				.addAddable(PlayerSpawnCss.class.getSimpleName()));
@@ -364,7 +360,7 @@ public class Config {
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
 				.addAddable(Solid.class.getSimpleName())
-				.addAddable(SlabBottom.class.getSimpleName())
+				.addAddable(Slab.class.getSimpleName())
 				.addAddable(Cactus.class.getSimpleName())
 				.addAddable(Fence.class.getSimpleName())
 				.addAddable(Pane.class.getSimpleName())
@@ -376,7 +372,6 @@ public class Config {
 				.addAddable(VinesWest.class.getSimpleName())
 				.addAddable(VinesEast.class.getSimpleName())
 				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(SlabTop.class.getSimpleName())
 				.addAddable(TorchNorth.class.getSimpleName())
 				.addAddable(TorchSouth.class.getSimpleName())
 				.addAddable(TorchWest.class.getSimpleName())

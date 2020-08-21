@@ -816,6 +816,7 @@ public enum Material implements Supplier<Block> {
 	_concrete_powder,
 	_powder,
 	_glazed_terracotta,
+	_terracotta,
 	_box,
 	_stained_glass,
 	_stained_glass_pane,
