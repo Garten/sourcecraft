@@ -332,46 +332,38 @@ public class Stairs extends Action {
 
 	private void addRampStubWest(Position position) {
 		Position p = Position.add(position, STEP_WEST);
-		if(context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH) != Blocks._UNSET &&
-			context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH) != Blocks._UNSET)
+		if (context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH) != Blocks._UNSET
+				&& context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH) != Blocks._UNSET)
 			return;
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH,
-				Blocks._RAMP_WEST);
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH,
-				Blocks._RAMP_WEST);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH, Blocks._RAMP_WEST);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH, Blocks._RAMP_WEST);
 	}
 
 	private void addRampStubEast(Position position) {
 		Position p = Position.add(position, STEP_EAST);
-		if(context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH) != Blocks._UNSET &&
-			context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH) != Blocks._UNSET)
+		if (context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH) != Blocks._UNSET
+				&& context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH) != Blocks._UNSET)
 			return;
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH,
-				Blocks._RAMP_EAST);
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH,
-				Blocks._RAMP_EAST);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH, Blocks._RAMP_EAST);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH, Blocks._RAMP_EAST);
 	}
 
 	private void addRampStubNorth(Position position) {
 		Position p = Position.add(position, STEP_NORTH);
-		if(context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH) != Blocks._UNSET &&
-			context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH) != Blocks._UNSET)
+		if (context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH) != Blocks._UNSET
+				&& context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH) != Blocks._UNSET)
 			return;
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH,
-				Blocks._RAMP_NORTH);
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH,
-				Blocks._RAMP_NORTH);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_NORTH, Blocks._RAMP_NORTH);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_NORTH, Blocks._RAMP_NORTH);
 	}
 
 	private void addRampStubSouth(Position position) {
 		Position p = Position.add(position, STEP_SOUTH);
-		if(context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH) != Blocks._UNSET &&
-			context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH) != Blocks._UNSET)
+		if (context.getSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH) != Blocks._UNSET
+				&& context.getSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH) != Blocks._UNSET)
 			return;
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH,
-				Blocks._RAMP_SOUTH);
-		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH,
-				Blocks._RAMP_SOUTH);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_EAST_SOUTH, Blocks._RAMP_SOUTH);
+		this.context.addSubBlock(p, SubBlockPosition.BOTTOM_WEST_SOUTH, Blocks._RAMP_SOUTH);
 	}
 
 	private void handleHalf(Position position, Block material, String part) {

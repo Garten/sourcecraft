@@ -24,9 +24,10 @@ public class Slab extends Action {
 	}
 
 	private void handleFull(Position position, Block block, String half) {
-		SubBlockPosition[] subpos = new SubBlockPosition[] { SubBlockPosition.BOTTOM_EAST_SOUTH, SubBlockPosition.BOTTOM_EAST_NORTH,
-			SubBlockPosition.BOTTOM_WEST_SOUTH, SubBlockPosition.BOTTOM_WEST_NORTH, SubBlockPosition.TOP_EAST_SOUTH,
-			SubBlockPosition.TOP_EAST_NORTH, SubBlockPosition.TOP_WEST_SOUTH, SubBlockPosition.TOP_WEST_NORTH };
+		SubBlockPosition[] subpos = new SubBlockPosition[] { SubBlockPosition.BOTTOM_EAST_SOUTH,
+				SubBlockPosition.BOTTOM_EAST_NORTH, SubBlockPosition.BOTTOM_WEST_SOUTH,
+				SubBlockPosition.BOTTOM_WEST_NORTH, SubBlockPosition.TOP_EAST_SOUTH, SubBlockPosition.TOP_EAST_NORTH,
+				SubBlockPosition.TOP_WEST_SOUTH, SubBlockPosition.TOP_WEST_NORTH };
 		for (SubBlockPosition sub : subpos) {
 			this.context.addSubBlock(position, sub, block);
 		}
