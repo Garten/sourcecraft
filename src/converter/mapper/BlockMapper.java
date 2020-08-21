@@ -57,8 +57,6 @@ public class BlockMapper extends Mapper {
 				3 + end.getZ() - start.getZ());
 
 		this.needsConversion = this.createBooleanArray(this.arraySize);
-//		this.isAirBlock = this.createBooleanArray(this.arraySize);
-//		this.isConverted = this.createBooleanArray(this.arraySize);
 		this.materialField = this.createBlockArray(this.arraySize);
 
 		this.forAllPositions(p -> {
