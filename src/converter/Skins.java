@@ -26,6 +26,7 @@ public class Skins {
 	public static final Skin TRIGGER = new Skin("tools/toolstrigger", DEFAULT_SCALE);
 	public static final Skin SKYBOX = new Skin("tools/toolsskybox", DEFAULT_SCALE);
 	private static final Skin PLAYER_CLIP = new Skin("tools/toolsplayerclip", DEFAULT_SCALE);
+	private static final Skin LADDER = new Skin("tools/toolsinvisibleladder", DEFAULT_SCALE);
 
 	public static final String DEFAULT_TEXTURE = "dev/dev_measurecrate02";
 
@@ -106,10 +107,22 @@ public class Skins {
 			if (name.endsWith("_log")) { // except dark oak
 				String textureName = "log_" + name.substring(0, name.length() - "_log".length());
 				this.put(material, this.createSkin(() -> textureName, () -> textureName + "_top"));
+			} else if (name.endsWith("_trapdoor")) {
+				this.put(material, name);
+			} else if (name.endsWith("_stained_glass")) {
+				this.put(material, "glass_" + name.substring(0, name.length() - "_stained_glass".length()));
+			} else if (name.endsWith("_carpet")) {
+				this.put(material, "wool_" + name.substring(0, name.length() - "_carpet".length()));
+			} else if (name.equals("chest")) {
+				this.put(material, this.createSkinTopFront(() -> "chest_side", () -> "chest_top", () -> "chest_front",
+						Orientation.NORTH));
 			} else if (this.putPrefixMadeSuffix(material, Material._leaves)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._planks)) {
 			} else if (this.putPrefixMadeSuffix(material, Material._wool)) {
-			} else if (this.putPrefixMadeSuffix(material, Material._stained_glass)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._concrete)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._concrete_powder)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._terracotta)) {
+			} else if (this.putPrefixMadeSuffix(material, Material._glazed_terracotta)) {
 			}
 		}
 		// exceptions
@@ -137,9 +150,11 @@ public class Skins {
 		this.put(Material.stone_bricks, Texture.stonebrick);
 		this.put(Material.stone_brick_, Texture.stonebrick);
 		this.put(Material.infested_stone_bricks, Texture.stonebrick);
+		this.put(Material.bricks, Texture.brick);
 		this.put(Material.oak_, Texture.planks_oak);
 		this.put(Material.dark_oak_, Texture.planks_big_oak);
 		this.put(Material.spruce_, Texture.planks_spruce);
+		this.put(Material.birch_, Texture.planks_birch);
 		this.put(Material.acacia_, Texture.planks_acacia);
 		// exceptions
 
@@ -149,7 +164,9 @@ public class Skins {
 				this.createSkinTopBottom(Texture.dirt_podzol_side, Texture.dirt_podzol_top, Texture.dirt));
 		this.put(Material.mycelium,
 				this.createSkinTopBottom(Texture.mycelium_side, Texture.mycelium_top, Texture.dirt));
-//
+		this.put(Material.grass_path,
+				this.createSkinTopBottom(Texture.grass_path_side, Texture.grass_path_top, Texture.dirt));
+
 		this.put(Material.packed_ice, Texture.ice_packed);
 		this.put(Material.snow_block, Texture.snow);
 
@@ -175,6 +192,7 @@ public class Skins {
 		this.put(Material.bone_block, this.createSkin(Texture.bone_block_side, Texture.bone_block_top));
 
 		this.put(Material.nether_quartz_ore, Texture.quartz_ore);
+		this.put(Material.quartz_, Texture.quartz_block_side);
 		this.put(Material.quartz_block, this.createSkinTopBottom(Texture.quartz_block_side, Texture.quartz_block_top,
 				Texture.quartz_block_bottom));
 		this.put(Material.chiseled_quartz_block,
@@ -222,17 +240,18 @@ public class Skins {
 		this.put(Material.end_portal_frame,
 				this.createSkinTopBottom(Texture.endframe_side, Texture.endframe_top, Texture.end_stone));
 		this.put(Material.redstone_lamp, Texture.redstone_lamp_on);
-		this.put(Material.spruce_trapdoor, Texture.door_spruce_upper);
 		this.put(Material.wall_torch, Texture.torch_on);
+		this.put(Material.torch, Texture.torch_on);
 
 		// temporary fixes
 		this.put(Material.campfire, Texture.magma);
 		this.put(Material.lantern, Texture.magma);
 		this.put(Material.blast_furnace, Texture.furnace_front_on);
-		this.put(Material.torch, Texture.magma);
+		// this.put(Material.torch, Texture.magma);
 
 		// special
 		this.skins.put(Blocks.get("sourcecraft:ramp"), PLAYER_CLIP);
+		this.skins.put(Blocks.get("sourcecraft:ladder"), LADDER);
 	}
 
 	private void put(Texture block) {

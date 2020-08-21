@@ -204,16 +204,15 @@ public class BlockMapper extends Mapper {
 		return this.needsConversion[p.getX()][p.getY()][p.getZ()];
 	}
 
-	@Override
-	public void addSubBlock(Position position, SubBlockPosition pos, Block block) {
-		int x = position.getX();
-		int y = position.getY();
-		int z = position.getZ();
+	private Position convertPosToSubPos(Position pos, SubBlockPosition subPos) {
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
 		x = x * 2 + 1;
 		y = y * 2 + 1;
 		z = z * 2 + 1;
 		Position point = null;
-		switch (pos) {
+		switch (subPos) {
 		case BOTTOM_EAST_SOUTH:
 			point = new Position(x, y - 1, z);
 			break;
@@ -241,6 +240,18 @@ public class BlockMapper extends Mapper {
 		default:
 			break;
 		}
+		return point;
+	}
+
+	@Override
+	public Block getSubBlock(Position p, SubBlockPosition subP) {
+		Position point = this.convertPosToSubPos(p, subP);
+		return subBlocks.getBlock(point);
+	}
+
+	@Override
+	public void addSubBlock(Position position, SubBlockPosition pos, Block block) {
+		Position point = this.convertPosToSubPos(position, pos);
 		this.subBlocks.setBlock(point, block);
 	}
 

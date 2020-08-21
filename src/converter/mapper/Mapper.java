@@ -43,6 +43,10 @@ public abstract class Mapper extends SourceMapper {
 		throw new UnsupportedOperationException();
 	}
 
+	public Block getSubBlock(Position position, SubBlockPosition subpos) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Mapper setScale(int scale) {
 		this.scale = scale;
 		return this;
@@ -94,9 +98,11 @@ public abstract class Mapper extends SourceMapper {
 			Block material) {
 		double grid = (double) (this.getScale()) / (double) (parts);
 		Position startNew = new Position(start.x * this.getScale() + offset.x * grid,
-				(-end.z - 1) * this.getScale() + negativeOffset.z * grid, start.y * this.getScale() + offset.y * grid);
+				(-end.z - 1) * this.getScale() + negativeOffset.z * grid,
+				start.y * this.getScale() + offset.y * grid);
 		Position endNew = new Position((end.x + 1) * this.getScale() - negativeOffset.x * grid,
-				-start.z * this.getScale() - offset.z * grid, (end.y + 1) * this.getScale() - negativeOffset.y * grid);
+				-start.z * this.getScale() - offset.z * grid,
+				(end.y + 1) * this.getScale() - negativeOffset.y * grid);
 		return new Cuboid(new Tuple<>(startNew, endNew), Skins.INSTANCE.getSkin(material));
 	}
 

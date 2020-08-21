@@ -2,20 +2,7 @@ package converter.actions;
 
 import java.util.Collection;
 
-import converter.actions.actions.Cactus;
-import converter.actions.actions.CenteredPointEntity;
-import converter.actions.actions.DetailBlock;
-import converter.actions.actions.Fence;
-import converter.actions.actions.Fire;
-import converter.actions.actions.Liquid;
-import converter.actions.actions.NoAction;
-import converter.actions.actions.PlayerSpawnCss;
-import converter.actions.actions.SlabBottom;
-import converter.actions.actions.SlabTop;
-import converter.actions.actions.Solid;
-import converter.actions.actions.Stairs;
-import converter.actions.actions.TallGrassTf2;
-import converter.actions.actions.Torch;
+import converter.actions.actions.*;
 import converter.mapper.Mapper;
 import minecraft.Blocks;
 import minecraft.Material;
@@ -44,7 +31,7 @@ public class CustomActionManager extends ActionManager {
 				Material.red_tulip, Material.orange_tulip, Material.white_tulip, Material.pink_tulip,
 				Material.oxeye_daisy, Material.cornflower, Material.lily_of_the_valley, Material.wither_rose,
 				Material.lilac, Material.rose_bush, Material.peony, Material.sugar_cane, Material.seagrass,
-				Material.tall_seagrass, Material.sweet_berry_bush }) {
+				Material.tall_seagrass, Material.sweet_berry_bush, Material._pressure_plate }) {
 			this.actions.put(m, NoAction.INSTANCE);
 		}
 		for (Material m : new Material[] { Material._leaves, Material.glass, Material.ice }) {
@@ -56,16 +43,19 @@ public class CustomActionManager extends ActionManager {
 		}
 		this.actions.put(Material._fence, new Fence());
 		this.actions.put(Material._stairs, new Stairs());
-		this.actions.put(Blocks.get(t -> t.setName(Material._slab)
-				.addProperty(Property.half, Property.Half.top)
-				.addProperty(Property.waterlogged, Property.Waterlogged.false$)), new SlabTop());
-		this.actions.put(Blocks.get(t -> t.setName(Material._slab)
-				.addProperty(Property.half, Property.Half.bottom)
-				.addProperty(Property.waterlogged, Property.Waterlogged.false$)), new SlabBottom());
+		this.actions.put(Material._slab, new Slab());
 		this.actions.put(Material.torch, Torch.INSTANCE);
 		this.actions.put(Material.wall_torch, Torch.INSTANCE);
 		this.actions.put(Material.cactus, new Cactus());
 		this.actions.put(Material.fire, new Fire());
+		this.actions.put(Material._trapdoor, new Trapdoor());
+		this.actions.put(Material.ladder, new Ladder());
+		this.actions.put(Material._carpet, new Carpet());
+		this.actions.put(Material._pane, new Pane());
+		this.actions.put(Material.iron_bars, new Pane());
+		this.actions.put(Material.chest, new Chest());
+		this.actions.put(Material._button, new Button());
+		this.actions.put(Material.grass_path, new GrassPath());
 
 		// tf2
 		this.actions.put(Material.grass, new TallGrassTf2());
