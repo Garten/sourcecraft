@@ -43,8 +43,7 @@ public class BlockMapper extends Mapper {
 
 		this.setScale(this.convertOption.getScale());
 
-		this.convertOption.getAddablesAsStrings();
-		this.setAddableManager(new CustomActionManager(this, null).setDefaults());
+		this.setAddableManager(new CustomActionManager(this, this.convertOption.getConvertEntities()));
 
 		this.bound = converterData.getPlace()
 				.createBound();

@@ -8,32 +8,11 @@ import java.util.List;
 import java.util.Queue;
 
 import basic.Loggger;
-import converter.actions.actions.Cactus;
+import converter.actions.actions.CenteredPointEntity;
 import converter.actions.actions.CssLamp;
-import converter.actions.actions.DetailBlock;
-import converter.actions.actions.EndPortalFrame;
-import converter.actions.actions.Fence;
-import converter.actions.actions.Fire;
-import converter.actions.actions.LilypadTf2;
-import converter.actions.actions.Liquid;
-import converter.actions.actions.Pane;
-import converter.actions.actions.PlayerSpawnCss;
-import converter.actions.actions.PlayerSpawnTf2;
-import converter.actions.actions.Slab;
-import converter.actions.actions.SnowBlock;
-import converter.actions.actions.Solid;
-import converter.actions.actions.SupplyTf2;
 import converter.actions.actions.TallGrassTf2;
-import converter.actions.actions.Torch;
-import converter.actions.actions.TorchEast;
-import converter.actions.actions.TorchNorth;
-import converter.actions.actions.TorchSouth;
-import converter.actions.actions.TorchWest;
-import converter.actions.actions.VinesEast;
-import converter.actions.actions.VinesNorth;
-import converter.actions.actions.VinesSouth;
-import converter.actions.actions.VinesWest;
 import main.ConvertTask;
+import minecraft.Material;
 import minecraft.World;
 import vmfWriter.Color;
 
@@ -279,104 +258,82 @@ public class Config {
 				.setSkyTexture("sky_day02_09")
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
-				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(PlayerSpawnCss.class.getSimpleName())
-				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(VinesEast.class.getSimpleName())
-				.addAddable(VinesWest.class.getSimpleName())
-				.addAddable(VinesNorth.class.getSimpleName())
-				.addAddable(VinesSouth.class.getSimpleName())
-				.addAddable(TorchNorth.class.getSimpleName())
-				.addAddable(TorchSouth.class.getSimpleName())
-				.addAddable(TorchWest.class.getSimpleName())
-				.addAddable(TorchEast.class.getSimpleName())
-				.addAddable(Torch.class.getSimpleName())
-				.addAddable(SnowBlock.class.getSimpleName())
-				.addAddable(DetailBlock.class.getSimpleName())
-				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(Pane.class.getSimpleName())
-				.addAddable(Fence.class.getSimpleName())
-				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(Solid.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName()));
+				.setSunShadow(new Color(250, 250, 250, 0)));
 		config.options.add(ConvertOption.create()
-				.setName("defaultTf2")
+				.setName("default Tf2")
 				.setScale(48)
 				.setSkyTexture("sky_day02_09")
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(LilypadTf2.class.getSimpleName())
-				.addAddable(SupplyTf2.class.getSimpleName())
-				.addAddable(PlayerSpawnTf2.class.getSimpleName())
-				.addAddable(TorchEast.class.getSimpleName())
-				.addAddable(TorchWest.class.getSimpleName())
-				.addAddable(TorchSouth.class.getSimpleName())
-				.addAddable(TorchNorth.class.getSimpleName())
-				.addAddable(Solid.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
-				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(Fence.class.getSimpleName())
-				.addAddable(Pane.class.getSimpleName())
-				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(TallGrassTf2.class.getSimpleName())
-				.addAddable(DetailBlock.class.getSimpleName())
-				.addAddable(SnowBlock.class.getSimpleName())
-				.addAddable(VinesSouth.class.getSimpleName())
-				.addAddable(VinesNorth.class.getSimpleName())
-				.addAddable(VinesWest.class.getSimpleName())
-				.addAddable(VinesEast.class.getSimpleName())
-				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(Torch.class.getSimpleName()));
+				.addConvertEntity(Material.grass, new TallGrassTf2())
+//				.addConvertEntity(LilypadTf2.class.getSimpleName())
+//				.addConvertEntity(SupplyTf2.class.getSimpleName())
+//				.addConvertEntity(PlayerSpawnTf2.class.getSimpleName())
+//				.addConvertEntity(TorchEast.class.getSimpleName())
+//				.addConvertEntity(TorchWest.class.getSimpleName())
+//				.addConvertEntity(TorchSouth.class.getSimpleName())
+//				.addConvertEntity(TorchNorth.class.getSimpleName())
+//				.addConvertEntity(Solid.class.getSimpleName())
+//				.addConvertEntity(Slab.class.getSimpleName())
+//				.addConvertEntity(Cactus.class.getSimpleName())
+//				.addConvertEntity(Fence.class.getSimpleName())
+//				.addConvertEntity(Pane.class.getSimpleName())
+//				.addConvertEntity(Liquid.class.getSimpleName())
+//				.addConvertEntity(TallGrassTf2.class.getSimpleName())
+//				.addConvertEntity(DetailBlock.class.getSimpleName())
+//				.addConvertEntity(SnowBlock.class.getSimpleName())
+//				.addConvertEntity(VinesSouth.class.getSimpleName())
+//				.addConvertEntity(VinesNorth.class.getSimpleName())
+//				.addConvertEntity(VinesWest.class.getSimpleName())
+//				.addConvertEntity(VinesEast.class.getSimpleName())
+//				.addConvertEntity(EndPortalFrame.class.getSimpleName())
+//				.addConvertEntity(Torch.class.getSimpleName())
+		);
 		config.options.add(ConvertOption.create()
-				.setName("defaultCss")
+				.setName("default Css")
 				.setScale(48)
 				.setSkyTexture("sky_day02_09")
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
 				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(Solid.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
-				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(Fire.class.getSimpleName())
-				.addAddable(Fence.class.getSimpleName())
-				.addAddable(Pane.class.getSimpleName())
-				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(DetailBlock.class.getSimpleName())
-				.addAddable(SnowBlock.class.getSimpleName())
-				.addAddable(VinesSouth.class.getSimpleName())
-				.addAddable(VinesNorth.class.getSimpleName())
-				.addAddable(VinesWest.class.getSimpleName())
-				.addAddable(VinesEast.class.getSimpleName())
-				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(PlayerSpawnCss.class.getSimpleName())
-				.addAddable(CssLamp.class.getSimpleName())
-				.addAddable(PlayerSpawnCss.class.getSimpleName()));
+				.addConvertEntity(Material.torch, new CssLamp())
+				.addConvertEntity(Material.wall_torch, new CssLamp())
+//				.addConvertEntity(Solid.class.getSimpleName())
+//				.addConvertEntity(Slab.class.getSimpleName())
+//				.addConvertEntity(Cactus.class.getSimpleName())
+//				.addConvertEntity(Fire.class.getSimpleName())
+//				.addConvertEntity(Fence.class.getSimpleName())
+//				.addConvertEntity(Pane.class.getSimpleName())
+//				.addConvertEntity(Liquid.class.getSimpleName())
+//				.addConvertEntity(DetailBlock.class.getSimpleName())
+//				.addConvertEntity(SnowBlock.class.getSimpleName())
+//				.addConvertEntity(VinesSouth.class.getSimpleName())
+//				.addConvertEntity(VinesNorth.class.getSimpleName())
+//				.addConvertEntity(VinesWest.class.getSimpleName())
+//				.addConvertEntity(VinesEast.class.getSimpleName())
+//				.addConvertEntity(EndPortalFrame.class.getSimpleName())
+//				.addConvertEntity(PlayerSpawnCss.class.getSimpleName())
+//				.addConvertEntity(CssLamp.class.getSimpleName())
+//				.addConvertEntity(PlayerSpawnCss.class.getSimpleName())
+		);
 		config.options.add(ConvertOption.create()
-				.setName("defaultGmod")
+				.setName("default Gmod")
 				.setScale(40)
 				.setSkyTexture("sky_day02_09")
 				.setSunLight(new Color(255, 255, 200, 550))
 				.setSunAmbient(new Color(200, 200, 200, 80))
-				.setSunShadow(new Color(250, 250, 250, 0))
-				.addAddable(Solid.class.getSimpleName())
-				.addAddable(Slab.class.getSimpleName())
-				.addAddable(Cactus.class.getSimpleName())
-				.addAddable(Fence.class.getSimpleName())
-				.addAddable(Pane.class.getSimpleName())
-				.addAddable(Liquid.class.getSimpleName())
-				.addAddable(DetailBlock.class.getSimpleName())
-				.addAddable(SnowBlock.class.getSimpleName())
-				.addAddable(VinesSouth.class.getSimpleName())
-				.addAddable(VinesNorth.class.getSimpleName())
-				.addAddable(VinesWest.class.getSimpleName())
-				.addAddable(VinesEast.class.getSimpleName())
-				.addAddable(EndPortalFrame.class.getSimpleName())
-				.addAddable(TorchNorth.class.getSimpleName())
-				.addAddable(TorchSouth.class.getSimpleName())
-				.addAddable(TorchWest.class.getSimpleName())
-				.addAddable(TorchEast.class.getSimpleName())
-				.addAddable(Torch.class.getSimpleName()));
+				.setSunShadow(new Color(250, 250, 250, 0)));
+		config.options.add(ConvertOption.create()
+				.setName("default TTT")
+				.addConvertEntity(Material.zombie_head, new CenteredPointEntity("info_player_start"))
+				.addConvertEntity(Material.fletching_table, new CenteredPointEntity("ttt_random_weapon"))
+				.addConvertEntity(Material.grindstone, new CenteredPointEntity("ttt_random_ammo"))
+				.setScale(40)
+				.setSkyTexture("sky_day02_09")
+				.setSunLight(new Color(255, 255, 200, 550))
+				.setSunAmbient(new Color(200, 200, 200, 80))
+				.setSunShadow(new Color(250, 250, 250, 0)));
 		config.setPack("minecraft_original");
 		config.setGame("Garrysmod");
 		return config;

@@ -75,6 +75,9 @@ public class DetailsPanel extends JPanel {
 	}
 
 	public void setSelectedConverterOptions(String convertOption) {
+		if (convertOption == null) {
+			return;
+		}
 		this.comboBox_ConverterOptions.setSelectedItem(convertOption);
 	}
 

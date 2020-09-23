@@ -12,8 +12,6 @@ import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public abstract class Action {
 
-	protected int[] materialUsedFor = {};
-
 	public Action() {
 	}
 
@@ -44,16 +42,6 @@ public abstract class Action {
 
 	public boolean hasWall(Orientation orientation) {
 		return false;
-	}
-
-	@Deprecated
-	public void setMaterialUsedFor(int[] material) {
-		this.materialUsedFor = material;
-	}
-
-	public void setMaterialUsedFor(int material) {
-		this.materialUsedFor = new int[1];
-		this.materialUsedFor[0] = material;
 	}
 
 	/**

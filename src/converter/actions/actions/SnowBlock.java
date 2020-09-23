@@ -3,15 +3,9 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 
 public class SnowBlock extends Action {
-
-	public SnowBlock() {
-		int[] temp = { MaterialLegacy.SNOW };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {

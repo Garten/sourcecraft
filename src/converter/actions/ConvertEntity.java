@@ -4,12 +4,17 @@ import java.util.function.Supplier;
 
 import converter.actions.actions.NoAction;
 import minecraft.Block;
+import minecraft.BlockTemplate;
 
 public class ConvertEntity {
-	private Supplier<Block> block;
+	private BlockTemplate block;
 	private Action action = NoAction.INSTANCE;
 
-	public ConvertEntity(Supplier<Block> block, Action action) {
+	public ConvertEntity() {
+
+	}
+
+	public ConvertEntity(BlockTemplate block, Action action) {
 		this.block = block;
 		this.action = action;
 	}
@@ -18,7 +23,8 @@ public class ConvertEntity {
 		return this.block;
 	}
 
-	public ConvertEntity setBlock(Supplier<Block> block) {
+	// not used by gson
+	public ConvertEntity setBlock(BlockTemplate block) {
 		this.block = block;
 		return this;
 	}

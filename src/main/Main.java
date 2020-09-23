@@ -18,7 +18,7 @@ import periphery.TexturePack;
 public class Main {
 
 	public static final String TITLE = "Sourcecraft - Minecraft to VMF converter";
-	public static final String VERSION = "3.1+";
+	public static final String VERSION = "3.2";
 	public static final String AUTHOR = "garten";
 	public static final String LICENSE = "GNU General Public License v3.0";
 	public static final String LICENSE_INFO = "https://www.gnu.org/licenses/gpl-3.0.html";

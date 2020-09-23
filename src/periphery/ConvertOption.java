@@ -1,7 +1,12 @@
 package periphery;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
+import converter.actions.Action;
+import converter.actions.ConvertEntity;
+import minecraft.BlockTemplate;
+import minecraft.Material;
 import vmfWriter.Color;
 
 public class ConvertOption {
@@ -12,18 +17,18 @@ public class ConvertOption {
 	private Color sunLight;
 	private Color sunAmbient;
 	private Color sunShadow;
-	private Stack<String> addables;
+	private List<ConvertEntity> convertEntities;
 
 	public static ConvertOption create() {
 		return new ConvertOption();
 	}
 
 	public ConvertOption() {
-		this.addables = new Stack<String>();
+		this.convertEntities = new ArrayList<ConvertEntity>();
 	}
 
 	public ConvertOption(String aName) {
-		this.addables = new Stack<String>();
+		this.convertEntities = new ArrayList<ConvertEntity>();
 		this.name = aName;
 		this.scale = 40;
 	}
@@ -82,20 +87,18 @@ public class ConvertOption {
 		return this.sunShadow;
 	}
 
-	public ConvertOption addAddable(String addable) {
-		this.addables.push(addable);
+	public ConvertOption addConvertEntity(Material material, Action action) {
+		this.convertEntities.add(new ConvertEntity(new BlockTemplate().setName(material), action));
 		return this;
 	}
 
-	public String[] getAddablesAsStrings() {
-		Stack<String> addablesNew = new Stack<String>();
-		int l = this.addables.size();
-		String[] result = new String[l];
-		for (int i = 0; i < l; i++) {
-			result[i] = this.addables.pop();
-			addablesNew.push(result[i]);
-		}
-		this.addables = addablesNew;
-		return result;
+	public ConvertOption addConvertEntity(ConvertEntity addable) {
+		this.convertEntities.add(addable);
+		return this;
+	}
+
+	public List<ConvertEntity> getConvertEntities() {
+		return convertEntities;
+
 	}
 }

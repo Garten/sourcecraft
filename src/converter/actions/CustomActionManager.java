@@ -2,17 +2,37 @@ package converter.actions;
 
 import java.util.Collection;
 
-import converter.actions.actions.*;
+import converter.actions.actions.Button;
+import converter.actions.actions.Cactus;
+import converter.actions.actions.Carpet;
+import converter.actions.actions.Chest;
+import converter.actions.actions.DetailBlock;
+import converter.actions.actions.Fence;
+import converter.actions.actions.Fire;
+import converter.actions.actions.GrassPath;
+import converter.actions.actions.Ladder;
+import converter.actions.actions.Liquid;
+import converter.actions.actions.NoAction;
+import converter.actions.actions.Pane;
+import converter.actions.actions.Slab;
+import converter.actions.actions.Solid;
+import converter.actions.actions.Stairs;
+import converter.actions.actions.Torch;
+import converter.actions.actions.Trapdoor;
 import converter.mapper.Mapper;
 import minecraft.Blocks;
 import minecraft.Material;
-import minecraft.Property;
-import vmfWriter.entity.pointEntity.RotateablePointEntity;
 
 public class CustomActionManager extends ActionManager {
 
 	public CustomActionManager(Mapper map, Collection<ConvertEntity> converters) {
 		super(Solid.INSTANCE);
+		this.setDefaults();
+		if (converters != null) {
+			for (ConvertEntity converter : converters) {
+				this.actions.put(converter.getBlock(), converter.getAction());
+			}
+		}
 	}
 
 	public CustomActionManager setDefaults() {
@@ -57,23 +77,23 @@ public class CustomActionManager extends ActionManager {
 		this.actions.put(Material._button, new Button());
 		this.actions.put(Material.grass_path, new GrassPath());
 
-		// tf2
-		this.actions.put(Material.grass, new TallGrassTf2());
-
-		// ttt
-		this.actions.put(Material.zombie_head, new CenteredPointEntity("info_player_start"));
-		this.actions.put(Material.fletching_table, new CenteredPointEntity("ttt_random_weapon"));
-		this.actions.put(Material.grindstone, new CenteredPointEntity("ttt_random_ammo"));
-
-		// css
-//		this.actions.put(Material.torch, new CssLamp());
-//		this.actions.put(Material.wall_torch, new CssLamp());
-		this.actions.put(Material.end_portal_frame,
-				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_terrorist")
-						.setRotation(0), false));
-		this.actions.put(Material.ender_chest,
-				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_counterterrorist")
-						.setRotation(180), true));
+//		// tf2
+//		this.actions.put(Material.grass, new TallGrassTf2());
+//
+//		// ttt
+//		this.actions.put(Material.zombie_head, new CenteredPointEntity("info_player_start"));
+//		this.actions.put(Material.fletching_table, new CenteredPointEntity("ttt_random_weapon"));
+//		this.actions.put(Material.grindstone, new CenteredPointEntity("ttt_random_ammo"));
+//
+//		// css
+////		this.actions.put(Material.torch, new CssLamp());
+////		this.actions.put(Material.wall_torch, new CssLamp());
+//		this.actions.put(Material.end_portal_frame,
+//				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_terrorist")
+//						.setRotation(0), false));
+//		this.actions.put(Material.ender_chest,
+//				new PlayerSpawnCss(new RotateablePointEntity().setName("info_player_counterterrorist")
+//						.setRotation(180), true));
 		return this;
 	}
 }

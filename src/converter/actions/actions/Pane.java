@@ -3,15 +3,9 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 
 public class Pane extends Action {
-
-	public Pane() {
-		int temp[] = { MaterialLegacy.GLASS_PANE };
-		super.materialUsedFor = temp;
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {

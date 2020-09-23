@@ -16,7 +16,7 @@ import periphery.Minecraft;
 public class Blocks {
 	public static final Blocks I = new Blocks();
 	private static final BlockTemplate TEMPLATE = new BlockTemplate();
-	public static final Map<Block, Block> KNOWN = new HashMap<Block, Block>();
+	public static final Map<Block, ImmutableBlock> KNOWN = new HashMap<Block, ImmutableBlock>();
 
 	public static final Block _UNSET = Blocks.get(t -> t.setName("_unset"));
 
@@ -30,18 +30,18 @@ public class Blocks {
 	public static Block _RAMP_SOUTH = Blocks.get(t -> t.setName("sourcecraft:ramp_south"));
 	public static Block _RAMP_WEST = Blocks.get(t -> t.setName("sourcecraft:ramp_west"));
 
-	private static Block get() {
-		Block hashed = KNOWN.get(TEMPLATE);
+	private static ImmutableBlock get() {
+		ImmutableBlock hashed = KNOWN.get(TEMPLATE);
 		if (hashed != null) {
 			TEMPLATE.reset();
 			return hashed;
 		}
-		Block lookup = I.new ImmutableBlock(TEMPLATE);
+		ImmutableBlock lookup = I.new ImmutableBlock(TEMPLATE);
 		KNOWN.put(lookup, lookup);
 		return lookup;
 	}
 
-	public static Block get(Consumer<BlockTemplate> setter) {
+	public static ImmutableBlock get(Consumer<BlockTemplate> setter) {
 		TEMPLATE.reset();
 		setter.accept(TEMPLATE);
 		return get();

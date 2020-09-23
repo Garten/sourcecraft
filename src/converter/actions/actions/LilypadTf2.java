@@ -3,7 +3,6 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.entity.pointEntity.pointEntity.PropStatic;
 
@@ -15,11 +14,6 @@ public class LilypadTf2 extends Action {
 
 	private final static String MODEL = "models/props_swamp/lilypad_large.mdl";
 	private final static PropStatic LILY_PAD = new PropStatic(LilypadTf2.MODEL);
-
-	public LilypadTf2() {
-		int[] temp = { MaterialLegacy.LILY_PAD };
-		super.materialUsedFor = temp;
-	}
 
 	@Override
 	public void add(Mapper context, Position position, Block material) {

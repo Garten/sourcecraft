@@ -3,7 +3,6 @@ package converter.actions.actions;
 import converter.actions.Action;
 import converter.mapper.Mapper;
 import minecraft.Block;
-import minecraft.MaterialLegacy;
 import minecraft.Position;
 import vmfWriter.entity.solidEntity.FuncIllusionary;
 
@@ -12,11 +11,6 @@ import vmfWriter.entity.solidEntity.FuncIllusionary;
  *
  */
 public class VinesNorth extends Action {
-
-	public VinesNorth() {
-		int[] temp = { MaterialLegacy.VINES };
-		super.setMaterialUsedFor(temp);
-	}
 
 	@Override
 	public void add(Mapper context, Position p, Block material) {
